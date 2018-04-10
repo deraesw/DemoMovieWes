@@ -1,7 +1,10 @@
 package com.demo.developer.deraesw.demomoviewes.network
 
+import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.network.response.MovieGenreResponse
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -11,9 +14,12 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class MovieGenreCallHandler {
+class MovieGenreCallHandler private constructor(){
 
-    val mRetrofit : Retrofit
+    private val TAG = MovieGenreCallHandler::class.java.simpleName
+
+    private val mRetrofit : Retrofit
+    val mMovieGenreList : MutableLiveData<List<MovieGenre>> = MutableLiveData();
 
     init {
         val gson : Gson = GsonBuilder().setLenient().create();
@@ -25,29 +31,42 @@ class MovieGenreCallHandler {
     }
 
     fun fetchGenreMovieList(){
-
         val call = mRetrofit.create(moviedbAPI::class.java)
                                                     .fetchMovieGenres(BuildConfig.MOVIES_DB_API);
 
-        call.enqueue(object : Callback<List<MovieGenre>> {
-            override fun onResponse(call: Call<List<MovieGenre>>, response: Response<List<MovieGenre>>) {
-                if (response.isSuccessful()) {
+        call.enqueue(object : Callback<MovieGenreResponse> {
+            override fun onResponse(call: Call<MovieGenreResponse>, response: Response<MovieGenreResponse>) {
+                if (response.isSuccessful) {
                     if (response.body() != null) {
-                        val list = response.body()
-                        //todo
+                        val list = response.body()?.genres
+                        if(list != null){
+                            mMovieGenreList.postValue(list)
+                        }
                     }
                 } else {
                     if (response.errorBody() != null) {
                         //todo
+                        Log.w(TAG, "Empty body")
                     }
                 }
             }
 
-            override fun onFailure(call: Call<List<MovieGenre>>, t: Throwable) {
+            override fun onFailure(call: Call<MovieGenreResponse>, t: Throwable) {
                 //todo
+                Log.e(TAG, t.message, t);
             }
         })
-
     }
 
+    companion object {
+
+        private var mInstance : MovieGenreCallHandler? = null
+
+        fun getInstance() : MovieGenreCallHandler {
+            mInstance ?: synchronized(this) {
+                mInstance = MovieGenreCallHandler()
+            }
+            return mInstance!!
+        }
+    }
 }
