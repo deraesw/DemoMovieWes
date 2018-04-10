@@ -6,4 +6,11 @@ class Constant {
         const val MOVIE_API_WEB = "https://api.themoviedb.org/3/"
     }
 
+    class ShareKey {
+        companion object {
+            const val LAST_DATE_SYNC = "LAST_DATE_SYNC"
+            const val SYNC_STATUS = "SYNC_STATUS"
+        }
+    }
+
 }
