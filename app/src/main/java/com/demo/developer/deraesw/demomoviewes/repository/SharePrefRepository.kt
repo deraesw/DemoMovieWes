@@ -1,0 +1,47 @@
+package com.demo.developer.deraesw.demomoviewes.repository
+
+import android.arch.lifecycle.MutableLiveData
+import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
+import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.utils.Constant
+
+class SharePrefRepository private constructor(mContext : Context){
+    private val TAG = SharePrefRepository::class.java.simpleName
+
+    val account : MutableLiveData<AccountData> = MutableLiveData()
+    internal val sharedPreferences : SharedPreferences
+
+    init {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
+        fetchAccountInformation()
+    }
+
+    fun fetchAccountInformation(){
+        val accountData = AccountData()
+        accountData.lastDateSync = sharedPreferences.getString(Constant.ShareKey.LAST_DATE_SYNC, "")
+        accountData.syncStatus   = sharedPreferences.getInt(Constant.ShareKey.SYNC_STATUS, AccountData.SyncStatus.NO_SYNC)
+        account.postValue(accountData)
+    }
+
+    fun updateAccountInformation(accountDate : AccountData){
+        val editor = sharedPreferences.edit()
+        editor.putString(Constant.ShareKey.LAST_DATE_SYNC, accountDate.lastDateSync)
+        editor.putInt(Constant.ShareKey.SYNC_STATUS, accountDate.syncStatus)
+        editor.apply()
+        fetchAccountInformation()
+    }
+
+    companion object {
+        @Volatile private var sInstance :SharePrefRepository? = null
+
+        fun getInstance(context: Context) : SharePrefRepository {
+            sInstance ?: synchronized(this){
+                sInstance = SharePrefRepository(context)
+            }
+
+            return sInstance!!
+        }
+    }
+}
