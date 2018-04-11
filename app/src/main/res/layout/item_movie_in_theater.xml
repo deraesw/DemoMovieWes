@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+        <variable
+            name="movie"
+            type="com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater"/>
+
+    </data>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="8dp"
+        android:layout_margin="@dimen/spacing_normal"
+        >
+
+        <include
+            android:id="@+id/inc_content"
+            layout="@layout/inc_item_movie_in_theater_content"
+            app:movie="@{movie}"
+            />
+
+    </android.support.v7.widget.CardView>
+</layout>

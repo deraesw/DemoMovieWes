@@ -1,3 +1,29 @@
 <resources>
+
+    <!-- Text size -->
+    <dimen name="item_header_title">16sp</dimen>
+
+    <!-- standard metrics -->
+    <dimen name="spacing_micro">4dp</dimen>
+    <dimen name="spacing_normal">8dp</dimen>
+    <dimen name="spacing_small_large">16dp</dimen>
+    <dimen name="spacing_large">32dp</dimen>
+    <dimen name="spacing_xlarge">48dp</dimen>
+    <dimen name="spacing_huge">64dp</dimen>
+
+    <dimen name="padding_light">8dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+
+    <dimen name="corner_radius_light">4dp</dimen>
+    <dimen name="corner_radius_normal">8dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+
+    <!-- dialogs -->
+    <dimen name="dialog_corners">2dp</dimen>
+    <dimen name="padding_dialog">24dp</dimen>
+    <dimen name="dialog_title_spacing">20dp</dimen>
+
+    <!-- FAB -->
     <dimen name="fab_margin">16dp</dimen>
 </resources>

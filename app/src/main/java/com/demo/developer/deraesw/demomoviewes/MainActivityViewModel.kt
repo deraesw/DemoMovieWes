@@ -12,8 +12,8 @@ class MainActivityViewModel(private val mainRepository: MainRepository) : ViewMo
     val movieGenreList: LiveData<List<MovieGenre>> = mainRepository.genreRepository.mMovieGenreList
     val accountData : LiveData<AccountData> = mainRepository.sharePrefRepository.account
 
-    fun callFetchMovieGenreList() {
-        mainRepository.genreRepository.fetchAllMovieGenreData()
+    fun callFullSyncData(accountData: AccountData){
+        mainRepository.initFullSynchronization(accountData)
     }
 
     fun callUpdateAccountData(accountData: AccountData){

@@ -4,18 +4,21 @@ import android.content.Context
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.MainActivityFactory
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
+import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
+import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import com.demo.developer.deraesw.demomoviewes.repository.SharePrefRepository
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFactory
 
 object Injection {
 
     fun provideMainRepository(context: Context) : MainRepository{
         val genreRepository = provideMovieGenreRepository(context)
         val sharePrefRepository = provideSharePrefRepository(context.applicationContext)
-
-        return MainRepository.getInstance(genreRepository, sharePrefRepository)
+        val movieRepository = provideMovieRepository(context)
+        return MainRepository.getInstance(genreRepository, sharePrefRepository, movieRepository)
     }
 
     fun  provideSharePrefRepository(context: Context) : SharePrefRepository{
@@ -29,8 +32,19 @@ object Injection {
         return MovieGenreRepository.getInstance(movieGenreCallHandler, database.movieGenreDao() ,appExecutors)
     }
 
+    fun provideMovieRepository(context: Context) : MovieRepository {
+        val database = appDatabase.getInstance(context)
+        val movieCallHandler = MovieCallHandler.getInstance()
+        val appExecutors = AppExecutors.getInstance()
+        return MovieRepository.getInstance(movieCallHandler, database.movieDAO(), appExecutors)
+    }
+
     fun provideMainActivityFactory(context: Context) : MainActivityFactory{
         return MainActivityFactory(provideMainRepository(context))
+    }
+
+    fun provideMovieInTheaterFactory(context: Context) : MoviesInTheaterFactory {
+        return MoviesInTheaterFactory(provideMovieRepository(context))
     }
 
 }

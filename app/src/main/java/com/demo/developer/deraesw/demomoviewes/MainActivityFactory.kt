@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
 
+@Suppress("UNCHECKED_CAST")
 class MainActivityFactory(private val mainRepository: MainRepository) : ViewModelProvider.Factory{
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
