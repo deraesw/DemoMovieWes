@@ -18,6 +18,10 @@ interface MovieDAO {
     fun selectMoviesInTheater() : LiveData<List<MovieInTheater>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertMovie(movie: Movie)
+
+    @JvmSuppressWildcards
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun bulkInsertMovies(movieList: List<Movie>)
 
     @Query("DELETE FROM movie")

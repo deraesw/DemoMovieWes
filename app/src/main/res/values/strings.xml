@@ -1,9 +1,13 @@
 <resources>
-
+    <!-- Image content description -->
+    <string name="desc_movie_poster">Movie poster image</string>
+    <string name="desc_movie_duration_icon">Movie duration icon</string>
+    <string name="desc_movie_vote_icon">Movie vote icon</string>
 
     <string name="title_activity_synchronized_data">SynchronizedDataActivity</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
 </resources>

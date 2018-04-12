@@ -1,10 +1,11 @@
 package com.demo.developer.deraesw.demomoviewes.network
 
 import android.arch.lifecycle.MutableLiveData
+import android.os.Handler
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
-import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
+import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -18,29 +19,52 @@ class MovieCallHandler private constructor(){
 
     private val TAG = MovieCallHandler::class.java.simpleName
 
-    private val mRetrofit : Retrofit
-    val mMovieList : MutableLiveData<List<Movie>> = MutableLiveData();
+    private val mMovieDbApi : MoviedbAPI
+    private val mApi = BuildConfig.MOVIES_DB_API
+
+    val mMovieList : MutableLiveData<List<Movie>> = MutableLiveData()
+    val mMovie : MutableLiveData<Movie> = MutableLiveData()
 
     init {
         val gson : Gson = GsonBuilder().setLenient().create();
 
-        mRetrofit = Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
                 .baseUrl(Constant.MOVIE_API_WEB)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
+
+        mMovieDbApi = retrofit.create(MoviedbAPI::class.java)
+    }
+
+    fun fetchMovieDetail(id : Int){
+        val call = mMovieDbApi.fetchMovieDetail(id, mApi)
+
+        call.enqueue(object : Callback<Movie> {
+            override fun onFailure(call: Call<Movie>?, t: Throwable?) {
+                Log.e(TAG, t?.message, t)
+            }
+
+            override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+                if(response.isSuccessful) {
+                    val movie = response.body()
+                    if(movie != null){
+                        mMovie.postValue(movie)
+                    }
+                }
+            }
+        })
     }
 
     fun fetchNowPlayingMovies(){
-        val call = mRetrofit.create(MoviedbAPI::class.java)
-                                                    .fetchNowPlayingMovies(BuildConfig.MOVIES_DB_API);
+        val call = mMovieDbApi.fetchNowPlayingMovies(mApi)
 
-        call.enqueue(object : Callback<MovieResponse> {
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+        call.enqueue(object : Callback<MoviesResponse> {
+            override fun onResponse(call: Call<MoviesResponse>, response: Response<MoviesResponse>) {
                 if (response.isSuccessful) {
                     if (response.body() != null) {
                         val list = response.body()?.results
                         if(list != null){
-                            mMovieList.postValue(list)
+                            handleFetchingMovieDetailFromList(list)
                         }
                     }
                 } else {
@@ -51,10 +75,39 @@ class MovieCallHandler private constructor(){
                 }
             }
 
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
                 //todo
                 Log.e(TAG, t.message, t);
             }
+        })
+    }
+
+    private fun handleFetchingMovieDetailFromList(movieList: List<Movie>) {
+        var completeMovieList : List<Movie> = ArrayList()
+
+        val handler = Handler()
+        movieList.forEach({
+            handler.postDelayed({
+                val call = mMovieDbApi.fetchMovieDetail(it.id, mApi)
+
+                call.enqueue(object : Callback<Movie> {
+                    override fun onFailure(call: Call<Movie>?, t: Throwable?) {
+                        Log.e(TAG, t?.message, t)
+                    }
+
+                    override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+                        if(response.isSuccessful) {
+                            val movie = response.body()
+                            if(movie != null){
+                                completeMovieList += movie
+                                if(movieList.size == completeMovieList.size){
+                                    mMovieList.postValue(completeMovieList)
+                                }
+                            }
+                        }
+                    }
+                })
+            }, 500)
         })
     }
 

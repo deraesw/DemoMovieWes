@@ -17,20 +17,19 @@ class MainRepository private constructor(
     private var syncStarted = false
     private var mAccountData : AccountData? = null
 
+
     init {
         genreRepository.mMovieGenreList.observeForever({
             if(it?.size != 0 && syncStarted){
                 syncMovieGenreDone = true
-                if(checkSynchronizationTerminated()){
-                    setSynchronizationTerminated()
-                }
+                movieRepository.fetchNowPlayingMovie()
             }
         })
 
         movieRepository.mMovieList.observeForever({
             if(it?.size != 0 && syncStarted){
                 syncMovieDone = true
-                if(checkSynchronizationTerminated()){
+                if(checkSynchronizationTerminated()) {
                     setSynchronizationTerminated()
                 }
             }
@@ -49,7 +48,6 @@ class MainRepository private constructor(
             syncStarted = true
 
             genreRepository.fetchAllMovieGenreData()
-            movieRepository.fetchNowPlayingMovie()
         }
     }
 

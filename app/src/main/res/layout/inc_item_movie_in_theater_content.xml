@@ -8,6 +8,8 @@
         <variable
             name="movie"
             type="com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater" />
+
+        <import type="com.demo.developer.deraesw.demomoviewes.utils.AppTools"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -28,44 +30,32 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="112dp" />
 
-        <FrameLayout
-            android:id="@+id/ll_top_container"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_margin="0dp"
-            android:paddingStart="@dimen/spacing_normal"
-            android:paddingEnd="@dimen/spacing_normal"
-            android:paddingTop="@dimen/spacing_small_large"
-            android:paddingBottom="@dimen/spacing_small_large"
-            android:background="@color/colorPrimary"
-            >
-
-            <TextView
-                android:id="@+id/tv_movie_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{movie.title}"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/item_header_title"
-                tools:text="title"
-                android:letterSpacing="0.1"
-                />
-
-        </FrameLayout>
-
-
-
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/iv_movie_poster"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:contentDescription="@string/desc_movie_poster"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintEnd_toStartOf="@+id/guideline5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <TextView
+            android:id="@+id/tv_movie_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@{movie.title}"
+            android:theme="@style/Text_ItemTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="title" />
 
         <TextView
             android:id="@+id/tv_movie_genre"
@@ -75,48 +65,91 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             tools:text="Comedy, Horror"
+            android:theme="@style/Text_SecondaryItem"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toBottomOf="@+id/ll_top_container" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title" />
 
-        <ImageView
-            android:id="@+id/iv_vote_average"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/ll_top_container"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintStart_toEndOf="@+id/tv_vote_average"
-            />
-
-        <TextView
-            android:id="@+id/tv_vote_average"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_vote_average"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="@+id/iv_vote_average"
-            tools:text="5" />
-
-        <TextView
-            android:id="@+id/tv_original_language"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            tools:text="EN"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:textColor="@android:color/white"
+            android:layout_margin="0dp"
             android:background="@color/colorPrimary"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            android:padding="@dimen/spacing_normal"
+            >
+
+            <ImageView
+                android:id="@+id/iv_movie_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_access_time_white_24dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/desc_movie_duration_icon"
+                />
+
+            <TextView
+                android:id="@+id/tv_movie_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="02:30"
+                android:layout_toRightOf="@+id/iv_movie_duration"
+                android:layout_toEndOf="@+id/iv_movie_duration"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:paddingStart="@dimen/spacing_normal"
+                android:paddingLeft="@dimen/spacing_normal"
+                android:paddingRight="@dimen/spacing_large"
+                android:paddingEnd="@dimen/spacing_large"
+                android:textStyle="bold"
+                android:text="@{AppTools.convertMinuteToHours(movie.runtime)}"
+                />
+
+
+            <ImageView
+                android:id="@+id/iv_movie_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_star_white_24dp"
+                android:layout_toRightOf="@+id/tv_movie_duration"
+                android:layout_toEndOf="@id/tv_movie_duration"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:contentDescription="@string/desc_movie_vote_icon"
+                />
+
+            <TextView
+                android:id="@+id/tv_movie_vote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:layout_toRightOf="@id/iv_movie_vote"
+                android:layout_toEndOf="@+id/iv_movie_vote"
+                tools:text="7.0"
+                android:text="@{String.valueOf(movie.voteAverage)}"
+                android:paddingStart="@dimen/spacing_normal"
+                android:paddingLeft="@dimen/spacing_normal"
+                />
+
+            <TextView
+                android:id="@+id/tv_movie_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:layout_alignParentRight="true"
+                tools:text="2, july 2017"
+                />
+
+        </RelativeLayout>
 
     </android.support.constraint.ConstraintLayout>
 </layout>

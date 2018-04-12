@@ -4,6 +4,7 @@ class Constant {
 
     companion object {
         const val MOVIE_API_WEB = "https://api.themoviedb.org/3/"
+        const val MOVIE_API_IMAGE = "https://image.tmdb.org/t/p/"
     }
 
     class ShareKey {

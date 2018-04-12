@@ -1,7 +1,8 @@
 <resources>
 
     <!-- Text size -->
-    <dimen name="item_header_title">16sp</dimen>
+    <dimen name="item_header_title">22sp</dimen>
+    <dimen name="item_secondary_item">16sp</dimen>
 
     <!-- standard metrics -->
     <dimen name="spacing_micro">4dp</dimen>

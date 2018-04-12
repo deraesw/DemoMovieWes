@@ -12,11 +12,14 @@ import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
+import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivity
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFragment
 import com.demo.developer.deraesw.demomoviewes.ui.synchronize_data.SynchronizedDataActivity
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NavigationInterface {
+
     private val TAG = MainActivity::class.java.simpleName
 
     private lateinit var mLoadingContainer : LinearLayout;
@@ -72,5 +75,15 @@ class MainActivity : AppCompatActivity() {
             val animation = AnimationUtils.loadAnimation(this, R.anim.slide_down_to_hide)
             mLoadingContainer.animation = animation
         }
+    }
+
+    override fun clickOnLaunchMovieDetailView(key: Int) {
+        launchMovieDetailActivity(key)
+    }
+
+    fun launchMovieDetailActivity(key : Int){
+        intent = Intent(this, MovieDetailActivity::class.java)
+        //todo Add item key
+        startActivity(intent)
     }
 }

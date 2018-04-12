@@ -3,6 +3,8 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
+import android.os.Handler
+import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieDAO
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
@@ -28,9 +30,20 @@ class MovieRepository private constructor(
                 appExecutors.diskIO().execute({
                     movieDAO.bulkInsertMovies(it)
                 })
-
             }
         })
+
+        movieCallHandler.mMovie.observeForever({
+            if(it != null){
+                appExecutors.diskIO().execute({
+                    movieDAO.insertMovie(it)
+                })
+            }
+        })
+    }
+
+    fun fetchMovieDetail(id: Int){
+        movieCallHandler.fetchMovieDetail(id)
     }
 
     fun fetchNowPlayingMovie(){
