@@ -8,5 +8,9 @@ import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 class MoviesInTheaterViewModel(private val movieRepository: MovieRepository) : ViewModel() {
 
     val mMovieList : LiveData<List<MovieInTheater>> = movieRepository.mMoviesInTheater
+    val mMovieInTheaterWithGender : LiveData<List<MovieInTheater>> = movieRepository.mMovieInTheaterWithGenres
 
+    fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>){
+        movieRepository.populateMovieInTheaterWithGenre(list)
+    }
 }

@@ -41,6 +41,9 @@ class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): Recyc
             content?.tvMovieReleaseDate?.text = AppTools.convertDateString(movieInTheater.releaseDate!!, AppTools.DatePattern.MM_DD_YYY_S_PATTERN)
         }
 
+        val genreListName = movieInTheater.genres.joinToString (transform = {it.name})
+        content?.tvMovieGenre?.text = genreListName
+
         holder.binding?.executePendingBindings()
     }
 

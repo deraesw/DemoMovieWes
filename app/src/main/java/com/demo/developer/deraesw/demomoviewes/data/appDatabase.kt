@@ -6,15 +6,23 @@ import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieDAO
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
+import com.demo.developer.deraesw.demomoviewes.data.dao.MovieToGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.data.entity.MovieToGenre
 
-@Database(entities = arrayOf(MovieGenre::class, Movie::class), version = 1)
+@Database(entities = [
+            (MovieGenre::class),
+            (Movie::class),
+            (MovieToGenre::class)
+        ],
+        version = 1)
 abstract class appDatabase : RoomDatabase(){
     private val TAG = appDatabase::class.java.simpleName
 
     abstract fun movieGenreDao() : MovieGenreDAO
     abstract fun movieDAO() : MovieDAO
+    abstract fun movieToGenreDAO() : MovieToGenreDAO
 
     companion object {
         const val NAME_DATABASE = "demo_movie_wes.db"

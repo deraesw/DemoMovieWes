@@ -38,4 +38,7 @@ open class Movie {
     @SerializedName(value = "vote_average")
     var voteAverage: Float = 0.toFloat()
 
+    @Ignore
+    var genres : List<MovieGenre> = ArrayList()
+
 }

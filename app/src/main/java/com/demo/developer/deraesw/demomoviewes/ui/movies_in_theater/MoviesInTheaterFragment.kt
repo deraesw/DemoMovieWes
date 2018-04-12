@@ -47,8 +47,13 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
 
         mViewModel.mMovieList.observe(this, Observer {
             if(it != null){
-                mAdapter.swapData(it)
+                //mAdapter.swapData(it)
+                mViewModel.populateMovieInTheaterWithGenre(it)
             }
+        })
+
+        mViewModel.mMovieInTheaterWithGender.observe(this, Observer {
+            mAdapter.swapData(it ?: ArrayList())
         })
 
         return mBinding.root

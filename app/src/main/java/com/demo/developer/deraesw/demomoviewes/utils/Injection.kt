@@ -36,7 +36,7 @@ object Injection {
         val database = appDatabase.getInstance(context)
         val movieCallHandler = MovieCallHandler.getInstance()
         val appExecutors = AppExecutors.getInstance()
-        return MovieRepository.getInstance(movieCallHandler, database.movieDAO(), appExecutors)
+        return MovieRepository.getInstance(movieCallHandler, database.movieDAO(), database.movieToGenreDAO(), appExecutors)
     }
 
     fun provideMainActivityFactory(context: Context) : MainActivityFactory{
