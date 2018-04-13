@@ -6,11 +6,12 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.view.GravityCompat
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Toast
 
 import com.demo.developer.deraesw.demomoviewes.R
@@ -32,6 +33,11 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     private lateinit var mAdapter: MovieInTheaterAdapter
     private lateinit var mViewModel : MoviesInTheaterViewModel
     private lateinit var mNavigationHandler : NavigationInterface
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = FragmentMoviesInTheaterBinding.inflate(layoutInflater)
@@ -56,6 +62,10 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
             mAdapter.swapData(it ?: ArrayList())
         })
 
+        (activity as AppCompatActivity).supportActionBar?.apply {
+            setTitle(R.string.title_movies_in_theater)
+        }
+
         return mBinding.root
     }
 
@@ -68,6 +78,21 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
             Log.e(TAG, "must instance NavigationInterface interface")
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.menu_movie_in_theater, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.action_filter_content -> {
+                mBinding.dlMovieInTheater.openDrawer(GravityCompat.END)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun clickOnItem(position: Int) {

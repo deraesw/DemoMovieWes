@@ -9,7 +9,7 @@ import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 
 @Dao interface MovieGenreDAO {
 
-    @Query("SELECT * FROM movie_genre")
+    @Query("SELECT * FROM movie_genre ORDER BY name")
     fun selectAllMovieGenre() : LiveData<List<MovieGenre>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

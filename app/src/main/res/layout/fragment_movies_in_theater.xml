@@ -5,15 +5,30 @@
     tools:context=".ui.movies_in_theater.MoviesInTheaterFragment"
     >
 
-    <FrameLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/dl_movie_in_theater"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_movies_in_theater"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            >
 
-    </FrameLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_movies_in_theater"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </FrameLayout>
+
+        <fragment
+            android:id="@+id/filter_container"
+            android:layout_width="320dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:name="com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment"
+            />
+
+    </android.support.v4.widget.DrawerLayout>
 </layout>

@@ -44,4 +44,12 @@ class AppTools {
             const val LARGE  = "w500";
         }
     }
+
+    class BackdropSize{
+        companion object {
+            const val SMALL = "w300"
+            const val MEDIUM = "w780"
+            const val LARGE = "w1280"
+        }
+    }
 }

@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity(), NavigationInterface {
 
     fun launchMovieDetailActivity(key : Int){
         intent = Intent(this, MovieDetailActivity::class.java)
-        //todo Add item key
+        intent.putExtra(MovieDetailActivity.KEY_MOVIE_ID, key)
         startActivity(intent)
     }
 }

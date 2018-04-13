@@ -21,6 +21,11 @@
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
+    <style name="Text_ItemTitle.light" parent="AppTheme">
+        <item name="android:textSize">@dimen/item_header_title</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
     <style name="Text_SecondaryItem" parent="AppTheme">
         <item name="android:textSize">@dimen/item_secondary_item</item>
         <item name="android:textColor">@color/secondary_text</item>

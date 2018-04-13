@@ -48,6 +48,8 @@ class MovieRepository private constructor(
         })
     }
 
+    fun getMovieDetail(id : Int) = movieDAO.selectMovie(id)
+
     fun fetchMovieDetail(id: Int){
         movieCallHandler.fetchMovieDetail(id)
     }

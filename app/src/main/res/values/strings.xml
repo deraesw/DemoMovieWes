@@ -1,13 +1,36 @@
 <resources>
+
+    <!-- title view -->
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
+    <string name="title_movies_in_theater">Movies in theater</string>
+
+    <!-- label title content -->
+    <string name="overview_title">Overview</string>
+    <string name="technical_team_title">Technical team</string>
+    <string name="budget_title">Budget</string>
+    <string name="revenue_title">Revenue</string>
+    <string name="original_title">Original title</string>
+    <string name="biography_title">Biography</string>
+    <string name="genre_title">Genres</string>
+    <string name="filter_title">@string/menu_filter</string>
+
+    <!-- Action bar menu item -->
+    <string name="menu_filter">Filter</string>
+
     <!-- Image content description -->
     <string name="desc_movie_poster">Movie poster image</string>
+    <string name="desc_movie_backdrop">Movie backdrop image</string>
     <string name="desc_movie_duration_icon">Movie duration icon</string>
     <string name="desc_movie_vote_icon">Movie vote icon</string>
+
+    <!-- Error messages -->
+    <string name="err_unknown_identifier_provided">Unknown identifier provided, please try again</string>
 
     <string name="title_activity_synchronized_data">SynchronizedDataActivity</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_movie_detail">MovieDetailActivity</string>
+
+
 </resources>

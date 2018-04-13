@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+        <variable
+            name="genre"
+            type="com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="clip_vertical"
+        android:padding="@dimen/padding_normal"
+        android:background="?attr/selectableItemBackground"
+        >
+
+        <android.support.v7.widget.AppCompatCheckBox
+            android:id="@+id/cb_genre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_genre_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceListItem"
+            android:text="@{genre.name}"
+            android:paddingStart="@dimen/padding_light"
+            android:paddingLeft="@dimen/padding_light"
+            tools:text="Comedy"
+            />
+
+    </LinearLayout>
+</layout>

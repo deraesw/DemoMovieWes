@@ -10,7 +10,9 @@ import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import com.demo.developer.deraesw.demomoviewes.repository.SharePrefRepository
+import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailFactory
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFactory
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFactory
 
 object Injection {
 
@@ -47,4 +49,11 @@ object Injection {
         return MoviesInTheaterFactory(provideMovieRepository(context))
     }
 
+    fun provideMovieDetailFactory(context: Context, movieId : Int) : MovieDetailFactory {
+        return MovieDetailFactory(provideMovieRepository(context), movieId)
+    }
+
+    fun provideFilterMoviesFactory(context: Context) : FilterMoviesFactory {
+        return FilterMoviesFactory(provideMovieGenreRepository(context))
+    }
 }

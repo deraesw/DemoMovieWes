@@ -1,10 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.movie_detail.MovieDetailActivityFragment"
-    tools:showIn="@layout/activity_movie_detail">
+    tools:context=".ui.movie_detail.MovieDetailActivityFragment">
 
-</android.support.constraint.ConstraintLayout>
+    <data>
+        <variable
+            name="movie"
+            type="com.demo.developer.deraesw.demomoviewes.data.entity.Movie"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/detail_movie_app_bar_height"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:toolbarId="@+id/toolbar_movie_detail">
+
+                <ImageView
+                    android:id="@+id/iv_backdrop_path"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_collapseMode="parallax"
+                    android:contentDescription="@string/desc_movie_backdrop"
+                    />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/detail_movie_cart_header_height"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="@dimen/spacing_large"
+                    android:layout_marginLeft="@dimen/spacing_large"
+                    app:layout_collapseMode="parallax"
+                    >
+                    <include
+                        android:id="@+id/inc_movie_header_info"
+                        layout="@layout/inc_movie_detail_toolbar_header_info"
+                        app:movie="@{movie}"
+                        />
+
+                </FrameLayout>
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar_movie_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"
+                    app:layout_collapseMode="pin"
+                    />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <include
+                android:id="@+id/inc_movie_content_info"
+                layout="@layout/inc_movie_detail_info_content"
+                app:movie="@{movie}"
+                />
+
+        </android.support.v4.widget.NestedScrollView>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+</layout>
