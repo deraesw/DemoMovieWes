@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowId
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemFilterMovieBinding
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieInTheaterBinding
@@ -17,10 +19,10 @@ import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 class FilterMovieAdapter(val mHandler: FilterMovieAdapterInterface): RecyclerView.Adapter<FilterMovieAdapter.FilterMovieViewHolder>() {
     private val TAG = FilterMovieAdapter::class.java.simpleName
 
-    private var mList: List<MovieGenre> = ArrayList();
+    private var mList: List<GenreFilter> = ArrayList()
 
     interface FilterMovieAdapterInterface {
-        fun clickOnItem(position : Int)
+        fun clickOnItem(id : Int, checked: Boolean)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterMovieViewHolder {
@@ -38,9 +40,22 @@ class FilterMovieAdapter(val mHandler: FilterMovieAdapterInterface): RecyclerVie
 
     override fun getItemCount(): Int = mList.size
 
-    fun getItemAt(position : Int) : MovieGenre = mList.get(position)
+    fun getItemAt(position : Int) : GenreFilter = mList.get(position)
 
-    fun swapData(list: List<MovieGenre>){
+    fun unSelectAllFilter(){
+        mList.forEach({
+            it.checked = false
+        })
+        notifyDataSetChanged()
+    }
+
+    fun isAtLeastOneItemSelected() : Boolean{
+        return mList.any({
+            it.checked
+        })
+    }
+
+    fun swapData(list: List<GenreFilter>){
         if(mList.isEmpty()){
             mList = list
             notifyDataSetChanged()
@@ -73,11 +88,18 @@ class FilterMovieAdapter(val mHandler: FilterMovieAdapterInterface): RecyclerVie
         init {
             binding = DataBindingUtil.bind(itemView)
             itemView.setOnClickListener(this)
+            binding!!.cbGenre.setOnClickListener({
+                mHandler.clickOnItem(
+                        mList.get(adapterPosition).id,
+                        binding!!.cbGenre.isChecked)
+            })
         }
 
         override fun onClick(p0: View?) {
-            Log.d(TAG, "Click on item")
-            binding!!.cbGenre.isChecked = !(binding!!.cbGenre.isChecked)
+            val checkStatus =  !(binding!!.cbGenre.isChecked)
+            binding!!.cbGenre.isChecked = checkStatus
+
+            mHandler.clickOnItem(mList.get(adapterPosition).id, checkStatus)
         }
     }
 }

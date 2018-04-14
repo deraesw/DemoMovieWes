@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 
 class MovieGenreRepository private constructor(
@@ -16,6 +17,7 @@ class MovieGenreRepository private constructor(
     private val TAG = MovieGenreRepository::class.java.simpleName
 
     val mMovieGenreList : LiveData<List<MovieGenre>> = movieGenreDAO.selectAllMovieGenre()
+    val mGenreForFilter : LiveData<List<GenreFilter>> = movieGenreDAO.selectAllMovieGenreForFilter()
 
     init {
         movieGenreCallHandler.mMovieGenreList.observeForever({

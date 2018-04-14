@@ -3,6 +3,7 @@
     <!-- App dimension -->
     <dimen name="detail_movie_app_bar_height">296dp</dimen>
     <dimen name="detail_movie_cart_header_height">160dp</dimen>
+    <dimen name="movie_filter_width">296dp</dimen>
 
     <!-- Text size -->
     <dimen name="item_header_title">22sp</dimen>

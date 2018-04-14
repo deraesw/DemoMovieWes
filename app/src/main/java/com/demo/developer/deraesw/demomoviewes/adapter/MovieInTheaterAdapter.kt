@@ -52,6 +52,8 @@ class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): Recyc
     fun getItemAt(position : Int) : MovieInTheater = mList.get(position)
 
     fun swapData(list: List<MovieInTheater>){
+        Log.d(TAG, "call swap")
+
         if(mList.isEmpty()){
             mList = list
             notifyDataSetChanged()
@@ -87,7 +89,6 @@ class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): Recyc
         }
 
         override fun onClick(p0: View?) {
-            Log.d(TAG, "Click on item")
             val position = adapterPosition;
             mHandler.clickOnItem(position)
         }

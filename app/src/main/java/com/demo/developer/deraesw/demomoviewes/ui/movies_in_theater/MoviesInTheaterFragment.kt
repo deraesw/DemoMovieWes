@@ -16,16 +16,22 @@ import android.widget.Toast
 
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.MovieInTheaterAdapter
+import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheaterBinding
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
 
 /**
  * A simple [Fragment] subclass.
  * Will display a list of movies in theater
  */
-class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheaterAdapterInterface {
+class MoviesInTheaterFragment : Fragment(),
+        MovieInTheaterAdapter.MovieInTheaterAdapterInterface,
+        FilterListenerInterface{
+
 
     private val TAG = MoviesInTheaterFragment::class.java.simpleName
 
@@ -33,6 +39,12 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     private lateinit var mAdapter: MovieInTheaterAdapter
     private lateinit var mViewModel : MoviesInTheaterViewModel
     private lateinit var mNavigationHandler : NavigationInterface
+
+    private var mFilterFragment : FilterMoviesFragment? = null
+
+    private var originalList : List<MovieInTheater> = ArrayList()
+    private var filterItem : List<Int> = ArrayList()
+    private var allGenreList : List<MovieGenre> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,20 +63,41 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
         val factory = Injection.provideMovieInTheaterFactory(context!!)
         mViewModel = ViewModelProviders.of(this, factory).get(MoviesInTheaterViewModel::class.java)
 
+        mViewModel.mMovieGenre.observe(this, Observer {
+            if(it != null){
+                allGenreList = it
+            }
+        })
+
         mViewModel.mMovieList.observe(this, Observer {
             if(it != null){
-                //mAdapter.swapData(it)
                 mViewModel.populateMovieInTheaterWithGenre(it)
             }
         })
 
         mViewModel.mMovieInTheaterWithGender.observe(this, Observer {
-            mAdapter.swapData(it ?: ArrayList())
+            originalList = it ?: ArrayList()
+            manageItems()
+            manageFilterContentView()
         })
 
         (activity as AppCompatActivity).supportActionBar?.apply {
             setTitle(R.string.title_movies_in_theater)
         }
+
+        if(savedInstanceState == null){
+            mFilterFragment = FilterMoviesFragment()
+            mFilterFragment!!.setFilterListener(this)
+            (context as AppCompatActivity)
+                    .supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.filter_container, mFilterFragment)
+                    .commit()
+        }
+
+        mBinding.ivClearAllFilter.setOnClickListener({
+            mFilterFragment?.clearAllFilter()
+        })
 
         return mBinding.root
     }
@@ -88,7 +121,12 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.action_filter_content -> {
-                mBinding.dlMovieInTheater.openDrawer(GravityCompat.END)
+                if(mBinding.dlMovieInTheater.isDrawerOpen(GravityCompat.END)){
+                    mBinding.dlMovieInTheater.closeDrawer(GravityCompat.END)
+                } else {
+                    mBinding.dlMovieInTheater.openDrawer(GravityCompat.END)
+                }
+
                 return true
             }
         }
@@ -97,5 +135,61 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
 
     override fun clickOnItem(position: Int) {
         mNavigationHandler.clickOnLaunchMovieDetailView(mAdapter.getItemAt(position).id)
+    }
+
+    override fun onFilterChange(list: List<Int>) {
+        filterItem = list
+        manageItems()
+        manageFilterContentView()
+    }
+
+    override fun clearFilter() {
+        filterItem = ArrayList()
+    }
+
+    private fun manageItems(){
+        var filterList = originalList
+        if(filterItem.isNotEmpty()){
+            //Method 1 AND
+            /*
+            list.forEach({
+                val id = it
+                filterList = filterList.filter {
+                    it.genres.any({
+                        it.id == id
+                    })
+                }
+            })*/
+
+            //Method 2 OR
+            filterList = filterList.filter {
+                it.genres.any({
+                    filterItem.contains(it.id)
+                })
+            }
+        }
+
+        mAdapter.swapData(filterList)
+    }
+
+    private fun manageFilterContentView(){
+        if(filterItem.isNotEmpty()){
+
+            mBinding.llFilterContent.visibility = View.VISIBLE
+
+            val filterContent = allGenreList.filter {
+                filterItem.contains(it.id)
+            } .sortedBy {
+                it.name
+            }.joinToString(transform = {
+                it.name
+            })
+
+            mBinding.tvFilterContent.text = filterContent
+
+        } else {
+            mBinding.tvFilterContent.text = ""
+            mBinding.llFilterContent.visibility = View.GONE
+        }
     }
 }

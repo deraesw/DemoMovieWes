@@ -46,7 +46,9 @@ object Injection {
     }
 
     fun provideMovieInTheaterFactory(context: Context) : MoviesInTheaterFactory {
-        return MoviesInTheaterFactory(provideMovieRepository(context))
+        return MoviesInTheaterFactory(
+                provideMovieRepository(context),
+                provideMovieGenreRepository(context))
     }
 
     fun provideMovieDetailFactory(context: Context, movieId : Int) : MovieDetailFactory {

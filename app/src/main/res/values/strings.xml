@@ -1,5 +1,8 @@
 <resources>
 
+    <!-- lbl -->
+    <string name="lbl_clear_all">clear all</string>
+
     <!-- title view -->
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
     <string name="title_movies_in_theater">Movies in theater</string>
@@ -22,6 +25,7 @@
     <string name="desc_movie_backdrop">Movie backdrop image</string>
     <string name="desc_movie_duration_icon">Movie duration icon</string>
     <string name="desc_movie_vote_icon">Movie vote icon</string>
+    <string name="desc_clear_all_filter">Clear all filter</string>
 
     <!-- Error messages -->
     <string name="err_unknown_identifier_provided">Unknown identifier provided, please try again</string>

@@ -2,6 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.movies_in_theater.MoviesInTheaterFragment"
     >
 
@@ -10,24 +11,56 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
 
+            <LinearLayout
+                android:id="@+id/ll_filter_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentTop="true"
+                android:background="@color/divider"
+                android:padding="@dimen/padding_normal"
+                app:elevation="4dp"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:id="@+id/tv_filter_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    tools:text="Animation, Drama"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    />
+
+                <ImageView
+                    android:id="@+id/iv_clear_all_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_delete_sweep_primary_24dp" />
+
+
+            </LinearLayout>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_movies_in_theater"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:layout_below="@+id/ll_filter_content"
+                />
 
-        </FrameLayout>
+        </RelativeLayout>
 
-        <fragment
+        <FrameLayout
             android:id="@+id/filter_container"
-            android:layout_width="320dp"
+            android:layout_width="@dimen/movie_filter_width"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:name="com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment"
             />
 
     </android.support.v4.widget.DrawerLayout>
