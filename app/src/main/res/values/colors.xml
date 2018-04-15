@@ -14,4 +14,6 @@
 
 
     <color name="dim_dark_background">#CC000000</color>
+    <color name="light_withe_background">#fafafa</color>
+    <color name="scrim">#99323232</color>
 </resources>

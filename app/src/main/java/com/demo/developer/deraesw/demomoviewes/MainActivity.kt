@@ -15,6 +15,7 @@ import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivity
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFragment
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_movies.SortingMovieActivity
 import com.demo.developer.deraesw.demomoviewes.ui.synchronize_data.SynchronizedDataActivity
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationInterface {
         launchMovieDetailActivity(key)
     }
 
-    fun launchMovieDetailActivity(key : Int){
+    private fun launchMovieDetailActivity(key : Int){
         intent = Intent(this, MovieDetailActivity::class.java)
         intent.putExtra(MovieDetailActivity.KEY_MOVIE_ID, key)
         startActivity(intent)

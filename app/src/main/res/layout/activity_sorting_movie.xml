@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.movies_in_theater.sorting_movies.SortingMovieActivity">
+
+    <FrameLayout
+        android:id="@+id/main_container_sorting_movie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_large"
+        android:layout_marginEnd="@dimen/spacing_large"
+        android:layout_marginStart="@dimen/spacing_large"
+        android:layout_marginRight="@dimen/spacing_large"
+        android:layout_marginTop="@dimen/spacing_xlarge"
+        android:layout_marginBottom="@dimen/spacing_xlarge"
+        android:background="@color/light_withe_background"
+        android:layout_gravity="center"
+        />
+
+</FrameLayout>

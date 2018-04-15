@@ -1,9 +1,11 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
 
 
+import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
@@ -22,6 +24,8 @@ import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheat
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_movies.SortingMovieActivity
+import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
 
 /**
@@ -32,8 +36,12 @@ class MoviesInTheaterFragment : Fragment(),
         MovieInTheaterAdapter.MovieInTheaterAdapterInterface,
         FilterListenerInterface{
 
-
     private val TAG = MoviesInTheaterFragment::class.java.simpleName
+
+    companion object {
+        //todo full path
+        const val RC_SORTING_OPTION = "RC_SORTING_OPTION"
+    }
 
     private lateinit var mBinding : FragmentMoviesInTheaterBinding
     private lateinit var mAdapter: MovieInTheaterAdapter
@@ -45,6 +53,7 @@ class MoviesInTheaterFragment : Fragment(),
     private var originalList : List<MovieInTheater> = ArrayList()
     private var filterItem : List<Int> = ArrayList()
     private var allGenreList : List<MovieGenre> = ArrayList()
+    private var sortingByCode : String = Constant.SortingCode.BY_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,16 +130,28 @@ class MoviesInTheaterFragment : Fragment(),
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.action_filter_content -> {
-                if(mBinding.dlMovieInTheater.isDrawerOpen(GravityCompat.END)){
-                    mBinding.dlMovieInTheater.closeDrawer(GravityCompat.END)
-                } else {
-                    mBinding.dlMovieInTheater.openDrawer(GravityCompat.END)
-                }
-
+                toggleFilterDrawer()
                 return true
+            }
+            R.id.action_sort_content -> {
+                toggleFilterDrawer(false)
+                launchSortingActivity()
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when(requestCode){
+            NavigationInterface.RC_MOVIE_SORTING_OPTION -> {
+                if(resultCode == Activity.RESULT_OK ){
+                    sortingByCode =
+                            data?.getStringExtra(SortingMovieActivity.KEY_NEW_CODE_SELECTED) ?:
+                            Constant.SortingCode.BY_DEFAULT
+                    manageItems()
+                }
+            }
+        }
     }
 
     override fun clickOnItem(position: Int) {
@@ -169,7 +190,18 @@ class MoviesInTheaterFragment : Fragment(),
             }
         }
 
+        filterList = when(sortingByCode){
+            Constant.SortingCode.BY_DEFAULT -> filterList.sortedBy { it.id }
+            Constant.SortingCode.BY_TITLE -> filterList.sortedBy { it.title }
+            Constant.SortingCode.BY_DURATION -> filterList.sortedBy { it.runtime }
+            Constant.SortingCode.BY_RELEASE_DATE -> filterList.sortedBy { it.releaseDate }
+            else -> filterList.sortedBy { it.id }
+        }
+
         mAdapter.swapData(filterList)
+
+        //Test code
+        mBinding.rvMoviesInTheater.scrollToPosition(0)
     }
 
     private fun manageFilterContentView(){
@@ -191,5 +223,19 @@ class MoviesInTheaterFragment : Fragment(),
             mBinding.tvFilterContent.text = ""
             mBinding.llFilterContent.visibility = View.GONE
         }
+    }
+
+    private fun toggleFilterDrawer(showing : Boolean = true){
+        if(mBinding.dlMovieInTheater.isDrawerOpen(GravityCompat.END)){
+            mBinding.dlMovieInTheater.closeDrawer(GravityCompat.END)
+        } else {
+            if(showing) mBinding.dlMovieInTheater.openDrawer(GravityCompat.END)
+        }
+    }
+
+    private fun launchSortingActivity(){
+        val intent = Intent(context, SortingMovieActivity::class.java)
+        intent.putExtra(SortingMovieActivity.KEY_CODE_SELECTED, sortingByCode)
+        startActivityForResult(intent, NavigationInterface.RC_MOVIE_SORTING_OPTION)
     }
 }
