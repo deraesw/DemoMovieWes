@@ -2,12 +2,8 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
-import android.os.Handler
-import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieDAO
-import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieToGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
@@ -49,6 +45,10 @@ class MovieRepository private constructor(
     }
 
     fun getMovieDetail(id : Int) = movieDAO.selectMovie(id)
+
+    fun getMovieGenreFromMovie(idMovie : Int) : LiveData<List<MovieGenre>> {
+        return movieToGenreDAO.observeGenreListFromMovie(idMovie)
+    }
 
     fun fetchMovieDetail(id: Int){
         movieCallHandler.fetchMovieDetail(id)

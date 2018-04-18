@@ -2,6 +2,8 @@ package com.demo.developer.deraesw.demomoviewes.utils
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 class AppTools {
 
@@ -26,6 +28,32 @@ class AppTools {
             val hour = minutes / 60
             val minute = minutes % 60
             return String.format("%02d", hour) + ":" + String.format("%02d", minute)
+        }
+
+        @JvmStatic
+        fun convertAmountToSuffix(amount:Double) : String {
+            var finalAmount = ""
+            if(amount > 1000){
+                var i = 0
+                var tempAmount = amount
+                do {
+                    tempAmount = ceil(tempAmount / 1000)
+                    i++
+                }while (tempAmount > 1000)
+
+                finalAmount = tempAmount.toInt().toString()
+                //todo reformat
+                finalAmount = when(i){
+                    1 -> "$finalAmount thousand"
+                    2 -> "$finalAmount million"
+                    3 -> "$finalAmount billion"
+                    else -> finalAmount
+                }
+            } else {
+                finalAmount = amount.toInt().toString()
+            }
+
+            return finalAmount
         }
     }
 

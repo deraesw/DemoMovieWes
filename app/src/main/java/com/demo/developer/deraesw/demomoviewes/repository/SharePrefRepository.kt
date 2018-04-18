@@ -18,11 +18,12 @@ class SharePrefRepository private constructor(mContext : Context){
         fetchAccountInformation()
     }
 
+    fun fetchAccountInformationDirectly() : AccountData{
+        return getAccountData()
+    }
+
     fun fetchAccountInformation(){
-        val accountData = AccountData()
-        accountData.lastDateSync = sharedPreferences.getString(Constant.ShareKey.LAST_DATE_SYNC, "")
-        accountData.syncStatus   = sharedPreferences.getInt(Constant.ShareKey.SYNC_STATUS, AccountData.SyncStatus.NO_SYNC)
-        account.postValue(accountData)
+        account.postValue(getAccountData())
     }
 
     fun updateAccountInformation(accountDate : AccountData){
@@ -31,6 +32,14 @@ class SharePrefRepository private constructor(mContext : Context){
         editor.putInt(Constant.ShareKey.SYNC_STATUS, accountDate.syncStatus)
         editor.apply()
         fetchAccountInformation()
+    }
+
+    private fun getAccountData() : AccountData{
+        val accountData = AccountData()
+        accountData.lastDateSync = sharedPreferences.getString(Constant.ShareKey.LAST_DATE_SYNC, "")
+        accountData.syncStatus   = sharedPreferences.getInt(Constant.ShareKey.SYNC_STATUS, AccountData.SyncStatus.NO_SYNC)
+
+        return accountData
     }
 
     companion object {

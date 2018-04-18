@@ -30,6 +30,11 @@
             android:name=".ui.movies_in_theater.sorting_movies.SortingMovieActivity"
             android:theme="@style/AppTheme.Transparent"
             />
+
+        <service
+            android:name=".service.DemoMovieJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            />
     </application>
 
 </manifest>

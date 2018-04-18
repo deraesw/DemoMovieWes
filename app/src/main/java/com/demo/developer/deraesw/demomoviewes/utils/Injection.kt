@@ -18,24 +18,24 @@ object Injection {
 
     fun provideMainRepository(context: Context) : MainRepository{
         val genreRepository = provideMovieGenreRepository(context)
-        val sharePrefRepository = provideSharePrefRepository(context.applicationContext)
+        val sharePrefRepository = provideSharePrefRepository(context)
         val movieRepository = provideMovieRepository(context)
         return MainRepository.getInstance(genreRepository, sharePrefRepository, movieRepository)
     }
 
     fun  provideSharePrefRepository(context: Context) : SharePrefRepository{
-        return SharePrefRepository.getInstance(context)
+        return SharePrefRepository.getInstance(context.applicationContext)
     }
 
     fun provideMovieGenreRepository(context: Context) : MovieGenreRepository {
-        val database = appDatabase.getInstance(context)
+        val database = appDatabase.getInstance(context.applicationContext)
         val movieGenreCallHandler = MovieGenreCallHandler.getInstance();
         val appExecutors = AppExecutors.getInstance()
         return MovieGenreRepository.getInstance(movieGenreCallHandler, database.movieGenreDao() ,appExecutors)
     }
 
     fun provideMovieRepository(context: Context) : MovieRepository {
-        val database = appDatabase.getInstance(context)
+        val database = appDatabase.getInstance(context.applicationContext)
         val movieCallHandler = MovieCallHandler.getInstance()
         val appExecutors = AppExecutors.getInstance()
         return MovieRepository.getInstance(movieCallHandler, database.movieDAO(), database.movieToGenreDAO(), appExecutors)

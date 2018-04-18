@@ -13,7 +13,9 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        >
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -75,6 +77,8 @@
                 android:id="@+id/inc_movie_content_info"
                 layout="@layout/inc_movie_detail_info_content"
                 app:movie="@{movie}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 />
 
         </android.support.v4.widget.NestedScrollView>

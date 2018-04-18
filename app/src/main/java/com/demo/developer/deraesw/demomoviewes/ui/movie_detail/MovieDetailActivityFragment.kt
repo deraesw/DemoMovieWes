@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.demo.developer.deraesw.demomoviewes.R
+import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
+import com.demo.developer.deraesw.demomoviewes.setAmountWithSuffix
 import com.demo.developer.deraesw.demomoviewes.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
@@ -51,12 +53,37 @@ class MovieDetailActivityFragment : Fragment() {
         mViewModel.movie.observe(this, Observer {
             if(it != null){
                 mBinding.movie = it
-                mBinding.incMovieHeaderInfo?.ivMoviePoster?.setImageUrl(it.posterPath, AppTools.PosterSize.SMALL)
-                mBinding.ivBackdropPath.setImageUrl(it.backdropPath, AppTools.BackdropSize.SMALL)
+                initMovieContent(it)
+            }
+        })
+
+        mViewModel.genreFromMovie.observe(this, Observer {
+            if(it != null){
+                mBinding.incMovieContentInfo!!.tvGenderValue.text = it.joinToString(transform = {it.name})
             }
         })
 
         return mBinding.root
+    }
+
+    private fun initMovieContent(movie: Movie){
+        mBinding.incMovieHeaderInfo?.ivMoviePoster?.setImageUrl(movie.posterPath, AppTools.PosterSize.SMALL)
+        mBinding.ivBackdropPath.setImageUrl(movie.backdropPath, AppTools.BackdropSize.SMALL)
+
+        val contentInfo = mBinding.incMovieContentInfo!!
+        contentInfo.tvBudget.setAmountWithSuffix(movie.budget)
+        contentInfo.tvRevenue.setAmountWithSuffix(movie.revenue)
+        contentInfo.tvPopularity.setAmountWithSuffix(movie.popularity.toDouble())
+        contentInfo.tvDurationValue.text = String.format(getString(R.string.format_movie_full_time_detail),
+                        AppTools.convertMinuteToHours(movie.runtime),
+                        movie.runtime.toString())
+        if(movie.releaseDate != null){
+            contentInfo.tvReleaseDateValue.text = AppTools.convertDateString(
+                    movie.releaseDate!!,
+                    AppTools.DatePattern.MMMM_S_DD_C_YYYY
+            )
+        }
+
     }
 
     companion object {

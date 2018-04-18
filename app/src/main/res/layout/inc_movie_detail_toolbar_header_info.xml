@@ -18,16 +18,22 @@
         >
 
         <TextView
+            android:id="@+id/tv_release_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            app:layout_constraintBottom_toTopOf="@+id/tv_movie_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_title"
+            tools:text="2017" />
+
+        <TextView
             android:id="@+id/tv_movie_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_margin="@dimen/spacing_normal"
             android:text="@{movie.title}"
             android:theme="@style/Text_ItemTitle.light"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
             app:layout_constraintTop_toTopOf="parent"
@@ -44,6 +50,7 @@
             android:id="@+id/iv_movie_poster"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:padding="@dimen/padding_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline7"
             app:layout_constraintStart_toStartOf="parent"

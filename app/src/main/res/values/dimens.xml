@@ -4,11 +4,14 @@
     <dimen name="detail_movie_app_bar_height">296dp</dimen>
     <dimen name="detail_movie_cart_header_height">160dp</dimen>
     <dimen name="movie_filter_width">296dp</dimen>
+    <dimen name="movie_in_theater_poster_item_width">112dp</dimen>
+    <dimen name="movie_in_theater_height">160dp</dimen>
 
     <!-- Text size -->
     <dimen name="item_header_title">22sp</dimen>
     <dimen name="item_header_subtitle">20sp</dimen>
     <dimen name="item_secondary_item">16sp</dimen>
+    <dimen name="movie_item_secondary_item">14sp</dimen>
 
     <!-- standard metrics -->
     <dimen name="spacing_micro">4dp</dimen>

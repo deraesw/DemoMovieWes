@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.FrameLayout
 import com.demo.developer.deraesw.demomoviewes.R
 
 class SortingMovieActivity : AppCompatActivity(), SortingMovieFragment.SortingMovieFragmentInterface {
@@ -20,6 +21,11 @@ class SortingMovieActivity : AppCompatActivity(), SortingMovieFragment.SortingMo
         setContentView(R.layout.activity_sorting_movie)
 
         val code = intent?.getStringExtra(KEY_CODE_SELECTED) ?: ""
+
+        val mainContainer : FrameLayout = findViewById(R.id.main_container)
+        mainContainer.setOnClickListener({
+            finish()
+        })
 
         if(savedInstanceState == null){
             val fragment = SortingMovieFragment()

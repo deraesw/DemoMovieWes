@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- lbl -->
     <string name="lbl_clear_all">clear all</string>
@@ -9,6 +9,9 @@
     <string name="title_movies_in_theater">Movies in theater</string>
 
     <!-- label title content -->
+    <string name="average_vote_title">Average vote</string>
+    <string name="vote_count_title">Vote count</string>
+    <string name="popularity_title">Popularity</string>
     <string name="overview_title">Overview</string>
     <string name="technical_team_title">Technical team</string>
     <string name="budget_title">Budget</string>
@@ -18,6 +21,9 @@
     <string name="genre_title">Genres</string>
     <string name="filter_title">@string/menu_filter</string>
     <string name="sorting_by_title">@string/menu_sort_by</string>
+    <string name="extra_information_title">Extra information</string>
+    <string name="duration_title">Duration</string>
+    <string name="release_date_title">Release date</string>
 
     <!-- Action bar menu item -->
     <string name="menu_filter">Filter</string>
@@ -43,4 +49,9 @@
         <item>Duration</item>
         <item>Release date</item>
     </string-array>
+
+    <!-- Formatted string -->
+    <string name="format_movie_full_time_detail">
+        <xliff:g id="hour">%1$s</xliff:g> - (<xliff:g id="v2">%2$s</xliff:g> mins)
+    </string>
 </resources>

@@ -1,8 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Observer
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre

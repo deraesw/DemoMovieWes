@@ -1,5 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.data.dao
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
@@ -11,6 +12,9 @@ import com.demo.developer.deraesw.demomoviewes.data.entity.MovieToGenre
 
     @Query("SELECT * FROM movie_genre  INNER JOIN movie_to_genre ON movie_to_genre.idGenre = movie_genre.id  WHERE movie_to_genre.idMovie = :idMovie")
     fun selectGenreListFromMovie(idMovie : Int) : List<MovieGenre>
+
+    @Query("SELECT * FROM movie_genre  INNER JOIN movie_to_genre ON movie_to_genre.idGenre = movie_genre.id  WHERE movie_to_genre.idMovie = :idMovie")
+    fun observeGenreListFromMovie(idMovie : Int) : LiveData<List<MovieGenre>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE )
     fun bulkInsertMovieToGenre(movieToGenre : List<MovieToGenre>)
