@@ -1,0 +1,16 @@
+<resources>
+
+    <!-- App dimension -->
+    <dimen name="detail_movie_app_bar_height">296dp</dimen>
+    <dimen name="detail_movie_cart_header_height">160dp</dimen>
+    <dimen name="movie_filter_width">256dp</dimen>
+    <dimen name="movie_in_theater_poster_item_width">96dp</dimen>
+    <dimen name="movie_in_theater_height">144dp</dimen>
+
+    <!-- Text size -->
+    <dimen name="item_header_title">18sp</dimen>
+    <dimen name="item_header_subtitle">16sp</dimen>
+    <dimen name="item_secondary_item">14sp</dimen>
+    <dimen name="movie_item_secondary_item">12sp</dimen>
+
+</resources>
