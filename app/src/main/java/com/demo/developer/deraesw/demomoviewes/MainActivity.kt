@@ -1,5 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes
 
+import android.app.ActivityOptions
 import android.app.job.JobInfo
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
@@ -26,6 +27,7 @@ import com.demo.developer.deraesw.demomoviewes.utils.Injection
 import android.content.Context.JOB_SCHEDULER_SERVICE
 import android.app.job.JobScheduler
 import android.content.Context
+import android.support.v4.app.ActivityOptionsCompat
 import com.demo.developer.deraesw.demomoviewes.service.DemoMovieScheduler
 
 
@@ -96,6 +98,14 @@ class MainActivity : AppCompatActivity(), NavigationInterface {
     private fun launchMovieDetailActivity(key : Int){
         intent = Intent(this, MovieDetailActivity::class.java)
         intent.putExtra(MovieDetailActivity.KEY_MOVIE_ID, key)
-        startActivity(intent)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Apply activity transition
+            val activityOptionsCompat = ActivityOptions.makeSceneTransitionAnimation(this)
+            startActivity(intent, activityOptionsCompat.toBundle())
+        } else {
+            // Swap without transition
+            startActivity(intent)
+        }
     }
 }

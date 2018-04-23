@@ -80,4 +80,12 @@ class AppTools {
             const val LARGE = "w1280"
         }
     }
+
+    class ProfileSize {
+        companion object {
+            const val SMALL = "w45"
+            const val MEDIUM = "w185"
+            const val LARGE = "h632"
+        }
+    }
 }

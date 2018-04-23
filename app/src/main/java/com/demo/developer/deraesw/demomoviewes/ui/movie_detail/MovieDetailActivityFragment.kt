@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
@@ -30,7 +31,7 @@ class MovieDetailActivityFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        //setHasOptionsMenu(true)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -64,6 +65,7 @@ class MovieDetailActivityFragment : Fragment() {
         })
 
         return mBinding.root
+        //inflater.inflate(R.layout.fragment_movie_credits, container, false) //
     }
 
     private fun initMovieContent(movie: Movie){

@@ -1,11 +1,16 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.Snackbar
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.widget.Toast
 import com.demo.developer.deraesw.demomoviewes.R
+import com.demo.developer.deraesw.demomoviewes.addFragmentToActivity
+import com.demo.developer.deraesw.demomoviewes.replaceFragmentToActivity
+import com.demo.developer.deraesw.demomoviewes.showShortToast
 
 import kotlinx.android.synthetic.main.activity_movie_detail.*
 
@@ -17,7 +22,6 @@ class MovieDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
-        //setSupportActionBar(toolbar)
 
         mMovieId = intent.getIntExtra(KEY_MOVIE_ID, 0)
 
@@ -26,30 +30,68 @@ class MovieDetailActivity : AppCompatActivity() {
                 val fragment = MovieDetailActivityFragment()
                 fragment.arguments = MovieDetailActivityFragment.setupBundle(mMovieId)
 
-                supportFragmentManager
-                        .beginTransaction()
-                        .add(R.id.main_container_movie_detail, fragment)
-                        .commit()
+                this.addFragmentToActivity(R.id.main_container_movie_detail, fragment)
             }
+
+            val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bnv_movie_detail_nav)
+            bottomNavigationView.setOnNavigationItemSelectedListener({
+                return@setOnNavigationItemSelectedListener when(it.itemId) {
+                    R.id.navigation_movie_detail_information -> {
+                        launchDetailMovieFragment()
+                        true
+                    }
+                    R.id.navigation_movie_detail_credits -> {
+                        launchCreditsMovieFragment()
+                        true
+                    }
+                    R.id.navigation_movie_detail_reviews -> {
+                        launchReviewMovieFragment()
+                        true
+                    }
+                    else  -> false
+                }
+            })
+
         } else {
-            Toast.makeText(
-                    this,
-                    getString(R.string.err_unknown_identifier_provided),
-                    Toast.LENGTH_SHORT)
-                    .show()
+            this.showShortToast(getString(R.string.err_unknown_identifier_provided))
             finish()
         }
 
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        return when(item?.itemId){
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
+            else -> super.onOptionsItemSelected(item)
+
         }
-        return super.onOptionsItemSelected(item)
+    }
+
+    private fun launchDetailMovieFragment(){
+        val fragment = MovieDetailActivityFragment()
+        fragment.arguments = MovieDetailActivityFragment.setupBundle(mMovieId)
+
+        replaceFragment(fragment)
+    }
+
+    private fun launchCreditsMovieFragment(){
+        val fragment = MovieDetailCreditsFragment()
+        fragment.arguments = MovieDetailCreditsFragment.setupBundle(mMovieId)
+
+        replaceFragment(fragment)
+    }
+
+    private fun launchReviewMovieFragment(){
+        val fragment = MovieDetailReviewFragment()
+
+        replaceFragment(fragment)
+    }
+
+    private fun replaceFragment(fragment : Fragment){
+        this.replaceFragmentToActivity(R.id.main_container_movie_detail, fragment)
     }
 
     companion object {

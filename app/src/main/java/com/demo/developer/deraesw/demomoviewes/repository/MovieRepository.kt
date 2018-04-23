@@ -3,6 +3,7 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
+import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieDAO
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieToGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
@@ -14,40 +15,33 @@ import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 
 class MovieRepository private constructor(
         private val movieCallHandler: MovieCallHandler,
-        private val movieDAO: MovieDAO,
-        private val movieToGenreDAO: MovieToGenreDAO,
+        private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){
 
     private val TAG = MovieRepository::class.java.simpleName
 
-    val mMovieList : LiveData<List<Movie>> = movieDAO.selectAllMovies()
-    val mMoviesInTheater : LiveData<List<MovieInTheater>> = movieDAO.selectMoviesInTheater()
+    val mMovieList : LiveData<List<Movie>> = appDataSource.movieDAO.selectAllMovies()
+    val mMoviesInTheater : LiveData<List<MovieInTheater>> = appDataSource.movieDAO.selectMoviesInTheater()
     val mMovieInTheaterWithGenres : MutableLiveData<List<MovieInTheater>> = MutableLiveData()
 
     init {
         movieCallHandler.mMovieList.observeForever({
             if(it != null){
-                appExecutors.diskIO().execute({
-                    movieDAO.bulkInsertMovies(it)
-                })
-
-                handleMovieToGenreFromList(it)
+                appDataSource.saveListOfMovie(it)
             }
         })
 
         movieCallHandler.mMovie.observeForever({
             if(it != null){
-                appExecutors.diskIO().execute({
-                    movieDAO.insertMovie(it)
-                })
+                appDataSource.saveMovie(it)
             }
         })
     }
 
-    fun getMovieDetail(id : Int) = movieDAO.selectMovie(id)
+    fun getMovieDetail(id : Int) = appDataSource.movieDAO.selectMovie(id)
 
     fun getMovieGenreFromMovie(idMovie : Int) : LiveData<List<MovieGenre>> {
-        return movieToGenreDAO.observeGenreListFromMovie(idMovie)
+        return appDataSource.movieToGenreDAO.observeGenreListFromMovie(idMovie)
     }
 
     fun fetchMovieDetail(id: Int){
@@ -61,41 +55,25 @@ class MovieRepository private constructor(
     fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>){
         appExecutors.diskIO().execute({
             list.forEach({
-                it.genres = movieToGenreDAO.selectGenreListFromMovie(it.id)
+                it.genres = appDataSource.movieToGenreDAO.selectGenreListFromMovie(it.id)
             })
 
             mMovieInTheaterWithGenres.postValue(list)
         })
     }
 
-    private fun handleMovieToGenreFromList(list : List<Movie>){
-        var movieToGenreList : List<MovieToGenre> = ArrayList()
-        list.forEach({
-            val idMovie = it.id
-            it.genres.forEach({
-                val idGenre = it.id
-                movieToGenreList += MovieToGenre(idMovie, idGenre)
-            })
-        })
-
-        appExecutors.diskIO().execute({
-            movieToGenreDAO.bulkInsertMovieToGenre(movieToGenreList)
-        })
-    }
 
     companion object {
         @Volatile private var sInstance : MovieRepository? = null
 
         fun getInstance(
                 movieCallHandler: MovieCallHandler ,
-                movieDAO: MovieDAO,
-                movieToGenreDAO: MovieToGenreDAO,
+                appDataSource: AppDataSource,
                 appExecutors: AppExecutors) : MovieRepository {
             sInstance ?: synchronized(this){
                 sInstance = MovieRepository(
                         movieCallHandler,
-                        movieDAO,
-                        movieToGenreDAO,
+                        appDataSource,
                         appExecutors)
             }
 

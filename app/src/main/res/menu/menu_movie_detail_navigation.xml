@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_movie_detail_information"
+        android:icon="@drawable/ic_details_black_24dp"
+        android:title="@string/bottom_movie_information" />
+
+    <item
+        android:id="@+id/navigation_movie_detail_credits"
+        android:icon="@drawable/ic_group_white_24dp"
+        android:title="@string/bottom_movie_credits" />
+
+    <item
+        android:id="@+id/navigation_movie_detail_reviews"
+        android:icon="@drawable/ic_rate_review_white_24dp"
+        android:title="@string/bottom_movie_reviews" />
+
+</menu>

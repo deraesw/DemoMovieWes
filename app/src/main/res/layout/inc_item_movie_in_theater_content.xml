@@ -14,7 +14,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        >
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline3"
@@ -39,6 +41,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:posterImageUrl="@{movie.posterPath}"
             />
 
         <TextView

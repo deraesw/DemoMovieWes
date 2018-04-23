@@ -29,13 +29,21 @@
     <string name="menu_filter">Filter</string>
     <string name="menu_sort_by">Sort By</string>
 
-    <!-- Image content description -->ter
-    <string name="desc_movie_poster">Movie posimage</string>
+    <!-- Tab title -->
+    <string name="tab_casting">Casting</string>
+    <!-- Bottom Navigation -->
+    <string name="bottom_movie_information">Details</string>
+    <string name="bottom_movie_credits">Credits</string>
+    <string name="bottom_movie_reviews">Reviews</string>
+
+    <!-- Image content description -->
+    <string name="desc_movie_poster">Movie poster image</string>
     <string name="desc_movie_backdrop">Movie backdrop image</string>
     <string name="desc_movie_duration_icon">Movie duration icon</string>
     <string name="desc_movie_vote_icon">Movie vote icon</string>
     <string name="desc_clear_all_filter">Clear all filter</string>
     <string name="desc_sorting_selected">Sorting option selected</string>
+    <string name="desc_profile_image">profile image</string>
 
     <!-- Error messages -->
     <string name="err_unknown_identifier_provided">Unknown identifier provided, please try again</string>
@@ -54,4 +62,7 @@
     <string name="format_movie_full_time_detail">
         <xliff:g id="hour">%1$s</xliff:g> - (<xliff:g id="v2">%2$s</xliff:g> mins)
     </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

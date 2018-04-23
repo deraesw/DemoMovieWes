@@ -7,49 +7,38 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.databinding.ItemCastingItemBinding
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieInTheaterBinding
 import com.demo.developer.deraesw.demomoviewes.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
-class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): RecyclerView.Adapter<MovieInTheaterAdapter.MovieInTheaterViewHolder>() {
-    private val TAG = MovieInTheaterAdapter::class.java.simpleName
+class CastingAdapter(): RecyclerView.Adapter<CastingAdapter.CastingViewHolder>() {
+    private val TAG = CastingAdapter::class.java.simpleName
 
-    private var mList: List<MovieInTheater> = ArrayList();
+    private var mList: List<CastingItem> = ArrayList();
 
-    interface MovieInTheaterAdapterInterface {
-        fun clickOnItem(position : Int)
-    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieInTheaterViewHolder {
-        val binding = ItemMovieInTheaterBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CastingViewHolder {
+        val binding = ItemCastingItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false)
 
-        return MovieInTheaterViewHolder(binding.root)
+        return CastingViewHolder(binding.root)
     }
 
-    override fun onBindViewHolder(holder: MovieInTheaterViewHolder, position: Int) {
-        val movieInTheater = mList.get(position)
-        val content = holder.binding?.incContent
+    override fun onBindViewHolder(holder: CastingViewHolder, position: Int) {
+        val item = mList.get(position)
 
-        holder.binding?.movie = movieInTheater
-
-        if(movieInTheater.releaseDate != null){
-            content?.tvMovieReleaseDate?.text = AppTools.convertDateString(movieInTheater.releaseDate!!, AppTools.DatePattern.MM_DD_YYY_S_PATTERN)
-        }
-
-        val genreListName = movieInTheater.genres.joinToString (transform = {it.name})
-        content?.tvMovieGenre?.text = genreListName
-
+        holder.binding?.casting = item
         holder.binding?.executePendingBindings()
     }
 
     override fun getItemCount(): Int = mList.size
 
-    fun getItemAt(position : Int) : MovieInTheater = mList.get(position)
+    fun getItemAt(position : Int) : CastingItem = mList.get(position)
 
-    fun swapData(list: List<MovieInTheater>){
-        Log.d(TAG, "call swap")
+    fun swapData(list: List<CastingItem>){
 
         if(mList.isEmpty()){
             mList = list
@@ -75,19 +64,12 @@ class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): Recyc
         }
     }
 
-    inner class MovieInTheaterViewHolder(itemView : View) :
-            RecyclerView.ViewHolder(itemView), View.OnClickListener{
+    inner class CastingViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
 
-        internal var binding:ItemMovieInTheaterBinding? = null
+        internal var binding:ItemCastingItemBinding? = null
 
         init {
             binding = DataBindingUtil.bind(itemView)
-            itemView.setOnClickListener(this)
-        }
-
-        override fun onClick(p0: View?) {
-            val position = adapterPosition;
-            mHandler.clickOnItem(position)
         }
     }
 }

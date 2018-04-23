@@ -2,6 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.network
 
 
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
+import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieGenreResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
 
@@ -23,4 +24,13 @@ interface MoviedbAPI {
     @GET("movie/now_playing")
     fun fetchNowPlayingMovies(@Query("api_key") apiKey: String)
             : Call<MoviesResponse>
+
+    @GET("movie/{id}/credits")
+    fun fetchMovieCredit(@Path("id") movieId: Int, @Query("api_key") apiKey: String)
+        : Call<MovieCreditsListResponse>
+
+    /*
+    @GET("movie/{id}/reviews")
+    fun fetchMovieReview(@Path("id") movieId: Int, @Query("api_key") apiKey: String)
+    */
 }
