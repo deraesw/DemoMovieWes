@@ -13,6 +13,7 @@ import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.ViewPagerAdapter
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingFragment
+import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section.MovieCrewFragment
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
 
 
@@ -60,30 +61,20 @@ class MovieDetailCreditsFragment : Fragment() {
             castFragment.arguments = MovieCastingFragment.setupBundle(mMovieId)
             viewPagerAdapter.addFragment(castFragment, getString(R.string.tab_casting))
 
+            val crewFragment = MovieCrewFragment()
+            crewFragment.arguments = MovieCrewFragment.setupBundle(mMovieId)
+            viewPagerAdapter.addFragment(crewFragment, getString(R.string.tab_crew))
+
             viewPage.adapter = viewPagerAdapter
             tableLayout.setupWithViewPager(viewPage)
         }
-
-
 
         return viewRoot
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        //todo remove, only for testing
-        menu?.add(Menu.NONE,9999, Menu.NONE, "Test fetch data")
+        menu?.clear()
         super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId){
-            9999 -> {
-                val test = Injection.provideMovieCreditsRepository(context!!)
-                test.fetchMovieCredits(mMovieId)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     companion object {

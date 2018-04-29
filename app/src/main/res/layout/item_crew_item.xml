@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="casting"
-            type="com.demo.developer.deraesw.demomoviewes.data.model.CastingItem"/>
+            name="crew"
+            type="com.demo.developer.deraesw.demomoviewes.data.model.CrewItem"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -34,23 +34,22 @@
             app:layout_constraintStart_toStartOf="@+id/picture_divider"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Adam sandler"
-            android:text="@{casting.name}"
+            android:text="@{crew.name}"
             style="@style/Text_ItemTitle"
             />
 
         <TextView
-            android:id="@+id/tv_casting_character"
+            android:id="@+id/tv_crew_job"
+            style="@style/Text_SecondaryItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:text="@{crew.job}"
             app:layout_constraintStart_toStartOf="@+id/picture_divider"
             app:layout_constraintTop_toBottomOf="@+id/tv_crew_name"
-            tools:text="Bell complent"
-            android:text="@{casting.character}"
-            style="@style/Text_SecondaryItem"
-            />
+            tools:text="Bell complent" />
 
         <FrameLayout
             android:layout_width="56dp"
@@ -80,7 +79,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    app:profileImageUrl="@{casting.profilePath}"
+                    app:profileImageUrl="@{crew.profilePath}"
                     android:contentDescription="@string/desc_profile_image"
                     />
             </FrameLayout>

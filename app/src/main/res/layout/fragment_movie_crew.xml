@@ -4,24 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.movie_detail.casting_section.MovieCastingFragment">
+    tools:context=".ui.movie_detail.crew_section.MovieCrewFragment"
+    >
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/sf_casting_list"
+        android:id="@+id/sf_crew_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_casting_list"
+            android:id="@+id/rv_crew_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-
-    <include
-        android:id="@+id/inc_empty_list"
-        layout="@layout/inc_empty_list"
-        />
 </FrameLayout>

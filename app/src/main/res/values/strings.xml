@@ -1,12 +1,13 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- lbl -->
-    <string name="lbl_clear_all">clear all</string>
-    <string name="lbl_done">Done</string>
-
     <!-- title view -->
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
     <string name="title_movies_in_theater">Movies in theater</string>
+
+    <!-- lbl -->
+    <string name="lbl_clear_all">clear all</string>
+    <string name="lbl_done">Done</string>
+    <string name="lbl_empty_list_default">No result found. Please refresh the data!</string>
 
     <!-- label title content -->
     <string name="average_vote_title">Average vote</string>
@@ -31,6 +32,8 @@
 
     <!-- Tab title -->
     <string name="tab_casting">Casting</string>
+    <string name="tab_crew">Crew</string>
+
     <!-- Bottom Navigation -->
     <string name="bottom_movie_information">Details</string>
     <string name="bottom_movie_credits">Credits</string>
@@ -56,6 +59,14 @@
         <item>Title</item>
         <item>Duration</item>
         <item>Release date</item>
+    </string-array>
+
+    <string-array name="casting_sorting_label">
+        <item>Default</item>
+        <item>Name, desc</item>
+        <item>Name, asc</item>
+        <item>Character name, desc</item>
+        <item>Character name, asc</item>
     </string-array>
 
     <!-- Formatted string -->

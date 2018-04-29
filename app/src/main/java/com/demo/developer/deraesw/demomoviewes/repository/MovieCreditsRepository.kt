@@ -29,11 +29,17 @@ class MovieCreditsRepository private constructor(
                 if(it.cast.isNotEmpty()){
                     handleCastResponse(it.cast, it.id)
                 }
+
+                if(it.crew.isNotEmpty()){
+                    handleCrewResponse(it.crew, it.id)
+                }
             }
         })
     }
 
     fun getCastingFromMovie(movieId : Int) = appDataSource.selectCastingItemFromMovie(movieId)
+
+    fun getCrewFromMovie(movieId: Int) = appDataSource.selectCrewItemFromMovie(movieId)
 
     fun fetchMovieCredits(id: Int){
         movieCreditsCallHandler.fetchMovieCredits(id)
@@ -52,6 +58,18 @@ class MovieCreditsRepository private constructor(
         appDataSource.saveListCasting(castList)
     }
 
+    private fun handleCrewResponse(list : List<MovieCreditsListResponse.Crew>, movieId : Int){
+        var peopleList : List<People> = ArrayList()
+        var crewList : List<Crew> = ArrayList()
+
+        list.forEach {
+            peopleList += MapperUtils.Data.mapCrewResponseToPeople(it)
+            crewList += MapperUtils.Data.mapCrewResponseToCrew(it, movieId)
+        }
+
+        appDataSource.saveListPeople(peopleList)
+        appDataSource.saveListCrew(crewList)
+    }
 
     companion object {
         @Volatile private var sInstance : MovieCreditsRepository? = null

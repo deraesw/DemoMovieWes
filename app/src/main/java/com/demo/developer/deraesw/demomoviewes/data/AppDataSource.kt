@@ -1,6 +1,7 @@
 package com.demo.developer.deraesw.demomoviewes.data
 
 import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
@@ -16,7 +17,31 @@ class AppDataSource private constructor(
         val appExecutors: AppExecutors
 ) {
 
+    companion object {
+
+        @Volatile private var sInstance : AppDataSource? = null
+
+        fun getInstance( appDatabase: appDatabase,
+                         appExecutors: AppExecutors) : AppDataSource {
+            sInstance ?: synchronized(this){
+                sInstance = AppDataSource(
+                        appDatabase.movieGenreDao(),
+                        appDatabase.movieDAO(),
+                        appDatabase.movieToGenreDAO(),
+                        appDatabase.peopleDAO(),
+                        appDatabase.crewDAO(),
+                        appDatabase.castingDAO(),
+                        appExecutors)
+            }
+
+            return sInstance!!
+        }
+
+    }
+
     fun selectCastingItemFromMovie(movieId : Int) = castingDAO.selectCastingItemFromMovie(movieId)
+
+    fun selectCrewItemFromMovie(movieId: Int) = crewDAO.selectCrewsItemFromMovie(movieId)
 
     fun saveListMovieGenre(list: List<MovieGenre>){
         appExecutors.diskIO().execute({
@@ -54,6 +79,15 @@ class AppDataSource private constructor(
         })
     }
 
+    fun saveListCrew(list: List<Crew>){
+        appExecutors.diskIO().execute({
+            val movieId = list.get(0).movieId ?: 0
+            if(movieId != 0){
+                crewDAO.deleteCrewFromMovie(movieId)
+            }
+            crewDAO.bulkInsertCrews(list)
+        })
+    }
 
     fun saveListMovieToGenre(list: List<MovieToGenre>){
         appExecutors.diskIO().execute({
@@ -74,25 +108,5 @@ class AppDataSource private constructor(
         saveListMovieToGenre(movieToGenreList)
     }
 
-    companion object {
 
-        @Volatile private var sInstance : AppDataSource? = null
-
-        fun getInstance( appDatabase: appDatabase,
-                         appExecutors: AppExecutors) : AppDataSource {
-            sInstance ?: synchronized(this){
-                    sInstance = AppDataSource(
-                            appDatabase.movieGenreDao(),
-                            appDatabase.movieDAO(),
-                            appDatabase.movieToGenreDAO(),
-                            appDatabase.peopleDAO(),
-                            appDatabase.crewDAO(),
-                            appDatabase.castingDAO(),
-                            appExecutors)
-            }
-
-            return sInstance!!
-        }
-
-    }
 }

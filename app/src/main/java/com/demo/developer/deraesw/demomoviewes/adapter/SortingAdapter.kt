@@ -3,23 +3,18 @@ package com.demo.developer.deraesw.demomoviewes.adapter
 import android.databinding.DataBindingUtil
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
-import com.demo.developer.deraesw.demomoviewes.data.model.MovieSortItem
-import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieInTheaterBinding
+import com.demo.developer.deraesw.demomoviewes.data.model.SortItem
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemSortingMovieBinding
-import com.demo.developer.deraesw.demomoviewes.setImageUrl
-import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
-class SortingMovieAdapter(val mHandler: SortingMovieAdapterInterface):
-        RecyclerView.Adapter<SortingMovieAdapter.SortingMovieViewHolder>() {
+class SortingAdapter(val mHandler: SortingMovieAdapterInterface):
+        RecyclerView.Adapter<SortingAdapter.SortingMovieViewHolder>() {
 
-    private val TAG = SortingMovieAdapter::class.java.simpleName
+    private val TAG = SortingAdapter::class.java.simpleName
 
-    private var mList: List<MovieSortItem> = ArrayList();
+    private var mList: List<SortItem> = ArrayList();
 
     interface SortingMovieAdapterInterface {
         fun clickOnItem(position : Int)
@@ -47,9 +42,9 @@ class SortingMovieAdapter(val mHandler: SortingMovieAdapterInterface):
 
     override fun getItemCount(): Int = mList.size
 
-    fun getItemAt(position : Int) : MovieSortItem = mList.get(position)
+    fun getItemAt(position : Int) : SortItem = mList.get(position)
 
-    fun swapData(list: List<MovieSortItem>){
+    fun swapData(list: List<SortItem>){
 
         if(mList.isEmpty()){
             mList = list

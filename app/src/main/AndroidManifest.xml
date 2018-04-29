@@ -30,6 +30,10 @@
             android:name=".ui.movies_in_theater.sorting_movies.SortingMovieActivity"
             android:theme="@style/AppTheme.Transparent"
             />
+        <activity
+            android:name=".ui.sorting.SortingActivity"
+            android:theme="@style/AppTheme.Transparent"
+            />
 
         <service
             android:name=".service.DemoMovieJobService"

@@ -7,7 +7,7 @@
     <data>
         <variable
             name="sorting"
-            type="com.demo.developer.deraesw.demomoviewes.data.model.MovieSortItem"/>
+            type="com.demo.developer.deraesw.demomoviewes.data.model.SortItem"/>
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -47,14 +47,14 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline2"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_done_green_24dp"
             android:contentDescription="@string/desc_sorting_selected"
             android:visibility="gone"
-            />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.75"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_done_green_24dp" />
 
 
     </android.support.constraint.ConstraintLayout>

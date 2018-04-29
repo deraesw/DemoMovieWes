@@ -11,6 +11,7 @@ import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.repository.*
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailFactory
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingFactory
+import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section.MovieCrewFactory
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFactory
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFactory
 
@@ -71,6 +72,13 @@ object Injection {
 
     fun provideMovieCastingFactory(context: Context, movieId : Int) : MovieCastingFactory {
         return MovieCastingFactory(
+                provideMovieCreditsRepository(context),
+                movieId
+        )
+    }
+
+    fun provideMovieCrewFactory(context: Context, movieId : Int) : MovieCrewFactory {
+        return MovieCrewFactory(
                 provideMovieCreditsRepository(context),
                 movieId
         )

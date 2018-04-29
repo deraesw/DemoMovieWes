@@ -1,4 +1,4 @@
-package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_movies
+package com.demo.developer.deraesw.demomoviewes.ui.sorting
 
 import android.content.Context
 import android.os.Bundle
@@ -15,40 +15,44 @@ import com.demo.developer.deraesw.demomoviewes.adapter.SortingAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.SortItem
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [SortingMovieFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [SortingMovieFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
-class SortingMovieFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
 
-    private val TAG = SortingMovieFragment::class.java.simpleName
+class SortingFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
+
+    private val TAG = SortingFragment::class.java.simpleName
 
     companion object {
+        const val KEY_SORT_CATEGORY = "KEY_SORT_CATEGORY"
         const val KEY_SORT_CODE = "KEY_SORT_CODE"
 
-        fun setup(codeKey : String) : Bundle {
+        fun setup(categorySorting : String,  codeKey : String) : Bundle {
             val bundle = Bundle()
             bundle.putString(KEY_SORT_CODE, codeKey)
+            bundle.putString(KEY_SORT_CATEGORY, categorySorting)
             return bundle
         }
     }
 
-    interface SortingMovieFragmentInterface {
+    class Category {
+        companion object {
+            const val SORT_MOVIE   = "SORT_MOVIE"
+            const val SORT_CASTING = "SORT_CASTING"
+            const val SORT_CREW    = "SORT_CREW"
+        }
+    }
+
+    interface SortingFragmentInterface {
         fun selectSortingOption(code : String)
     }
 
     private lateinit var mAdapter : SortingAdapter
     private lateinit var mCode : String
-    private lateinit var mHandle : SortingMovieFragmentInterface
+    private lateinit var mCategory: String
+    private lateinit var mHandle : SortingFragmentInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        mCategory = arguments?.getString(KEY_SORT_CATEGORY) ?: ""
         mCode = arguments?.getString(KEY_SORT_CODE) ?: Constant.SortingCode.BY_DEFAULT
         if(mCode == ""){
             mCode = Constant.SortingCode.BY_DEFAULT
@@ -56,7 +60,7 @@ class SortingMovieFragment : Fragment(), SortingAdapter.SortingMovieAdapterInter
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val viewRoot = inflater.inflate(R.layout.fragment_sorting_movie, container, false)
+        val viewRoot = inflater.inflate(R.layout.fragment_sorting, container, false)
 
         val recyclerView : RecyclerView = viewRoot.findViewById(R.id.rv_sorting_options)
         //recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
@@ -66,16 +70,30 @@ class SortingMovieFragment : Fragment(), SortingAdapter.SortingMovieAdapterInter
         mAdapter = SortingAdapter(this)
         recyclerView.adapter = mAdapter
 
-        val sortingOptionCode = Constant.SortingCode.CODE
-        val sortingOptionLabel = resources.getStringArray(R.array.movie_sorting_label)
+        var sortingOptionCode = HashMap<Int, String>()
+        var sortingOptionLabel = arrayOf<String>()
+
+        when(mCategory){
+            Category.SORT_MOVIE -> {
+                sortingOptionCode = Constant.SortingCode.Movie.CODE
+                sortingOptionLabel = resources.getStringArray(R.array.movie_sorting_label)
+            }
+            Category.SORT_CASTING -> {
+                sortingOptionCode = Constant.SortingCode.Casting.CODE
+                sortingOptionLabel = resources.getStringArray(R.array.casting_sorting_label)
+            }
+            Category.SORT_CREW -> {
+
+            }
+        }
 
         var movieSortList : List<SortItem> = ArrayList()
-        sortingOptionCode.forEach{
+        sortingOptionCode.toSortedMap().forEach{
             index, value -> movieSortList += SortItem(
                 value,
                 sortingOptionLabel.get(index) ?: "",
                 (value == mCode)
-                )
+            )
         }
 
         mAdapter.swapData(movieSortList)
@@ -86,7 +104,7 @@ class SortingMovieFragment : Fragment(), SortingAdapter.SortingMovieAdapterInter
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         try {
-            mHandle = context as SortingMovieFragmentInterface
+            mHandle = context as SortingFragmentInterface
         } catch (ex : Exception){
             Log.e(TAG, "Must implement SortingMovieFragmentInterface")
         }
