@@ -4,14 +4,13 @@ import android.annotation.TargetApi
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ClipDescription
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.support.v4.app.NotificationManagerCompat
-import com.demo.developer.deraesw.demomoviewes.MainActivity
 import com.demo.developer.deraesw.demomoviewes.R
+import com.demo.developer.deraesw.demomoviewes.ui.MainActivity
 
 class NotificationTools {
     private val TAG = NotificationTools::class.java.simpleName

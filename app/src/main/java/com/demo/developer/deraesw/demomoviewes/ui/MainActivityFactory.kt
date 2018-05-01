@@ -1,4 +1,4 @@
-package com.demo.developer.deraesw.demomoviewes
+package com.demo.developer.deraesw.demomoviewes.ui
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider

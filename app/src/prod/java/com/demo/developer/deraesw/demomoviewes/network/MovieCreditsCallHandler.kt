@@ -1,22 +1,18 @@
 package com.demo.developer.deraesw.demomoviewes.network
 
 import android.arch.lifecycle.MutableLiveData
-import android.os.Handler
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
-import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
-import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
-import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieCreditsCallHandler private constructor() : MainCallHandler() {
+@Singleton
+class MovieCreditsCallHandler
+@Inject constructor() {
 
     private val TAG = MovieCreditsCallHandler::class.java.simpleName
 
@@ -32,8 +28,11 @@ class MovieCreditsCallHandler private constructor() : MainCallHandler() {
 
     val mCreditsList : MutableLiveData<MovieCreditsListResponse> = MutableLiveData()
 
+    @Inject
+    lateinit var mMovieDbApi: MoviedbAPI
+
     fun fetchMovieCredits(idMovie : Int){
-        val call = mMovieDbApi.fetchMovieCredit(idMovie, mApi)
+        val call = mMovieDbApi.fetchMovieCredit(idMovie, BuildConfig.MOVIES_DB_API)
 
         call.enqueue(object : Callback<MovieCreditsListResponse> {
             override fun onResponse(call: Call<MovieCreditsListResponse>, response: Response<MovieCreditsListResponse>) {

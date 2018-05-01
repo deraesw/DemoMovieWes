@@ -1,11 +1,9 @@
-package com.demo.developer.deraesw.demomoviewes
+package com.demo.developer.deraesw.demomoviewes.ui
 
 import android.databinding.BindingAdapter
-import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import com.demo.developer.deraesw.demomoviewes.extension.setImageUrl
+import com.demo.developer.deraesw.demomoviewes.extension.setRoundImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
 object BindingAdapter {

@@ -3,8 +3,7 @@ package com.demo.developer.deraesw.demomoviewes.adapter
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
-
-import java.util.ArrayList
+import java.util.*
 
 class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
     private val mFragmentList = ArrayList<Fragment>()

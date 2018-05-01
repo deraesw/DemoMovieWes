@@ -2,9 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.repository.MovieCreditsRepository
-import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 
 class MovieCastingFactory(
         private val movieCreditsRepository: MovieCreditsRepository,

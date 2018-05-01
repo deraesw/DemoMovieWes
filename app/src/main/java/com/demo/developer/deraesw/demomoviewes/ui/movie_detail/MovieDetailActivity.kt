@@ -2,17 +2,13 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.widget.Toast
 import com.demo.developer.deraesw.demomoviewes.R
-import com.demo.developer.deraesw.demomoviewes.addFragmentToActivity
-import com.demo.developer.deraesw.demomoviewes.replaceFragmentToActivity
-import com.demo.developer.deraesw.demomoviewes.showShortToast
-
-import kotlinx.android.synthetic.main.activity_movie_detail.*
+import com.demo.developer.deraesw.demomoviewes.extension.addFragmentToActivity
+import com.demo.developer.deraesw.demomoviewes.extension.replaceFragmentToActivity
+import com.demo.developer.deraesw.demomoviewes.extension.showShortToast
 
 class MovieDetailActivity : AppCompatActivity() {
 

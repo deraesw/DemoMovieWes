@@ -7,15 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.data.model.CrewItem
-import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
-import com.demo.developer.deraesw.demomoviewes.databinding.ItemCastingItemBinding
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemCrewItemBinding
-import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieInTheaterBinding
-import com.demo.developer.deraesw.demomoviewes.databinding.ItemTestBinding
-import com.demo.developer.deraesw.demomoviewes.setImageUrl
-import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
 class CrewAdapter(): RecyclerView.Adapter<CrewAdapter.CrewViewHolder>() {
     private val TAG = CrewAdapter::class.java.simpleName

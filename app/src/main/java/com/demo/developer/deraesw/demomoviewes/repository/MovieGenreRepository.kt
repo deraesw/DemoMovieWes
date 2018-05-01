@@ -3,13 +3,15 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import android.arch.lifecycle.LiveData
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
-import com.demo.developer.deraesw.demomoviewes.data.appDatabase
-import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieGenreRepository private constructor(
+@Singleton
+class MovieGenreRepository
+@Inject constructor(
         private val movieGenreCallHandler: MovieGenreCallHandler ,
         private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){

@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieInTheaterBinding
-import com.demo.developer.deraesw.demomoviewes.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
 class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): RecyclerView.Adapter<MovieInTheaterAdapter.MovieInTheaterViewHolder>() {

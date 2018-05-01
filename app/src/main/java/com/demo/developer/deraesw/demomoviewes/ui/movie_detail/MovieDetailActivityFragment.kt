@@ -2,17 +2,15 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.support.v4.app.Fragment
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.view.*
-import android.widget.TextView
-import android.widget.Toast
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
-import com.demo.developer.deraesw.demomoviewes.setAmountWithSuffix
-import com.demo.developer.deraesw.demomoviewes.setImageUrl
+import com.demo.developer.deraesw.demomoviewes.extension.setAmountWithSuffix
+import com.demo.developer.deraesw.demomoviewes.extension.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
 

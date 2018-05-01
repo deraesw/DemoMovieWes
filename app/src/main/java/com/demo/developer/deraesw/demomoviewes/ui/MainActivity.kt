@@ -1,45 +1,37 @@
-package com.demo.developer.deraesw.demomoviewes
+package com.demo.developer.deraesw.demomoviewes.ui
 
 import android.app.ActivityOptions
-import android.app.job.JobInfo
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
-import android.content.ComponentName
 import android.content.Intent
-import android.icu.util.DateInterval
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
-import android.widget.Toast
+import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
-import com.demo.developer.deraesw.demomoviewes.service.DemoMovieJobService
-import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
-import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivity
-import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFragment
-import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_movies.SortingMovieActivity
-import com.demo.developer.deraesw.demomoviewes.ui.synchronize_data.SynchronizedDataActivity
-import com.demo.developer.deraesw.demomoviewes.utils.Injection
-import android.content.Context.JOB_SCHEDULER_SERVICE
-import android.app.job.JobScheduler
-import android.content.Context
-import android.support.v4.app.ActivityOptionsCompat
 import com.demo.developer.deraesw.demomoviewes.service.DemoMovieScheduler
+import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivity
+import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
 
-class MainActivity : AppCompatActivity(), NavigationInterface {
+class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
+
 
     private val TAG = MainActivity::class.java.simpleName
 
-    private lateinit var mLoadingContainer : LinearLayout;
+    private lateinit var mLoadingContainer : LinearLayout
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "test log")
         setContentView(R.layout.activity_main)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -47,8 +39,10 @@ class MainActivity : AppCompatActivity(), NavigationInterface {
 
         mLoadingContainer = findViewById(R.id.ll_loading_data)
 
-        val factory = Injection.provideMainActivityFactory(this)
-        val viewModel = ViewModelProviders.of(this, factory).get(MainActivityViewModel::class.java)
+        //Goal Create ViewModel and Factory with dagger 2
+        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
+
+        //DemoMovieScheduler.initDummyJobScheduler(this)
 
         viewModel.accountData.observe(this, Observer {
             if(it != null){
@@ -66,30 +60,17 @@ class MainActivity : AppCompatActivity(), NavigationInterface {
                 }
             }
         })
-
+/*
         if(savedInstanceState == null){
             supportFragmentManager
                     .beginTransaction()
                     .add(R.id.main_container, MoviesInTheaterFragment())
                     .commit()
         }
+        */
     }
 
-    fun displayLoadingDataContainer(){
-        if(mLoadingContainer.visibility == View.GONE){
-            mLoadingContainer.visibility = View.VISIBLE
-            val animation = AnimationUtils.loadAnimation(this, R.anim.slide_up_to_show)
-            mLoadingContainer.animation = animation
-        }
-    }
 
-    fun hideLoadingDataContainer(){
-        if(mLoadingContainer.visibility == View.VISIBLE){
-            mLoadingContainer.visibility = View.GONE
-            val animation = AnimationUtils.loadAnimation(this, R.anim.slide_down_to_hide)
-            mLoadingContainer.animation = animation
-        }
-    }
 
     override fun clickOnLaunchMovieDetailView(key: Int) {
         launchMovieDetailActivity(key)
@@ -106,6 +87,22 @@ class MainActivity : AppCompatActivity(), NavigationInterface {
         } else {
             // Swap without transition
             startActivity(intent)
+        }
+    }
+
+    private fun displayLoadingDataContainer(){
+        if(mLoadingContainer.visibility == View.GONE){
+            mLoadingContainer.visibility = View.VISIBLE
+            val animation = AnimationUtils.loadAnimation(this, R.anim.slide_up_to_show)
+            mLoadingContainer.animation = animation
+        }
+    }
+
+    private fun hideLoadingDataContainer(){
+        if(mLoadingContainer.visibility == View.VISIBLE){
+            mLoadingContainer.visibility = View.GONE
+            val animation = AnimationUtils.loadAnimation(this, R.anim.slide_down_to_hide)
+            mLoadingContainer.animation = animation
         }
     }
 }

@@ -2,11 +2,11 @@ package com.demo.developer.deraesw.demomoviewes.ui.sorting
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
 import com.demo.developer.deraesw.demomoviewes.R
-import com.demo.developer.deraesw.demomoviewes.showShortToast
+import com.demo.developer.deraesw.demomoviewes.extension.showShortToast
 
 class SortingActivity : AppCompatActivity(), SortingFragment.SortingFragmentInterface {
 

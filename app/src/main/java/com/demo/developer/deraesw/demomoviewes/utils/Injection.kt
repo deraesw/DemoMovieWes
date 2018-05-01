@@ -2,13 +2,13 @@ package com.demo.developer.deraesw.demomoviewes.utils
 
 import android.content.Context
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
-import com.demo.developer.deraesw.demomoviewes.MainActivityFactory
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
 import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MovieCreditsCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.repository.*
+import com.demo.developer.deraesw.demomoviewes.ui.MainActivityFactory
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailFactory
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingFactory
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section.MovieCrewFactory
@@ -52,7 +52,7 @@ object Injection {
         return MovieRepository.getInstance(movieCallHandler, appDataSource , appExecutors)
     }
 
-    fun provideMainActivityFactory(context: Context) : MainActivityFactory{
+    fun provideMainActivityFactory(context: Context) : MainActivityFactory {
         return MainActivityFactory(provideMainRepository(context))
     }
 

@@ -6,7 +6,6 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import com.demo.developer.deraesw.demomoviewes.data.entity.Casting
-import com.demo.developer.deraesw.demomoviewes.data.entity.People
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 
 @Dao

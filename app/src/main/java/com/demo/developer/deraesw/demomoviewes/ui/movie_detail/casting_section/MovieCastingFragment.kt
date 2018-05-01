@@ -3,7 +3,6 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -14,14 +13,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.*
-
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CastingAdapter
-import com.demo.developer.deraesw.demomoviewes.adapter.SortingAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
-import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailCreditsFragment
-import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_movies.SortingMovieActivity
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingActivity
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingFragment
 import com.demo.developer.deraesw.demomoviewes.utils.Constant

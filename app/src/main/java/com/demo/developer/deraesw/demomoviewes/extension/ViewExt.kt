@@ -1,7 +1,9 @@
-package com.demo.developer.deraesw.demomoviewes
+package com.demo.developer.deraesw.demomoviewes.extension
 
 import android.widget.ImageView
 import android.widget.TextView
+import com.demo.developer.deraesw.demomoviewes.GlideApp
+import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
 fun ImageView.setImageUrl(url: String?, size: String) {

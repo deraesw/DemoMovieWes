@@ -1,21 +1,19 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
-import com.demo.developer.deraesw.demomoviewes.data.dao.MovieDAO
-import com.demo.developer.deraesw.demomoviewes.data.dao.MovieToGenreDAO
-import com.demo.developer.deraesw.demomoviewes.data.entity.*
-import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
-import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
+import com.demo.developer.deraesw.demomoviewes.data.entity.Casting
+import com.demo.developer.deraesw.demomoviewes.data.entity.Crew
+import com.demo.developer.deraesw.demomoviewes.data.entity.People
 import com.demo.developer.deraesw.demomoviewes.network.MovieCreditsCallHandler
-import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.utils.MapperUtils
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieCreditsRepository private constructor(
+@Singleton
+class MovieCreditsRepository
+@Inject constructor(
         private val movieCreditsCallHandler: MovieCreditsCallHandler,
         private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){

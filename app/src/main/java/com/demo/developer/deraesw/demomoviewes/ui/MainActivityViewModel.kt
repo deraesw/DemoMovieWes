@@ -1,13 +1,16 @@
-package com.demo.developer.deraesw.demomoviewes
+package com.demo.developer.deraesw.demomoviewes.ui
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
-import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MainActivityViewModel(private val mainRepository: MainRepository) : ViewModel() {
+@Singleton
+class MainActivityViewModel
+@Inject constructor (private val mainRepository: MainRepository) : ViewModel() {
 
     val movieGenreList: LiveData<List<MovieGenre>> = mainRepository.genreRepository.mMovieGenreList
     val accountData : LiveData<AccountData> = mainRepository.sharePrefRepository.account

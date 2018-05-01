@@ -1,11 +1,14 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
-import android.arch.lifecycle.Observer
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MainRepository private constructor(
+@Singleton
+class MainRepository
+@Inject constructor(
         val genreRepository: MovieGenreRepository,
         val sharePrefRepository: SharePrefRepository,
         val movieRepository: MovieRepository){

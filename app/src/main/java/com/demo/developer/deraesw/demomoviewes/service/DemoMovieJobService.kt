@@ -3,26 +3,27 @@ package com.demo.developer.deraesw.demomoviewes.service
 import android.annotation.TargetApi
 import android.app.job.JobParameters
 import android.app.job.JobService
-import android.content.Context
 import android.os.Build
-import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
-import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Injection
 import com.demo.developer.deraesw.demomoviewes.utils.NotificationTools
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
 @TargetApi(Build.VERSION_CODES.M)
 class DemoMovieJobService : JobService(){
 
     private val TAG = DemoMovieJobService::class.java.simpleName
-    private lateinit var mainRepository : MainRepository
+
+    @Inject
+    lateinit var mainRepository : MainRepository
 
     override fun onCreate() {
+        AndroidInjection.inject(this)
         super.onCreate()
-        mainRepository = Injection.provideMainRepository(this)
     }
 
     override fun onStopJob(p0: JobParameters?): Boolean {

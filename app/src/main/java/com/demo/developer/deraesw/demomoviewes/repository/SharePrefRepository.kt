@@ -6,15 +6,20 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-class SharePrefRepository private constructor(mContext : Context){
+@Singleton
+class SharePrefRepository
+@Inject constructor(@Named("context_app") mContext : Context){
     private val TAG = SharePrefRepository::class.java.simpleName
 
     val account : MutableLiveData<AccountData> = MutableLiveData()
-    internal val sharedPreferences : SharedPreferences
+    internal val sharedPreferences : SharedPreferences =
+            PreferenceManager.getDefaultSharedPreferences(mContext)
 
     init {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
         fetchAccountInformation()
     }
 

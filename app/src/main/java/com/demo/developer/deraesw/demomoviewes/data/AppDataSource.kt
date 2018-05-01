@@ -1,13 +1,11 @@
 package com.demo.developer.deraesw.demomoviewes.data
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
-import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
+import javax.inject.Inject
 
-class AppDataSource private constructor(
+class AppDataSource constructor(
         val movieGenreDAO: MovieGenreDAO,
         val movieDAO: MovieDAO,
         val movieToGenreDAO: MovieToGenreDAO,
@@ -21,7 +19,7 @@ class AppDataSource private constructor(
 
         @Volatile private var sInstance : AppDataSource? = null
 
-        fun getInstance( appDatabase: appDatabase,
+        @Inject fun getInstance( appDatabase: appDatabase,
                          appExecutors: AppExecutors) : AppDataSource {
             sInstance ?: synchronized(this){
                 sInstance = AppDataSource(

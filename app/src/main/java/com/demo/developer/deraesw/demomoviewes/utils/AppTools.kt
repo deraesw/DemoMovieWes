@@ -3,7 +3,6 @@ package com.demo.developer.deraesw.demomoviewes.utils
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.ceil
-import kotlin.math.roundToInt
 
 class AppTools {
 

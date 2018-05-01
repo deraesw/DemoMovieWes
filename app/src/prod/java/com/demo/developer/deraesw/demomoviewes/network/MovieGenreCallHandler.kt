@@ -13,26 +13,21 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieGenreCallHandler private constructor(){
+@Singleton
+class MovieGenreCallHandler
+@Inject constructor(){
 
     private val TAG = MovieGenreCallHandler::class.java.simpleName
-
-    private val mRetrofit : Retrofit
     val mMovieGenreList : MutableLiveData<List<MovieGenre>> = MutableLiveData();
 
-    init {
-        val gson : Gson = GsonBuilder().setLenient().create();
-
-        mRetrofit = Retrofit.Builder()
-                .baseUrl(Constant.MOVIE_API_WEB)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-    }
+    @Inject
+    lateinit var mMoviedbAPI: MoviedbAPI
 
     fun fetchGenreMovieList(){
-        val call = mRetrofit.create(MoviedbAPI::class.java)
-                                                    .fetchMovieGenres(BuildConfig.MOVIES_DB_API);
+        val call = mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API);
 
         call.enqueue(object : Callback<MovieGenreResponse> {
             override fun onResponse(call: Call<MovieGenreResponse>, response: Response<MovieGenreResponse>) {

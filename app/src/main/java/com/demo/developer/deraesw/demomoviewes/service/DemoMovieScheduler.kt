@@ -31,6 +31,18 @@ class DemoMovieScheduler {
             val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
             jobScheduler.schedule(jobInfo)
         }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        public fun initDummyJobScheduler(context: Context){
+            val jobInfo : JobInfo = JobInfo.Builder(
+                    DEMO_JOB_ID,
+                    ComponentName(context, DummyJobService::class.java))
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
+                    .setPeriodic(Timing.DAY)
+                    .build()
+            val jobScheduler = context.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+            jobScheduler.schedule(jobInfo)
+        }
     }
 
     class Timing {

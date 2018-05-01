@@ -14,27 +14,32 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieCallHandler private constructor(){
+@Singleton
+class MovieCallHandler
+@Inject constructor(){
+
+    companion object {
+        private var mInstance : MovieCallHandler? = null
+        fun getInstance() : MovieCallHandler {
+            mInstance ?: synchronized(this) {
+                mInstance = MovieCallHandler()
+            }
+            return mInstance!!
+        }
+    }
 
     private val TAG = MovieCallHandler::class.java.simpleName
-
-    private val mMovieDbApi : MoviedbAPI
     private val mApi = BuildConfig.MOVIES_DB_API
 
     val mMovieList : MutableLiveData<List<Movie>> = MutableLiveData()
     val mMovie : MutableLiveData<Movie> = MutableLiveData()
 
-    init {
-        val gson : Gson = GsonBuilder().setLenient().create();
+    @Inject
+    lateinit var mMovieDbApi: MoviedbAPI
 
-        val retrofit = Retrofit.Builder()
-                .baseUrl(Constant.MOVIE_API_WEB)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-
-        mMovieDbApi = retrofit.create(MoviedbAPI::class.java)
-    }
 
     fun fetchMovieDetail(id : Int){
         val call = mMovieDbApi.fetchMovieDetail(id, mApi)
@@ -109,17 +114,5 @@ class MovieCallHandler private constructor(){
                 })
             }, 500)
         })
-    }
-
-    companion object {
-
-        private var mInstance : MovieCallHandler? = null
-
-        fun getInstance() : MovieCallHandler {
-            mInstance ?: synchronized(this) {
-                mInstance = MovieCallHandler()
-            }
-            return mInstance!!
-        }
     }
 }

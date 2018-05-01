@@ -4,16 +4,16 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
-import com.demo.developer.deraesw.demomoviewes.data.dao.MovieDAO
-import com.demo.developer.deraesw.demomoviewes.data.dao.MovieToGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
-import com.demo.developer.deraesw.demomoviewes.data.entity.MovieToGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
-import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class MovieRepository private constructor(
+@Singleton
+class MovieRepository
+@Inject constructor(
         private val movieCallHandler: MovieCallHandler,
         private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){

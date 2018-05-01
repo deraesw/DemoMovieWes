@@ -2,7 +2,6 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 
 class MovieDetailFactory(private val movieRepository: MovieRepository,val movieId : Int) : ViewModelProvider.Factory {
