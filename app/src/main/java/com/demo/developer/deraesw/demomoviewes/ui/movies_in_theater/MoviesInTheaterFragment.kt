@@ -3,6 +3,7 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
@@ -21,15 +22,17 @@ import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheat
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment
-import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_movies.SortingMovieActivity
+import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingActivity
+import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingFragment
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import com.demo.developer.deraesw.demomoviewes.utils.Injection
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  * Will display a list of movies in theater
  */
-class MoviesInTheaterFragment : Fragment(),
+class MoviesInTheaterFragment : DaggerFragment(),
         MovieInTheaterAdapter.MovieInTheaterAdapterInterface,
         FilterListenerInterface{
 
@@ -39,6 +42,9 @@ class MoviesInTheaterFragment : Fragment(),
         //todo full path
         const val RC_SORTING_OPTION = "RC_SORTING_OPTION"
     }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var mBinding : FragmentMoviesInTheaterBinding
     private lateinit var mAdapter: MovieInTheaterAdapter
@@ -66,8 +72,8 @@ class MoviesInTheaterFragment : Fragment(),
                 context, LinearLayoutManager.VERTICAL, false)
         mBinding.rvMoviesInTheater.adapter = mAdapter
 
-        val factory = Injection.provideMovieInTheaterFactory(context!!)
-        mViewModel = ViewModelProviders.of(this, factory).get(MoviesInTheaterViewModel::class.java)
+
+        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MoviesInTheaterViewModel::class.java)
 
         mViewModel.mMovieGenre.observe(this, Observer {
             if(it != null){
@@ -143,7 +149,7 @@ class MoviesInTheaterFragment : Fragment(),
             NavigationInterface.RC_MOVIE_SORTING_OPTION -> {
                 if(resultCode == Activity.RESULT_OK ){
                     sortingByCode =
-                            data?.getStringExtra(SortingMovieActivity.KEY_NEW_CODE_SELECTED) ?:
+                            data?.getStringExtra(SortingActivity.KEY_NEW_CODE_SELECTED) ?:
                             Constant.SortingCode.BY_DEFAULT
                     manageItems()
                 }
@@ -231,8 +237,9 @@ class MoviesInTheaterFragment : Fragment(),
     }
 
     private fun launchSortingActivity(){
-        val intent = Intent(context, SortingMovieActivity::class.java)
-        intent.putExtra(SortingMovieActivity.KEY_CODE_SELECTED, sortingByCode)
+        val intent = Intent(context, SortingActivity::class.java)
+        intent.putExtra(SortingActivity.KEY_SORT_CATEGORY, SortingFragment.Category.SORT_MOVIE)
+        intent.putExtra(SortingActivity.KEY_CODE_SELECTED, sortingByCode)
         startActivityForResult(intent, NavigationInterface.RC_MOVIE_SORTING_OPTION)
     }
 }

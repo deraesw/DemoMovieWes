@@ -1,15 +1,14 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.demo.developer.deraesw.demomoviewes.data.model.CrewItem
 import com.demo.developer.deraesw.demomoviewes.repository.MovieCreditsRepository
+import javax.inject.Inject
 
-class MovieCrewViewModel(
-        private val movieCreditsRepository: MovieCreditsRepository,
-        private val idMovie : Int) : ViewModel() {
+class MovieCrewViewModel
+@Inject constructor(
+        private val movieCreditsRepository: MovieCreditsRepository) : ViewModel() {
 
-    val crew : LiveData<List<CrewItem>> = movieCreditsRepository.getCrewFromMovie(idMovie)
+    fun getMovieCrew(movieId: Int) = movieCreditsRepository.getCrewFromMovie(movieId)
 
     fun fetchMovieCredits(movieId : Int){
         movieCreditsRepository.fetchMovieCredits(movieId)

@@ -24,6 +24,7 @@ import com.demo.developer.deraesw.demomoviewes.utils.Constant
  * create an instance of this fragment.
  *
  */
+@Deprecated("to remove, use SortingActivity instead")
 class SortingMovieFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
 
     private val TAG = SortingMovieFragment::class.java.simpleName

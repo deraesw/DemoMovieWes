@@ -4,8 +4,10 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
+import javax.inject.Inject
 
-class FilterMovieViewModel (private val genreMovieRepository: MovieGenreRepository) : ViewModel() {
+class FilterMovieViewModel
+@Inject constructor (private val genreMovieRepository: MovieGenreRepository) : ViewModel() {
     private val TAG = FilterMovieViewModel::class.java.simpleName
 
     val movieGenreFilter : LiveData<List<GenreFilter>> = genreMovieRepository.mGenreForFilter

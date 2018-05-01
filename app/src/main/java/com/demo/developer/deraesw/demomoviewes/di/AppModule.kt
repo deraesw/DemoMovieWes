@@ -6,7 +6,6 @@ import com.demo.developer.deraesw.demomoviewes.DemoMovieWesApp
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
 import com.demo.developer.deraesw.demomoviewes.network.MoviedbAPI
-import com.demo.developer.deraesw.demomoviewes.repository.SharePrefRepository
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -14,7 +13,6 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 

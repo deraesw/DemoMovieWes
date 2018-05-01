@@ -14,7 +14,8 @@ import javax.inject.Singleton
     AppModule::class,
     ViewModelBuilder::class,
     ActivityModule::class,
-    ServiceModule::class
+    ServiceModule::class,
+    FragmentModule::class
 ])
 interface AppComponent : AndroidInjector<DemoMovieWesApp> {
 

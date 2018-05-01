@@ -3,6 +3,7 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +12,6 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CastingAdapter
@@ -20,17 +20,20 @@ import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingActivity
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingFragment
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import com.demo.developer.deraesw.demomoviewes.utils.Injection
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 
 /**
  * A simple [Fragment] subclass.
  *
  */
-class MovieCastingFragment : Fragment() {
+class MovieCastingFragment : DaggerFragment() {
 
     private val TAG = MovieCastingFragment::class.java.simpleName
 
+    @Inject
+    lateinit var mFactory : ViewModelProvider.Factory
     private lateinit var mViewModel : MovieCastingViewModel
     private lateinit var mAdapter : CastingAdapter
     private lateinit var mEmptyView : View
@@ -52,11 +55,9 @@ class MovieCastingFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        Log.d(TAG, "onCreate")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.d(TAG, "onCreateView")
         val viewRoot = inflater.inflate(R.layout.fragment_movie_casting, container, false)
 
         mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
@@ -74,10 +75,9 @@ class MovieCastingFragment : Fragment() {
         val swipeRefreshLayout = viewRoot.findViewById<SwipeRefreshLayout>(R.id.sf_casting_list)
 
         if(mMovieId != 0){
-            val factory = Injection.provideMovieCastingFactory(context!!, mMovieId)
-            mViewModel = ViewModelProviders.of(this, factory).get(MovieCastingViewModel::class.java)
+            mViewModel = ViewModelProviders.of(this, mFactory).get(MovieCastingViewModel::class.java)
 
-            mViewModel.casting.observe(this, Observer {
+            mViewModel.getMovieCasting(mMovieId).observe(this, Observer {
                 if(it != null){
                     if(it.isNotEmpty()){
                         originalList = it

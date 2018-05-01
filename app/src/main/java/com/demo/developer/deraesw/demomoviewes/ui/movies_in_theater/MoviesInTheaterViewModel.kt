@@ -6,8 +6,10 @@ import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
+import javax.inject.Inject
 
-class MoviesInTheaterViewModel(
+class MoviesInTheaterViewModel
+@Inject constructor(
         private val movieRepository: MovieRepository,
         private val movieGenreRepository : MovieGenreRepository) : ViewModel() {
 

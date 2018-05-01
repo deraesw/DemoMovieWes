@@ -7,7 +7,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.animation.AnimationUtils
@@ -16,6 +15,7 @@ import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.service.DemoMovieScheduler
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivity
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFragment
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
@@ -60,14 +60,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
                 }
             }
         })
-/*
+
         if(savedInstanceState == null){
             supportFragmentManager
                     .beginTransaction()
                     .add(R.id.main_container, MoviesInTheaterFragment())
                     .commit()
         }
-        */
+
     }
 
 

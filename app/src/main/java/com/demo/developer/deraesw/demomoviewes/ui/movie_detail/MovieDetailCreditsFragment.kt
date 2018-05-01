@@ -2,10 +2,10 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
@@ -14,12 +14,26 @@ import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.ViewPagerAdapter
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingFragment
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section.MovieCrewFragment
-import com.demo.developer.deraesw.demomoviewes.utils.Injection
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 
-class MovieDetailCreditsFragment : Fragment() {
+class MovieDetailCreditsFragment : DaggerFragment() {
+
+    companion object {
+        private const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
+
+        fun setupBundle(movieId : Int) : Bundle{
+            val bundle = Bundle()
+            bundle.putInt(KEY_MOVIE_ID, movieId)
+            return bundle
+        }
+    }
+
     private val TAG = MovieDetailCreditsFragment::class.java.simpleName
 
+    @Inject
+    lateinit var mFactory : ViewModelProvider.Factory
     private lateinit var mViewModel : MovieDetailViewModel
     private var mMovieId : Int = 0
 
@@ -46,10 +60,9 @@ class MovieDetailCreditsFragment : Fragment() {
         mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
 
         if(mMovieId != 0){
-            val factory = Injection.provideMovieDetailFactory(context!!, mMovieId)
-            mViewModel = ViewModelProviders.of(this, factory).get(MovieDetailViewModel::class.java)
+           mViewModel = ViewModelProviders.of(this, mFactory).get(MovieDetailViewModel::class.java)
 
-            mViewModel.movie.observe(this, Observer {
+            mViewModel.getMovieDetail(mMovieId).observe(this, Observer {
                 if(it != null){
                     (activity as AppCompatActivity).supportActionBar?.title = it.title
                 }
@@ -77,13 +90,5 @@ class MovieDetailCreditsFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    companion object {
-        private const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
 
-        fun setupBundle(movieId : Int) : Bundle{
-            val bundle = Bundle()
-            bundle.putInt(KEY_MOVIE_ID, movieId)
-            return bundle
-        }
-    }
 }

@@ -2,6 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movi
 
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -16,19 +17,22 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.FilterMovieAdapter
-import com.demo.developer.deraesw.demomoviewes.utils.Injection
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  *
  */
-class FilterMoviesFragment : Fragment(), FilterMovieAdapter.FilterMovieAdapterInterface {
+class FilterMoviesFragment : DaggerFragment(), FilterMovieAdapter.FilterMovieAdapterInterface {
 
     private val TAG = FilterMoviesFragment::class.java.simpleName
 
     private lateinit var mClearAllView : ImageView
     private lateinit var mClearAllTv   : TextView
 
+    @Inject
+    lateinit var mFactory : ViewModelProvider.Factory
     private lateinit var mViewModel : FilterMovieViewModel
     private lateinit var mAdapter : FilterMovieAdapter
     private var mListener : FilterListenerInterface? = null
@@ -49,8 +53,7 @@ class FilterMoviesFragment : Fragment(), FilterMovieAdapter.FilterMovieAdapterIn
         mAdapter = FilterMovieAdapter(this)
         recyclerView.adapter = mAdapter
 
-        val factory = Injection.provideFilterMoviesFactory(context!!)
-        mViewModel = ViewModelProviders.of(this, factory).get(FilterMovieViewModel::class.java)
+        mViewModel = ViewModelProviders.of(this, mFactory).get(FilterMovieViewModel::class.java)
 
         mViewModel.movieGenreFilter.observe(this, Observer {
             if(it != null){

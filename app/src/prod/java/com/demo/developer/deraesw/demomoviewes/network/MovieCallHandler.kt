@@ -6,14 +6,9 @@ import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
-import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 

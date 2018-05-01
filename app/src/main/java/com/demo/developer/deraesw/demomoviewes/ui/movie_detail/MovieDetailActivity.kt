@@ -3,14 +3,18 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.extension.addFragmentToActivity
 import com.demo.developer.deraesw.demomoviewes.extension.replaceFragmentToActivity
 import com.demo.developer.deraesw.demomoviewes.extension.showShortToast
+import dagger.android.support.DaggerAppCompatActivity
 
-class MovieDetailActivity : AppCompatActivity() {
+class MovieDetailActivity : DaggerAppCompatActivity() {
+
+    companion object {
+        const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
+    }
 
     private val TAG = MovieDetailActivity::class.java.simpleName
     private var mMovieId : Int = 0
@@ -41,7 +45,7 @@ class MovieDetailActivity : AppCompatActivity() {
                         true
                     }
                     R.id.navigation_movie_detail_reviews -> {
-                        launchReviewMovieFragment()
+                        //launchReviewMovieFragment()
                         true
                     }
                     else  -> false
@@ -90,7 +94,5 @@ class MovieDetailActivity : AppCompatActivity() {
         this.replaceFragmentToActivity(R.id.main_container_movie_detail, fragment)
     }
 
-    companion object {
-        const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
-    }
+
 }

@@ -1,15 +1,14 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.repository.MovieCreditsRepository
+import javax.inject.Inject
 
-class MovieCastingViewModel(
-        private val movieCreditsRepository: MovieCreditsRepository,
-        private val idMovie : Int) : ViewModel() {
+class MovieCastingViewModel
+@Inject constructor(
+        private val movieCreditsRepository: MovieCreditsRepository) : ViewModel() {
 
-    val casting : LiveData<List<CastingItem>> = movieCreditsRepository.getCastingFromMovie(idMovie)
+    fun getMovieCasting(movieId: Int) = movieCreditsRepository.getCastingFromMovie(movieId)
 
     fun fetchMovieCredits(movieId : Int){
         movieCreditsRepository.fetchMovieCredits(movieId)

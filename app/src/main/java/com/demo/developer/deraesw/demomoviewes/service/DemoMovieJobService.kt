@@ -8,7 +8,6 @@ import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
-import com.demo.developer.deraesw.demomoviewes.utils.Injection
 import com.demo.developer.deraesw.demomoviewes.utils.NotificationTools
 import dagger.android.AndroidInjection
 import javax.inject.Inject

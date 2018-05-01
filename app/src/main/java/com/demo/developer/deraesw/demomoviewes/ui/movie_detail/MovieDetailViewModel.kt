@@ -1,14 +1,13 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
-import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
+import javax.inject.Inject
 
-class MovieDetailViewModel(val movieRepository: MovieRepository, val idMovie : Int) : ViewModel() {
+class MovieDetailViewModel
+@Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
 
-    val movie : LiveData<Movie> = movieRepository.getMovieDetail(idMovie)
-    val genreFromMovie : LiveData<List<MovieGenre>> = movieRepository.getMovieGenreFromMovie(idMovie)
+    fun getMovieDetail(movieId : Int) = movieRepository.getMovieDetail(movieId)
 
+    fun getGenreFromMovie(movieId : Int) = movieRepository.getMovieGenreFromMovie(movieId)
 }

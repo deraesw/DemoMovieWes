@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
 import com.demo.developer.deraesw.demomoviewes.R
 
+@Deprecated("to remove, use SortingActivity instead")
 class SortingMovieActivity : AppCompatActivity(), SortingMovieFragment.SortingMovieFragmentInterface {
 
     private val TAG = SortingMovieActivity::class.java.simpleName
