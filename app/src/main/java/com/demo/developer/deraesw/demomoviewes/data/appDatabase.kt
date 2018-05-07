@@ -15,9 +15,11 @@ import javax.inject.Named
             (MovieToGenre::class),
             (People::class),
             (Crew::class),
-            (Casting::class)
+            (Casting::class),
+            (ProductionCompany::class),
+            (MovieToProduction::class)
         ],
-        version = 1)
+        version = 2)
 abstract class appDatabase : RoomDatabase(){
     private val TAG = appDatabase::class.java.simpleName
 
@@ -27,9 +29,11 @@ abstract class appDatabase : RoomDatabase(){
     abstract fun peopleDAO() : PeopleDAO
     abstract fun castingDAO() : CastingDAO
     abstract fun crewDAO() : CrewDAO
+    abstract fun productionCompanyDao() : ProductionCompanyDao
+    abstract fun movieToProductionDao() : MovieToProductionDao
 
     companion object {
-        const val NAME_DATABASE = "demo_movie_wes.db"
+        private const val NAME_DATABASE = "demo_movie_wes.db"
 
         @Volatile private var sInstance : appDatabase? = null
 

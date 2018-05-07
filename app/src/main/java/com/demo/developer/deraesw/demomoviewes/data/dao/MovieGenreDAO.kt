@@ -13,9 +13,6 @@ import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
     @Query("SELECT * FROM movie_genre ORDER BY name")
     fun selectAllMovieGenre() : LiveData<List<MovieGenre>>
 
-    @Query("SELECT * FROM movie_genre")
-    fun selectAllMovieGenreList() : List<MovieGenre>
-
     @Query("SELECT * FROM movie_genre ORDER BY name")
     fun selectAllMovieGenreForFilter() : LiveData<List<GenreFilter>>
 
