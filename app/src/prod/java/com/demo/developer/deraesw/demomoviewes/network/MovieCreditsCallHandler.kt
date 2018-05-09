@@ -3,7 +3,10 @@ package com.demo.developer.deraesw.demomoviewes.network
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
+import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,9 +30,12 @@ class MovieCreditsCallHandler
     }
 
     val mCreditsList : MutableLiveData<MovieCreditsListResponse> = MutableLiveData()
+    val mErrorMessage : SingleLiveEvent<NetworkError> = SingleLiveEvent()
 
     @Inject
     lateinit var mMovieDbApi: MoviedbAPI
+    @Inject
+    lateinit var mGson : Gson
 
     fun fetchMovieCredits(idMovie : Int){
         val call = mMovieDbApi.fetchMovieCredit(idMovie, BuildConfig.MOVIES_DB_API)
@@ -42,15 +48,15 @@ class MovieCreditsCallHandler
                     }
                 } else {
                     if (response.errorBody() != null) {
-                        //todo
-                        Log.w(TAG, "Empty body")
+                        val error = mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java)
+                        mErrorMessage.postValue(error)
                     }
                 }
             }
 
             override fun onFailure(call: Call<MovieCreditsListResponse>, t: Throwable) {
-                //todo
-                Log.e(TAG, t.message, t);
+                Log.e(TAG, t.message, t)
+                mErrorMessage.postValue(NetworkError(t.message ?: "unknown error", 0))
             }
         })
     }
