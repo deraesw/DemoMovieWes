@@ -18,4 +18,11 @@
         android:orderInCategory="10"
         app:showAsAction="ifRoom"
         />
+
+    <item
+        android:id="@+id/actiob_refresh"
+        android:title="Refresh"
+        android:orderInCategory="999"
+        app:showAsAction="never"
+        />
 </menu>

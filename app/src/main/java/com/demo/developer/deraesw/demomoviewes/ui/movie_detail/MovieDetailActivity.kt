@@ -1,7 +1,13 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.MenuItem
 import com.demo.developer.deraesw.demomoviewes.R
@@ -9,21 +15,31 @@ import com.demo.developer.deraesw.demomoviewes.extension.addFragmentToActivity
 import com.demo.developer.deraesw.demomoviewes.extension.replaceFragmentToActivity
 import com.demo.developer.deraesw.demomoviewes.extension.showShortToast
 import dagger.android.support.DaggerAppCompatActivity
+import javax.inject.Inject
 
 class MovieDetailActivity : DaggerAppCompatActivity() {
 
     companion object {
-        const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
+        const val EXTRA_MOVIE_ID = "com.demo.developer.deraesw.demomoviewes.EXTRA_MOVIE_ID"
+
+        fun setup(context: Context, movieId : Int) : Intent {
+            val intent = Intent(context, MovieDetailActivity::class.java)
+            intent.putExtra(EXTRA_MOVIE_ID, movieId)
+            return intent
+        }
     }
 
     private val TAG = MovieDetailActivity::class.java.simpleName
     private var mMovieId : Int = 0
 
+    @Inject
+    lateinit var mFactory : ViewModelProvider.Factory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
 
-        mMovieId = intent.getIntExtra(KEY_MOVIE_ID, 0)
+        mMovieId = intent.getIntExtra(EXTRA_MOVIE_ID, 0)
 
         if(mMovieId != 0){
             if(savedInstanceState == null){
@@ -45,10 +61,21 @@ class MovieDetailActivity : DaggerAppCompatActivity() {
                         true
                     }
                     R.id.navigation_movie_detail_reviews -> {
-                        //launchReviewMovieFragment()
+                        launchReviewMovieFragment()
                         true
                     }
                     else  -> false
+                }
+            })
+
+            val viewModel = ViewModelProviders.of(this, mFactory).get(MovieDetailViewModel::class.java)
+            viewModel.networkError.observe(this, Observer {
+                if(it != null){
+                    Snackbar.make(
+                            findViewById(R.id.main_view),
+                            "${it.statusMessage} (${it.statusCode})",
+                            Snackbar.LENGTH_LONG
+                    ).show()
                 }
             })
 
@@ -85,9 +112,7 @@ class MovieDetailActivity : DaggerAppCompatActivity() {
     }
 
     private fun launchReviewMovieFragment(){
-        val fragment = MovieDetailReviewFragment()
-
-        replaceFragment(fragment)
+        replaceFragment(MovieDetailReviewFragment.create(mMovieId))
     }
 
     private fun replaceFragment(fragment : Fragment){

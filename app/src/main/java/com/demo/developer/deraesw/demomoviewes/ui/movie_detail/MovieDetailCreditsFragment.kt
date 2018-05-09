@@ -60,14 +60,6 @@ class MovieDetailCreditsFragment : DaggerFragment() {
         mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
 
         if(mMovieId != 0){
-           mViewModel = ViewModelProviders.of(this, mFactory).get(MovieDetailViewModel::class.java)
-
-            mViewModel.getMovieDetail(mMovieId).observe(this, Observer {
-                if(it != null){
-                    (activity as AppCompatActivity).supportActionBar?.title = it.title
-                }
-            })
-
             val viewPagerAdapter = ViewPagerAdapter(fragmentManager!!)
 
             val castFragment = MovieCastingFragment()
@@ -85,10 +77,22 @@ class MovieDetailCreditsFragment : DaggerFragment() {
         return viewRoot
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        if(mMovieId != 0) {
+            mViewModel = ViewModelProviders.of(this, mFactory).get(MovieDetailViewModel::class.java)
+
+            mViewModel.getMovieDetail(mMovieId).observe(this, Observer {
+                if (it != null) {
+                    (activity as AppCompatActivity).supportActionBar?.title = it.title
+                }
+            })
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         menu?.clear()
         super.onCreateOptionsMenu(menu, inflater)
     }
-
-
 }

@@ -32,16 +32,6 @@ class MovieCastingFragment : DaggerFragment() {
 
     private val TAG = MovieCastingFragment::class.java.simpleName
 
-    @Inject
-    lateinit var mFactory : ViewModelProvider.Factory
-    private lateinit var mViewModel : MovieCastingViewModel
-    private lateinit var mAdapter : CastingAdapter
-    private lateinit var mEmptyView : View
-
-    private var mMovieId : Int = 0
-    private var sortingByCode : String = Constant.SortingCode.BY_DEFAULT
-    private var originalList : List<CastingItem> = ArrayList()
-
     companion object {
         private const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
 
@@ -51,6 +41,16 @@ class MovieCastingFragment : DaggerFragment() {
             return bundle
         }
     }
+
+    @Inject lateinit var mFactory : ViewModelProvider.Factory
+    private lateinit var mViewModel : MovieCastingViewModel
+    private lateinit var mAdapter : CastingAdapter
+    private lateinit var mEmptyView : View
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+
+    private var mMovieId : Int = 0
+    private var mSortingCode : String = Constant.SortingCode.BY_DEFAULT
+    private var mOriginalList : List<CastingItem> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +72,15 @@ class MovieCastingFragment : DaggerFragment() {
 
         mEmptyView = viewRoot.findViewById(R.id.inc_empty_list)
 
-        val swipeRefreshLayout = viewRoot.findViewById<SwipeRefreshLayout>(R.id.sf_casting_list)
+        mSwipeRefreshLayout = viewRoot.findViewById(R.id.sf_casting_list)
+
+        mSwipeRefreshLayout.setOnRefreshListener(this@MovieCastingFragment::fetchMovieCredits)
+
+        return viewRoot
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         if(mMovieId != 0){
             mViewModel = ViewModelProviders.of(this, mFactory).get(MovieCastingViewModel::class.java)
@@ -80,31 +88,24 @@ class MovieCastingFragment : DaggerFragment() {
             mViewModel.getMovieCasting(mMovieId).observe(this, Observer {
                 if(it != null){
                     if(it.isNotEmpty()){
-                        originalList = it
+                        mOriginalList = it
                         manageItems()
-                    } else {
-                        mViewModel.fetchMovieCredits(mMovieId)
-                        swipeRefreshLayout.isRefreshing = true
                     }
-
-                } else {
-                    mViewModel.fetchMovieCredits(mMovieId)
-                    swipeRefreshLayout.isRefreshing = true
                 }
 
-                if(swipeRefreshLayout.isRefreshing){
-                    swipeRefreshLayout.isRefreshing = false
+                if(mSwipeRefreshLayout.isRefreshing){
+                    mSwipeRefreshLayout.isRefreshing = false
                 }
 
                 manageDisplayEmptyView()
             })
 
-            swipeRefreshLayout.setOnRefreshListener({
-                mViewModel.fetchMovieCredits(mMovieId)
+            mViewModel.errorNetwork.observe(this, Observer {
+                if(it != null){
+                    mSwipeRefreshLayout.isRefreshing = false
+                }
             })
         }
-
-        return viewRoot
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -127,8 +128,8 @@ class MovieCastingFragment : DaggerFragment() {
         when(requestCode){
             NavigationInterface.RC_CASTING_SORTING_OPTION -> {
                 if(resultCode == Activity.RESULT_OK ){
-                    sortingByCode =
-                            data?.getStringExtra(SortingActivity.KEY_NEW_CODE_SELECTED) ?:
+                    mSortingCode =
+                            data?.getStringExtra(SortingActivity.EXTRA_NEW_CODE_SELECTED) ?:
                             Constant.SortingCode.BY_DEFAULT
                     manageItems()
                 }
@@ -136,10 +137,14 @@ class MovieCastingFragment : DaggerFragment() {
         }
     }
 
-    private fun manageItems(){
-        var filterList = originalList
+    private fun fetchMovieCredits() {
+        mViewModel.fetchMovieCredits(mMovieId)
+    }
 
-        filterList = when(sortingByCode){
+    private fun manageItems(){
+        var filterList = mOriginalList
+
+        filterList = when(mSortingCode){
             Constant.SortingCode.BY_DEFAULT -> filterList.sortedBy { it.id }
             Constant.SortingCode.Casting.BY_NAME_ASC -> filterList.sortedBy { it.name }
             Constant.SortingCode.Casting.BY_NAME_DESC -> filterList.sortedByDescending { it.name }
@@ -152,13 +157,15 @@ class MovieCastingFragment : DaggerFragment() {
     }
 
     private fun manageDisplayEmptyView(){
-        mEmptyView.visibility = if(originalList.isNotEmpty()) View.GONE else View.VISIBLE
+        mEmptyView.visibility = if(mOriginalList.isNotEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun launchSortingActivity(){
-        val intent = Intent(context, SortingActivity::class.java)
-        intent.putExtra(SortingActivity.KEY_SORT_CATEGORY, SortingFragment.Category.SORT_CASTING)
-        intent.putExtra(SortingActivity.KEY_CODE_SELECTED, sortingByCode)
+        val intent = SortingActivity.setup(
+                context!!,
+                SortingFragment.Category.SORT_CASTING,
+                mSortingCode
+        )
         startActivityForResult(intent, NavigationInterface.RC_CASTING_SORTING_OPTION)
     }
 }

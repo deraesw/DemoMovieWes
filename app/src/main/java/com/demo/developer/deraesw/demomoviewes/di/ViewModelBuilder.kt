@@ -2,7 +2,6 @@ package com.demo.developer.deraesw.demomoviewes.di
 
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
-import com.demo.developer.deraesw.demomoviewes.ui.DummyMainActivityViewModel
 import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailViewModel
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingViewModel
@@ -18,11 +17,6 @@ internal abstract class ViewModelBuilder {
 
     @Binds
     internal abstract fun bindViewModelFactory(factory : DemoViewModelFactory) : ViewModelProvider.Factory
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(DummyMainActivityViewModel::class)
-    abstract fun bindDummyViewModel(viewModel : DummyMainActivityViewModel) : ViewModel
 
     @Binds
     @IntoMap

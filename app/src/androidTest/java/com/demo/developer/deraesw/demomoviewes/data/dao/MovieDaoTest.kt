@@ -3,11 +3,14 @@ package com.demo.developer.deraesw.demomoviewes.data.dao
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
+import android.support.test.espresso.matcher.ViewMatchers.assertThat
 import android.support.test.runner.AndroidJUnit4
 import com.demo.developer.deraesw.demomoviewes.data.LiveDataTestUtil
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -60,6 +63,9 @@ class MovieDaoTest {
         assertTrue(movieInserted.id == DataTestUtils.movie1.id)
         assertTrue(movieInserted.title == DataTestUtils.movie1.title)
         assertFalse(movieInserted.id == DataTestUtils.movie2.id)
+
+        //assertThat(movieInserted, equalTo(DataTestUtils.movie1))
+        assertThat(movieInserted, not(DataTestUtils.movie2))
     }
 
     @Test
@@ -99,7 +105,7 @@ class MovieDaoTest {
     }
 
     @Test
-    fun insertListAndRemoveAll(){
+    fun insertListLinkAndRemoveAll(){
         var list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
         assertTrue(list.isEmpty())
 

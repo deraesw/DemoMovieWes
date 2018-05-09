@@ -2,7 +2,9 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
+import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,6 +13,7 @@ class MainRepository
 @Inject constructor(
         val genreRepository: MovieGenreRepository,
         val sharePrefRepository: SharePrefRepository,
+        val movieCreditsRepository: MovieCreditsRepository,
         val movieRepository: MovieRepository){
 
     private val TAG = MainRepository::class.java.simpleName
@@ -20,6 +23,7 @@ class MainRepository
     private var syncStarted = false
     private var mAccountData : AccountData? = null
 
+    var networkError : SingleLiveEvent<NetworkError> = SingleLiveEvent()
 
     init {
         genreRepository.mMovieGenreList.observeForever({
@@ -35,6 +39,12 @@ class MainRepository
                 if(checkSynchronizationTerminated()) {
                     setSynchronizationTerminated()
                 }
+            }
+        })
+
+        movieCreditsRepository.errorNetwork.observeForever({
+            if(it != null){
+                networkError.postValue(it)
             }
         })
     }
@@ -69,6 +79,7 @@ class MainRepository
         sharePrefRepository.updateAccountInformation(mAccountData!!)
     }
 
+    /*
     companion object {
         @Volatile private var sInstance : MainRepository? = null
 
@@ -85,5 +96,5 @@ class MainRepository
 
             return sInstance!!
         }
-    }
+    }*/
 }

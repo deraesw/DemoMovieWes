@@ -1,6 +1,7 @@
 package com.demo.developer.deraesw.demomoviewes.ui.sorting
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,17 +14,24 @@ class SortingActivity : AppCompatActivity(), SortingFragment.SortingFragmentInte
     private val TAG = SortingActivity::class.java.simpleName
 
     companion object {
-        const val KEY_SORT_CATEGORY = "KEY_SORT_CATEGORY"
-        const val KEY_CODE_SELECTED = "KEY_CODE_SELECTED"
-        const val KEY_NEW_CODE_SELECTED = "KEY_NEW_CODE_SELECTED"
+        const val EXTRA_SORT_CATEGORY = "com.demo.developer.deraesw.demomoviewes.EXTRA_SORT_CATEGORY"
+        const val EXTRA_CODE_SELECTED = "com.demo.developer.deraesw.demomoviewes.EXTRA_CODE_SELECTED"
+        const val EXTRA_NEW_CODE_SELECTED = "com.demo.developer.deraesw.demomoviewes.EXTRA_NEW_CODE_SELECTED"
+
+        fun setup(context: Context, category : String, selectedCode : String) : Intent {
+            val intent = Intent(context, SortingActivity::class.java)
+            intent.putExtra(SortingActivity.EXTRA_SORT_CATEGORY, category)
+            intent.putExtra(SortingActivity.EXTRA_CODE_SELECTED, selectedCode)
+            return intent
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sorting_movie)
 
-        val category = intent?.getStringExtra(KEY_SORT_CATEGORY) ?: ""
-        val code = intent?.getStringExtra(KEY_CODE_SELECTED) ?: ""
+        val category = intent?.getStringExtra(EXTRA_SORT_CATEGORY) ?: ""
+        val code = intent?.getStringExtra(EXTRA_CODE_SELECTED) ?: ""
 
         if(category.isEmpty()){
             this.showShortToast("Unknown Category")
@@ -49,7 +57,7 @@ class SortingActivity : AppCompatActivity(), SortingFragment.SortingFragmentInte
 
     override fun selectSortingOption(code: String) {
         intent = Intent()
-        intent.putExtra(KEY_NEW_CODE_SELECTED, code)
+        intent.putExtra(EXTRA_NEW_CODE_SELECTED, code)
         setResult(Activity.RESULT_OK, intent)
         finish()
     }

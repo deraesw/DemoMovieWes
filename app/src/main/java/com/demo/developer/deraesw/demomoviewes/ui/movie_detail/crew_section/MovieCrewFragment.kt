@@ -19,61 +19,63 @@ import javax.inject.Inject
 
 
 class MovieCrewFragment : DaggerFragment() {
+    private val TAG = MovieCrewFragment::class.java.simpleName
 
     companion object {
-        private const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
+        private const val ARGUMENT_MOVIE_ID = "ARGUMENT_MOVIE_ID"
 
         fun setupBundle(movieId : Int) : Bundle{
             val bundle = Bundle()
-            bundle.putInt(KEY_MOVIE_ID, movieId)
+            bundle.putInt(ARGUMENT_MOVIE_ID, movieId)
             return bundle
         }
     }
 
-    private val TAG = MovieCrewFragment::class.java.simpleName
-
-    @Inject
-    lateinit var mFactory: ViewModelProvider.Factory
-    private var mMovieId : Int = 0
+    @Inject lateinit var mFactory: ViewModelProvider.Factory
     private lateinit var mViewModel : MovieCrewViewModel
+    private lateinit var mAdapter: CrewAdapter
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+
+    private var mMovieId : Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val viewRoot = inflater.inflate(R.layout.fragment_movie_crew, container, false)
 
-        mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
+        mMovieId = arguments?.getInt(ARGUMENT_MOVIE_ID) ?: 0
 
         val recyclerView = viewRoot.findViewById<RecyclerView>(R.id.rv_crew_list)
         recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)
 
-        val adapter = CrewAdapter()
-        recyclerView.adapter = adapter
+        mAdapter = CrewAdapter()
+        recyclerView.adapter = mAdapter
 
-        val swipeRefreshLayout = viewRoot.findViewById<SwipeRefreshLayout>(R.id.sf_crew_list)
+        mSwipeRefreshLayout = viewRoot.findViewById<SwipeRefreshLayout>(R.id.sf_crew_list)
+
+        mSwipeRefreshLayout.setOnRefreshListener({
+            mViewModel.fetchMovieCredits(mMovieId)
+        })
+
+        return viewRoot
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         if(mMovieId != 0){
             mViewModel = ViewModelProviders.of(this, mFactory).get(MovieCrewViewModel::class.java)
 
             mViewModel.getMovieCrew(mMovieId).observe(this, Observer {
                 if(it != null){
-                    adapter.swapData(it)
+                    mAdapter.swapData(it)
                 }
 
-                if(swipeRefreshLayout.isRefreshing){
-                    swipeRefreshLayout.isRefreshing = false
+                if(mSwipeRefreshLayout.isRefreshing){
+                    mSwipeRefreshLayout.isRefreshing = false
                 }
-            })
-
-            swipeRefreshLayout.setOnRefreshListener({
-                mViewModel.fetchMovieCredits(mMovieId)
             })
         }
-
-
-        return viewRoot
     }
-
-
 }

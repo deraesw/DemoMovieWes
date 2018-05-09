@@ -19,23 +19,22 @@ import javax.inject.Inject
  * A placeholder fragment containing a simple view.
  */
 class MovieDetailActivityFragment : DaggerFragment() {
+    private val TAG = MovieDetailActivityFragment::class.java.simpleName
 
     companion object {
-        private const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
+        private const val ARGUMENT_MOVIE_ID = "ARGUMENT_MOVIE_ID"
 
         fun setupBundle(movieId : Int) : Bundle{
             val bundle = Bundle()
-            bundle.putInt(KEY_MOVIE_ID, movieId)
+            bundle.putInt(ARGUMENT_MOVIE_ID, movieId)
             return bundle
         }
     }
 
-    private val TAG = MovieDetailActivityFragment::class.java.simpleName
-
-    @Inject
-    lateinit var mFactory : ViewModelProvider.Factory
+    @Inject lateinit var mFactory : ViewModelProvider.Factory
     private lateinit var mBinding : FragmentMovieDetailBinding
     private lateinit var mViewModel : MovieDetailViewModel
+
     private var mMovieId : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,24 +54,30 @@ class MovieDetailActivityFragment : DaggerFragment() {
             }
         }
 
-        mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
+        mMovieId = arguments?.getInt(ARGUMENT_MOVIE_ID) ?: 0
+
+        return mBinding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         mViewModel = ViewModelProviders.of(this, mFactory).get(MovieDetailViewModel::class.java)
 
-        mViewModel.getMovieDetail(mMovieId).observe(this, Observer {
-            if(it != null){
-                mBinding.movie = it
-                initMovieContent(it)
-            }
-        })
+        if(mMovieId != 0){
+            mViewModel.getMovieDetail(mMovieId).observe(this, Observer {
+                if(it != null){
+                    mBinding.movie = it
+                    initMovieContent(it)
+                }
+            })
 
-        mViewModel.getGenreFromMovie(mMovieId).observe(this, Observer {
-            if(it != null){
-                mBinding.incMovieContentInfo!!.tvGenderValue.text = it.joinToString(transform = {it.name})
-            }
-        })
-
-        return mBinding.root
+            mViewModel.getGenreFromMovie(mMovieId).observe(this, Observer {
+                if(it != null){
+                    mBinding.incMovieContentInfo!!.tvGenderValue.text = it.joinToString(transform = {it.name})
+                }
+            })
+        }
     }
 
     private fun initMovieContent(movie: Movie){

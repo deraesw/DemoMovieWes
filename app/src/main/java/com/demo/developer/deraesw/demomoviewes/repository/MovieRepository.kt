@@ -2,6 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
@@ -34,6 +35,13 @@ class MovieRepository
         movieCallHandler.mMovie.observeForever({
             if(it != null){
                 appDataSource.saveMovie(it)
+            }
+        })
+
+        movieCallHandler.mMovieNetworkResponseList.observeForever({
+            if(it != null){
+                Log.d(TAG, " movieCallHandler.mMovieNetworkResponseList.observeForever : data found")
+                appDataSource.saveListOfMovieNetworkResponse(it)
             }
         })
     }

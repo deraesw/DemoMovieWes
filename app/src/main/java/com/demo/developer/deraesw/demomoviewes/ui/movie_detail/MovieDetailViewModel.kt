@@ -1,13 +1,16 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 import android.arch.lifecycle.ViewModel
+import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import javax.inject.Inject
 
 class MovieDetailViewModel
-@Inject constructor(private val movieRepository: MovieRepository) : ViewModel() {
+@Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    fun getMovieDetail(movieId : Int) = movieRepository.getMovieDetail(movieId)
+    val networkError = mainRepository.networkError
 
-    fun getGenreFromMovie(movieId : Int) = movieRepository.getMovieGenreFromMovie(movieId)
+    fun getMovieDetail(movieId : Int) = mainRepository.movieRepository.getMovieDetail(movieId)
+
+    fun getGenreFromMovie(movieId : Int) = mainRepository.movieRepository.getMovieGenreFromMovie(movieId)
 }

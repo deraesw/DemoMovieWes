@@ -20,4 +20,8 @@ class MoviesInTheaterViewModel
     fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>){
         movieRepository.populateMovieInTheaterWithGenre(list)
     }
+
+    fun fetchNowPlayingMoving(){
+        movieRepository.fetchNowPlayingMovie()
+    }
 }

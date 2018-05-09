@@ -25,12 +25,6 @@ class AppModule constructor(var app : DemoMovieWesApp) {
         return app.applicationContext
     }
 
-    @Named("test")
-    @Provides
-    fun provideTest() : String {
-        return "TEST PROVIDE"
-    }
-
     @Provides
     fun provideAppDataBase(@Named("context_app") context: Context) : appDatabase {
         return appDatabase.getInstance(context)

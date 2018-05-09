@@ -20,18 +20,6 @@ class SortingFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
 
     private val TAG = SortingFragment::class.java.simpleName
 
-    companion object {
-        const val KEY_SORT_CATEGORY = "KEY_SORT_CATEGORY"
-        const val KEY_SORT_CODE = "KEY_SORT_CODE"
-
-        fun setup(categorySorting : String,  codeKey : String) : Bundle {
-            val bundle = Bundle()
-            bundle.putString(KEY_SORT_CODE, codeKey)
-            bundle.putString(KEY_SORT_CATEGORY, categorySorting)
-            return bundle
-        }
-    }
-
     class Category {
         companion object {
             const val SORT_MOVIE   = "SORT_MOVIE"
@@ -40,8 +28,16 @@ class SortingFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
         }
     }
 
-    interface SortingFragmentInterface {
-        fun selectSortingOption(code : String)
+    companion object {
+        const val ARGUMENT_SORT_CATEGORY = "ARGUMENT_SORT_CATEGORY"
+        const val ARGUMENT_SORT_CODE = "ARGUMENT_SORT_CODE"
+
+        fun setup(categorySorting : String,  codeKey : String) : Bundle {
+            val bundle = Bundle()
+            bundle.putString(ARGUMENT_SORT_CODE, codeKey)
+            bundle.putString(ARGUMENT_SORT_CATEGORY, categorySorting)
+            return bundle
+        }
     }
 
     private lateinit var mAdapter : SortingAdapter
@@ -52,8 +48,8 @@ class SortingFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mCategory = arguments?.getString(KEY_SORT_CATEGORY) ?: ""
-        mCode = arguments?.getString(KEY_SORT_CODE) ?: Constant.SortingCode.BY_DEFAULT
+        mCategory = arguments?.getString(ARGUMENT_SORT_CATEGORY) ?: ""
+        mCode = arguments?.getString(ARGUMENT_SORT_CODE) ?: Constant.SortingCode.BY_DEFAULT
         if(mCode == ""){
             mCode = Constant.SortingCode.BY_DEFAULT
         }
@@ -91,7 +87,7 @@ class SortingFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
         sortingOptionCode.toSortedMap().forEach{
             index, value -> movieSortList += SortItem(
                 value,
-                sortingOptionLabel.get(index) ?: "",
+                sortingOptionLabel[index],
                 (value == mCode)
             )
         }
@@ -115,5 +111,9 @@ class SortingFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
         mAdapter.changeSelectedItem(position)
         mCode = mAdapter.getItemAt(position).key
         mHandle.selectSortingOption(mCode)
+    }
+
+    interface SortingFragmentInterface {
+        fun selectSortingOption(code : String)
     }
 }

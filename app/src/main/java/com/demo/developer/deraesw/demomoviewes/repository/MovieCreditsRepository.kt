@@ -20,6 +20,7 @@ class MovieCreditsRepository
 
     private val TAG = MovieCreditsRepository::class.java.simpleName
 
+    val errorNetwork = movieCreditsCallHandler.mErrorMessage
 
     init {
         movieCreditsCallHandler.mCreditsList.observeForever({
@@ -33,6 +34,7 @@ class MovieCreditsRepository
                 }
             }
         })
+
     }
 
     fun getCastingFromMovie(movieId : Int) = appDataSource.selectCastingItemFromMovie(movieId)

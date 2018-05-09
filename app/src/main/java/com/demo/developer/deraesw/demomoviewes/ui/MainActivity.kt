@@ -77,8 +77,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
     }
 
     private fun launchMovieDetailActivity(key : Int){
-        intent = Intent(this, MovieDetailActivity::class.java)
-        intent.putExtra(MovieDetailActivity.KEY_MOVIE_ID, key)
+        val intent = MovieDetailActivity.setup(this, key)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // Apply activity transition

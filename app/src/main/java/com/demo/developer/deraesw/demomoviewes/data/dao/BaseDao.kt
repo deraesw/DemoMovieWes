@@ -10,5 +10,9 @@ interface BaseDao<T> {
 
     @JvmSuppressWildcards
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun bulkInsert(list: List<T>)
+    fun bulkForceInsert(list: List<T>)
+
+    @JvmSuppressWildcards
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun bulkIgnoreInsert(list: List<T>)
 }

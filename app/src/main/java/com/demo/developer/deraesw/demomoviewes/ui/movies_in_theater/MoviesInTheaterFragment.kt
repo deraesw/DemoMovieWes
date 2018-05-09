@@ -38,14 +38,7 @@ class MoviesInTheaterFragment : DaggerFragment(),
 
     private val TAG = MoviesInTheaterFragment::class.java.simpleName
 
-    companion object {
-        //todo full path
-        const val RC_SORTING_OPTION = "RC_SORTING_OPTION"
-    }
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var mBinding : FragmentMoviesInTheaterBinding
     private lateinit var mAdapter: MovieInTheaterAdapter
     private lateinit var mViewModel : MoviesInTheaterViewModel
@@ -53,10 +46,10 @@ class MoviesInTheaterFragment : DaggerFragment(),
 
     private var mFilterFragment : FilterMoviesFragment? = null
 
-    private var originalList : List<MovieInTheater> = ArrayList()
-    private var filterItem : List<Int> = ArrayList()
-    private var allGenreList : List<MovieGenre> = ArrayList()
-    private var sortingByCode : String = Constant.SortingCode.BY_DEFAULT
+    private var mOriginalList : List<MovieInTheater> = ArrayList()
+    private var mFilterItem : List<Int> = ArrayList()
+    private var mAllGenreList : List<MovieGenre> = ArrayList()
+    private var mSortingByCode : String = Constant.SortingCode.BY_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,27 +64,6 @@ class MoviesInTheaterFragment : DaggerFragment(),
         mBinding.rvMoviesInTheater.layoutManager = LinearLayoutManager(
                 context, LinearLayoutManager.VERTICAL, false)
         mBinding.rvMoviesInTheater.adapter = mAdapter
-
-
-        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MoviesInTheaterViewModel::class.java)
-
-        mViewModel.mMovieGenre.observe(this, Observer {
-            if(it != null){
-                allGenreList = it
-            }
-        })
-
-        mViewModel.mMovieList.observe(this, Observer {
-            if(it != null){
-                mViewModel.populateMovieInTheaterWithGenre(it)
-            }
-        })
-
-        mViewModel.mMovieInTheaterWithGender.observe(this, Observer {
-            originalList = it ?: ArrayList()
-            manageItems()
-            manageFilterContentView()
-        })
 
         (activity as AppCompatActivity).supportActionBar?.apply {
             setTitle(R.string.title_movies_in_theater)
@@ -112,6 +84,30 @@ class MoviesInTheaterFragment : DaggerFragment(),
         })
 
         return mBinding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MoviesInTheaterViewModel::class.java)
+
+        mViewModel.mMovieGenre.observe(this, Observer {
+            if(it != null){
+                mAllGenreList = it
+            }
+        })
+
+        mViewModel.mMovieList.observe(this, Observer {
+            if(it != null){
+                mViewModel.populateMovieInTheaterWithGenre(it)
+            }
+        })
+
+        mViewModel.mMovieInTheaterWithGender.observe(this, Observer {
+            mOriginalList = it ?: ArrayList()
+            manageItems()
+            manageFilterContentView()
+        })
     }
 
     override fun onAttach(context: Context?) {
@@ -140,6 +136,9 @@ class MoviesInTheaterFragment : DaggerFragment(),
                 toggleFilterDrawer(false)
                 launchSortingActivity()
             }
+            R.id.actiob_refresh -> {
+                mViewModel.fetchNowPlayingMoving()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -148,8 +147,8 @@ class MoviesInTheaterFragment : DaggerFragment(),
         when(requestCode){
             NavigationInterface.RC_MOVIE_SORTING_OPTION -> {
                 if(resultCode == Activity.RESULT_OK ){
-                    sortingByCode =
-                            data?.getStringExtra(SortingActivity.KEY_NEW_CODE_SELECTED) ?:
+                    mSortingByCode =
+                            data?.getStringExtra(SortingActivity.EXTRA_NEW_CODE_SELECTED) ?:
                             Constant.SortingCode.BY_DEFAULT
                     manageItems()
                 }
@@ -162,18 +161,18 @@ class MoviesInTheaterFragment : DaggerFragment(),
     }
 
     override fun onFilterChange(list: List<Int>) {
-        filterItem = list
+        mFilterItem = list
         manageItems()
         manageFilterContentView()
     }
 
     override fun clearFilter() {
-        filterItem = ArrayList()
+        mFilterItem = ArrayList()
     }
 
     private fun manageItems(){
-        var filterList = originalList
-        if(filterItem.isNotEmpty()){
+        var filterList = mOriginalList
+        if(mFilterItem.isNotEmpty()){
             //Method 1 AND
             /*
             list.forEach({
@@ -188,12 +187,12 @@ class MoviesInTheaterFragment : DaggerFragment(),
             //Method 2 OR
             filterList = filterList.filter {
                 it.genres.any({
-                    filterItem.contains(it.id)
+                    mFilterItem.contains(it.id)
                 })
             }
         }
 
-        filterList = when(sortingByCode){
+        filterList = when(mSortingByCode){
             Constant.SortingCode.BY_DEFAULT -> filterList.sortedBy { it.id }
             Constant.SortingCode.BY_TITLE -> filterList.sortedBy { it.title }
             Constant.SortingCode.BY_DURATION -> filterList.sortedBy { it.runtime }
@@ -208,12 +207,12 @@ class MoviesInTheaterFragment : DaggerFragment(),
     }
 
     private fun manageFilterContentView(){
-        if(filterItem.isNotEmpty()){
+        if(mFilterItem.isNotEmpty()){
 
             mBinding.llFilterContent.visibility = View.VISIBLE
 
-            val filterContent = allGenreList.filter {
-                filterItem.contains(it.id)
+            val filterContent = mAllGenreList.filter {
+                mFilterItem.contains(it.id)
             } .sortedBy {
                 it.name
             }.joinToString(transform = {
@@ -237,9 +236,9 @@ class MoviesInTheaterFragment : DaggerFragment(),
     }
 
     private fun launchSortingActivity(){
-        val intent = Intent(context, SortingActivity::class.java)
-        intent.putExtra(SortingActivity.KEY_SORT_CATEGORY, SortingFragment.Category.SORT_MOVIE)
-        intent.putExtra(SortingActivity.KEY_CODE_SELECTED, sortingByCode)
+        val intent = SortingActivity.setup(context!!,
+                SortingFragment.Category.SORT_MOVIE,
+                mSortingByCode)
         startActivityForResult(intent, NavigationInterface.RC_MOVIE_SORTING_OPTION)
     }
 }

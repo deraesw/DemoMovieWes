@@ -2,6 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.di
 
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivityFragment
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailCreditsFragment
+import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailReviewFragment
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingFragment
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section.MovieCrewFragment
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFragment
@@ -29,4 +30,7 @@ internal abstract class FragmentModule {
 
     @ContributesAndroidInjector
     internal abstract fun contributeMovieCrewFragment() : MovieCrewFragment
+
+    @ContributesAndroidInjector
+    internal abstract fun contributeMovieDetailReviewFragment() : MovieDetailReviewFragment
 }

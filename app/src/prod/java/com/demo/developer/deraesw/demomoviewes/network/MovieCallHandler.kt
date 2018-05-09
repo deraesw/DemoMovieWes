@@ -5,7 +5,12 @@ import android.os.Handler
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
+import com.demo.developer.deraesw.demomoviewes.data.entity.ProductionCompany
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
+import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
+import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,21 +35,23 @@ class MovieCallHandler
     private val mApi = BuildConfig.MOVIES_DB_API
 
     val mMovieList : MutableLiveData<List<Movie>> = MutableLiveData()
-    val mMovie : MutableLiveData<Movie> = MutableLiveData()
+    val mMovie : MutableLiveData<MovieResponse> = MutableLiveData()
+    val mMovieNetworkResponseList : MutableLiveData<List<MovieResponse>> = MutableLiveData()
 
     @Inject
     lateinit var mMovieDbApi: MoviedbAPI
-
+    @Inject
+    lateinit var mGson : Gson
 
     fun fetchMovieDetail(id : Int){
         val call = mMovieDbApi.fetchMovieDetail(id, mApi)
 
-        call.enqueue(object : Callback<Movie> {
-            override fun onFailure(call: Call<Movie>?, t: Throwable?) {
+        call.enqueue(object : Callback<MovieResponse> {
+            override fun onFailure(call: Call<MovieResponse>?, t: Throwable?) {
                 Log.e(TAG, t?.message, t)
             }
 
-            override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 if(response.isSuccessful) {
                     val movie = response.body()
                     if(movie != null){
@@ -83,26 +90,31 @@ class MovieCallHandler
     }
 
     private fun handleFetchingMovieDetailFromList(movieList: List<Movie>) {
-        var completeMovieList : List<Movie> = ArrayList()
+        var completeMovieList : List<MovieResponse> = listOf()
 
         val handler = Handler()
         movieList.forEach({
             handler.postDelayed({
                 val call = mMovieDbApi.fetchMovieDetail(it.id, mApi)
 
-                call.enqueue(object : Callback<Movie> {
-                    override fun onFailure(call: Call<Movie>?, t: Throwable?) {
+                call.enqueue(object : Callback<MovieResponse> {
+                    override fun onFailure(call: Call<MovieResponse>?, t: Throwable?) {
                         Log.e(TAG, t?.message, t)
                     }
 
-                    override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+                    override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                         if(response.isSuccessful) {
                             val movie = response.body()
                             if(movie != null){
                                 completeMovieList += movie
                                 if(movieList.size == completeMovieList.size){
-                                    mMovieList.postValue(completeMovieList)
+                                    //mMovieList.postValue(completeMovieList)
+                                    mMovieNetworkResponseList.postValue(completeMovieList)
                                 }
+                            }
+                        } else {
+                            if (response.errorBody() != null) {
+                                val error = mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java)
                             }
                         }
                     }

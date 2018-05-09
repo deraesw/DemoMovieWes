@@ -8,6 +8,8 @@ class MovieCastingViewModel
 @Inject constructor(
         private val movieCreditsRepository: MovieCreditsRepository) : ViewModel() {
 
+    val errorNetwork = movieCreditsRepository.errorNetwork
+
     fun getMovieCasting(movieId: Int) = movieCreditsRepository.getCastingFromMovie(movieId)
 
     fun fetchMovieCredits(movieId : Int){
