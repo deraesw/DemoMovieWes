@@ -11,6 +11,7 @@ buildscript {
     ext.glide_version='4.3.1'
     ext.dagger_version='2.13'
     ext.dagger_android_version='2.15'
+    ext.work_manager_version="1.0.0-alpha01"
 
     repositories {
         google()
