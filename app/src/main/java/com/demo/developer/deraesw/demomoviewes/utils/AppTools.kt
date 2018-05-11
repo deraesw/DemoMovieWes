@@ -72,6 +72,14 @@ class AppTools {
         }
     }
 
+    class LogoSize{
+        companion object {
+            const val SMALL  = "w45";
+            const val MEDIUM = "w92";
+            const val LARGE  = "w154";
+        }
+    }
+
     class BackdropSize{
         companion object {
             const val SMALL = "w300"

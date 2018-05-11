@@ -81,6 +81,8 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     app:profileImageUrl="@{casting.profilePath}"
+                    app:error="@{@drawable/ic_account_circle_black_24dp}"
+                    app:placeHolder="@{@drawable/ic_account_circle_black_24dp}"
                     android:contentDescription="@string/desc_profile_image"
                     />
             </FrameLayout>

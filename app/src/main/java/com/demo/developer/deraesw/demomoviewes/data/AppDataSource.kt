@@ -13,12 +13,12 @@ class AppDataSource constructor(
         val movieGenreDAO: MovieGenreDAO,
         val movieDAO: MovieDAO,
         val movieToGenreDAO: MovieToGenreDAO,
-        val peopleDAO: PeopleDAO,
-        val crewDAO: CrewDAO,
-        val castingDAO: CastingDAO,
-        val productionCompanyDao: ProductionCompanyDao,
-        val movieToProductionDao: MovieToProductionDao,
-        val appExecutors: AppExecutors
+        private val peopleDAO: PeopleDAO,
+        private val crewDAO: CrewDAO,
+        private val castingDAO: CastingDAO,
+        private val productionCompanyDao: ProductionCompanyDao,
+        private val movieToProductionDao: MovieToProductionDao,
+        private val appExecutors: AppExecutors
 ) {
 
     private val TAG = AppDataSource::class.java.simpleName
@@ -49,6 +49,8 @@ class AppDataSource constructor(
     fun selectCastingItemFromMovie(movieId : Int) = castingDAO.selectCastingItemFromMovie(movieId)
 
     fun selectCrewItemFromMovie(movieId: Int) = crewDAO.selectCrewsItemFromMovie(movieId)
+
+    fun selectProductionFromMovie(movieId: Int) = movieToProductionDao.selectProductionFromMovie(movieId)
 
     fun saveListMovieGenre(list: List<MovieGenre>){
         appExecutors.diskIO().execute({

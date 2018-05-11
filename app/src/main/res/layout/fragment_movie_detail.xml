@@ -38,6 +38,9 @@
                     android:layout_height="match_parent"
                     app:layout_collapseMode="parallax"
                     android:contentDescription="@string/desc_movie_backdrop"
+                    app:backdropImageUrl="@{movie.backdropPath}"
+                    app:error="@{@drawable/ic_broken_image_grey_24dp}"
+                    app:placeHolder="@{@drawable/ic_business_grey_24dp}"
                     />
 
                 <FrameLayout

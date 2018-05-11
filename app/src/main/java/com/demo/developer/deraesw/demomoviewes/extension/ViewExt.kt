@@ -1,34 +1,38 @@
 package com.demo.developer.deraesw.demomoviewes.extension
 
+import android.graphics.drawable.Drawable
+import android.support.annotation.DrawableRes
+import android.support.constraint.Placeholder
 import android.widget.ImageView
 import android.widget.TextView
 import com.demo.developer.deraesw.demomoviewes.GlideApp
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
-fun ImageView.setImageUrl(url: String?, size: String) {
+fun ImageView.setImageUrl(url: String?, size: String, errorRes : Drawable, placeholderRes: Drawable, isCenterCrop : Boolean = false, isFitCenter : Boolean = false, isCircleCrop : Boolean = false) {
     if(url != null && url != ""){
-        GlideApp.with(context)
+        val glide = GlideApp
+                .with(context)
                 .load(AppTools.getUrlStringForImage(url, size))
-                .centerCrop()
-                .into(this)
-    } else {
-        GlideApp.with(context)
-                .clear(this)
-    }
-}
+                .error(errorRes)
+                .placeholder(placeholderRes)
 
-fun ImageView.setRoundImageUrl(url: String?, size: String) {
-    if(url != null && url != ""){
-        GlideApp.with(context)
-                .load(AppTools.getUrlStringForImage(url, size))
-                .circleCrop()
-                .error(R.drawable.ic_account_circle_black_24dp)
-                .placeholder(R.drawable.ic_account_circle_black_24dp)
-                .into(this)
+        if(isCenterCrop) {
+            glide.centerCrop()
+        }
+        if(isFitCenter){
+            glide.fitCenter()
+        }
+        if(isCircleCrop){
+            glide.circleCrop()
+        }
+
+        glide.into(this)
+
     } else {
         GlideApp.with(context)
-                .clear(this)
+                .load(placeholderRes)
+                .into(this)
     }
 }
 

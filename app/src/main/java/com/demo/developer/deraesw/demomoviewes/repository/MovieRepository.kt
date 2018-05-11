@@ -48,16 +48,22 @@ class MovieRepository
 
     fun getMovieDetail(id : Int) = appDataSource.movieDAO.selectMovie(id)
 
+    fun getProductionFromMovie(movieId : Int) = appDataSource.selectProductionFromMovie(movieId)
+
     fun getMovieGenreFromMovie(idMovie : Int) : LiveData<List<MovieGenre>> {
         return appDataSource.movieToGenreDAO.observeGenreListFromMovie(idMovie)
     }
 
     fun fetchMovieDetail(id: Int){
-        movieCallHandler.fetchMovieDetail(id)
+        appExecutors.networkIO().execute({
+            movieCallHandler.fetchMovieDetail(id)
+        })
     }
 
     fun fetchNowPlayingMovie(){
-        movieCallHandler.fetchNowPlayingMovies()
+        appExecutors.networkIO().execute({
+            movieCallHandler.fetchNowPlayingMovies()
+        })
     }
 
     fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>){

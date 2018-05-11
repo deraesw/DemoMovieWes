@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
+import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setAmountWithSuffix
@@ -34,6 +36,7 @@ class MovieDetailActivityFragment : DaggerFragment() {
     @Inject lateinit var mFactory : ViewModelProvider.Factory
     private lateinit var mBinding : FragmentMovieDetailBinding
     private lateinit var mViewModel : MovieDetailViewModel
+    private val adapter = ProductionAdapter()
 
     private var mMovieId : Int = 0
 
@@ -56,6 +59,11 @@ class MovieDetailActivityFragment : DaggerFragment() {
 
         mMovieId = arguments?.getInt(ARGUMENT_MOVIE_ID) ?: 0
 
+        val productionRecyclerView = mBinding.incMovieContentInfo!!.rvProductionCompany
+        productionRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        productionRecyclerView.setHasFixedSize(true)
+        productionRecyclerView.adapter = adapter
+
         return mBinding.root
     }
 
@@ -77,12 +85,18 @@ class MovieDetailActivityFragment : DaggerFragment() {
                     mBinding.incMovieContentInfo!!.tvGenderValue.text = it.joinToString(transform = {it.name})
                 }
             })
+
+            mViewModel.getProductionFromMovie(mMovieId).observe(this, Observer {
+                if(it != null){
+                    adapter.swapData(it)
+                }
+            })
         }
     }
 
     private fun initMovieContent(movie: Movie){
-        mBinding.incMovieHeaderInfo?.ivMoviePoster?.setImageUrl(movie.posterPath, AppTools.PosterSize.SMALL)
-        mBinding.ivBackdropPath.setImageUrl(movie.backdropPath, AppTools.BackdropSize.SMALL)
+        //mBinding.incMovieHeaderInfo?.ivMoviePoster?.setImageUrl(movie.posterPath, AppTools.PosterSize.SMALL)
+        //mBinding.ivBackdropPath.setImageUrl(movie.backdropPath, AppTools.BackdropSize.SMALL)
 
         val contentInfo = mBinding.incMovieContentInfo!!
         contentInfo.tvBudget.setAmountWithSuffix(movie.budget)

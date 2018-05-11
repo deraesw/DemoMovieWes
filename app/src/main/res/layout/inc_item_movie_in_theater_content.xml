@@ -42,6 +42,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:posterImageUrl="@{movie.posterPath}"
+            app:error="@{@drawable/ic_broken_image_grey_24dp}"
+            app:placeHolder="@{@drawable/ic_business_grey_24dp}"
             />
 
         <TextView
