@@ -80,11 +80,14 @@ dependencies {
     implementation "android.arch.lifecycle:runtime:$architecture_lifecycle_version"
     kapt "android.arch.lifecycle:compiler:$architecture_version"
     implementation "android.arch.lifecycle:extensions:$architecture_lifecycle_version"
-    implementation "android.arch.persistence.room:runtime:$architecture_version"
+    implementation "android.arch.persistence.room:runtime:$room_version"
     kapt "android.arch.persistence.room:compiler:$architecture_version"
 
     //Work manager
     implementation "android.arch.work:work-runtime:$work_manager_version"
+
+    //Paging library
+    implementation "android.arch.paging:runtime:$paging_version"
 
     //Testing Architecture dependency
     implementation "android.arch.core:core-testing:$architecture_version"
