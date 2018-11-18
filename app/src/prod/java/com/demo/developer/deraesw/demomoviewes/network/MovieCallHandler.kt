@@ -1,6 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.network
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import android.os.Handler
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
@@ -87,6 +87,33 @@ class MovieCallHandler
                 Log.e(TAG, t.message, t);
             }
         })
+    }
+
+    fun fetchNowPlayingResponse() :  Response<MoviesResponse> {
+        return mMovieDbApi.fetchNowPlayingMovies(mApi).execute()
+    }
+
+    fun fetchingMovieDetailFromList(movieList: List<Movie>) : List<MovieResponse> {
+        var completeMovieList : List<MovieResponse> = listOf()
+
+        val handler = Handler()
+        movieList.forEach({
+            handler.postDelayed({
+                val res = mMovieDbApi.fetchMovieDetail(it.id, mApi).execute()
+                if(res.isSuccessful){
+                    val movie = res.body()
+                    if(movie != null){
+                        completeMovieList += movie
+                    }
+                } else {
+                    Log.d(TAG, "something went wrong")
+                    //todo throw execption
+                }
+
+            }, 500)
+        })
+
+        return completeMovieList
     }
 
     private fun handleFetchingMovieDetailFromList(movieList: List<Movie>) {

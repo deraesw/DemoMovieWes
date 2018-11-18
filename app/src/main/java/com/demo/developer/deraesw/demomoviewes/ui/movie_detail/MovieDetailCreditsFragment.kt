@@ -1,14 +1,14 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.ViewPagerAdapter
@@ -47,7 +47,7 @@ class MovieDetailCreditsFragment : DaggerFragment() {
 
         val toolbar = viewRoot.findViewById<Toolbar>(R.id.toolbar)
         val tableLayout = viewRoot.findViewById<TabLayout>(R.id.table_layout)
-        val viewPage = viewRoot.findViewById<ViewPager>(R.id.viewpager)
+        val viewPage = viewRoot.findViewById<androidx.viewpager.widget.ViewPager>(R.id.viewpager)
 
         (activity as AppCompatActivity).apply {
             setSupportActionBar(toolbar)

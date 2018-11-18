@@ -2,9 +2,9 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_mov
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -25,7 +25,7 @@ import com.demo.developer.deraesw.demomoviewes.utils.Constant
  *
  */
 @Deprecated("to remove, use SortingActivity instead")
-class SortingMovieFragment : Fragment(), SortingAdapter.SortingMovieAdapterInterface{
+class SortingMovieFragment : androidx.fragment.app.Fragment(), SortingAdapter.SortingMovieAdapterInterface{
 
     private val TAG = SortingMovieFragment::class.java.simpleName
 
@@ -59,9 +59,9 @@ class SortingMovieFragment : Fragment(), SortingAdapter.SortingMovieAdapterInter
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val viewRoot = inflater.inflate(R.layout.fragment_sorting_movie, container, false)
 
-        val recyclerView : RecyclerView = viewRoot.findViewById(R.id.rv_sorting_options)
+        val recyclerView : androidx.recyclerview.widget.RecyclerView = viewRoot.findViewById(R.id.rv_sorting_options)
         //recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         recyclerView.setHasFixedSize(true)
 
         mAdapter = SortingAdapter(this)

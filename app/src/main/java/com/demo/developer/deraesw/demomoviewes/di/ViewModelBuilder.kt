@@ -1,7 +1,7 @@
 package com.demo.developer.deraesw.demomoviewes.di
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailViewModel
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingViewModel

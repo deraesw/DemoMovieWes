@@ -1,15 +1,15 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import android.databinding.DataBindingUtil
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemFilterMovieBinding
 
-class FilterMovieAdapter(val mHandler: FilterMovieAdapterInterface): RecyclerView.Adapter<FilterMovieAdapter.FilterMovieViewHolder>() {
+class FilterMovieAdapter(val mHandler: FilterMovieAdapterInterface): androidx.recyclerview.widget.RecyclerView.Adapter<FilterMovieAdapter.FilterMovieViewHolder>() {
     private val TAG = FilterMovieAdapter::class.java.simpleName
 
     private var mList: List<GenreFilter> = ArrayList()
@@ -74,7 +74,7 @@ class FilterMovieAdapter(val mHandler: FilterMovieAdapterInterface): RecyclerVie
     }
 
     inner class FilterMovieViewHolder(itemView : View) :
-            RecyclerView.ViewHolder(itemView), View.OnClickListener{
+            androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
         internal var binding : ItemFilterMovieBinding ? = null
 

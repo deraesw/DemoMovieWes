@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import android.databinding.DataBindingUtil
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieInTheaterBinding
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
-class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): RecyclerView.Adapter<MovieInTheaterAdapter.MovieInTheaterViewHolder>() {
+class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): androidx.recyclerview.widget.RecyclerView.Adapter<MovieInTheaterAdapter.MovieInTheaterViewHolder>() {
     private val TAG = MovieInTheaterAdapter::class.java.simpleName
 
     private var mList: List<MovieInTheater> = ArrayList();
@@ -75,7 +75,7 @@ class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): Recyc
     }
 
     inner class MovieInTheaterViewHolder(itemView : View) :
-            RecyclerView.ViewHolder(itemView), View.OnClickListener{
+            androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView), View.OnClickListener{
 
         internal var binding:ItemMovieInTheaterBinding? = null
 

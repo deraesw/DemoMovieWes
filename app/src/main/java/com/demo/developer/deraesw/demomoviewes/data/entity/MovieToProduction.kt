@@ -1,9 +1,9 @@
 package com.demo.developer.deraesw.demomoviewes.data.entity
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.ForeignKey.CASCADE
-import android.arch.persistence.room.Index
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
+import androidx.room.Index
 
 @Entity(tableName = "movie_to_production",
         indices = [
@@ -24,5 +24,4 @@ import android.arch.persistence.room.Index
             ))
         ]
 )
-class MovieToProduction(var idMovie : Int, var idProduction : Int) {
-}
+class MovieToProduction(var idMovie : Int, var idProduction : Int)

@@ -1,16 +1,17 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.Fragment
 import android.view.MenuItem
 import com.demo.developer.deraesw.demomoviewes.R
+import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.extension.addFragmentToActivity
 import com.demo.developer.deraesw.demomoviewes.extension.replaceFragmentToActivity
 import com.demo.developer.deraesw.demomoviewes.extension.showShortToast
@@ -69,11 +70,11 @@ class MovieDetailActivity : DaggerAppCompatActivity() {
             })
 
             val viewModel = ViewModelProviders.of(this, mFactory).get(MovieDetailViewModel::class.java)
-            viewModel.networkError.observe(this, Observer {
-                if(it != null){
+            viewModel.status.observe(this, Observer {
+                if(it != null && it.status == AccountData.SyncStatus.SYNC_FAILED){
                     Snackbar.make(
                             findViewById(R.id.main_view),
-                            "${it.statusMessage} (${it.statusCode})",
+                            "${it.networkError?.statusMessage} (${it.networkError?.statusCode})",
                             Snackbar.LENGTH_LONG
                     ).show()
                 }
@@ -115,7 +116,7 @@ class MovieDetailActivity : DaggerAppCompatActivity() {
         replaceFragment(MovieDetailReviewFragment.create(mMovieId))
     }
 
-    private fun replaceFragment(fragment : Fragment){
+    private fun replaceFragment(fragment : androidx.fragment.app.Fragment){
         this.replaceFragmentToActivity(R.id.main_container_movie_detail, fragment)
     }
 

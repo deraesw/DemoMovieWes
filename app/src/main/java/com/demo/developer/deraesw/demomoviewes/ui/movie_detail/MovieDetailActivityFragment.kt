@@ -1,11 +1,11 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
@@ -60,7 +60,7 @@ class MovieDetailActivityFragment : DaggerFragment() {
         mMovieId = arguments?.getInt(ARGUMENT_MOVIE_ID) ?: 0
 
         val productionRecyclerView = mBinding.incMovieContentInfo!!.rvProductionCompany
-        productionRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        productionRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         productionRecyclerView.setHasFixedSize(true)
         productionRecyclerView.adapter = adapter
 

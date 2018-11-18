@@ -1,10 +1,12 @@
 package com.demo.developer.deraesw.demomoviewes.ui
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
 import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
+import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,6 +16,7 @@ class MainActivityViewModel
 
     val movieGenreList: LiveData<List<MovieGenre>> = mainRepository.genreRepository.mMovieGenreList
     val accountData : LiveData<AccountData> = mainRepository.sharePrefRepository.account
+    val syncStatus : SingleLiveEvent<SynchronizationStatus> = mainRepository.syncStatus
 
     fun callFullSyncData(accountData: AccountData){
         mainRepository.initFullSynchronization(accountData)

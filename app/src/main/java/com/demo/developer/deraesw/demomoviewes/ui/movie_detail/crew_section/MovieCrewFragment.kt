@@ -1,19 +1,20 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CrewAdapter
+import com.demo.developer.deraesw.demomoviewes.adapter.CrewAdapterV2
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -34,7 +35,8 @@ class MovieCrewFragment : DaggerFragment() {
     @Inject lateinit var mFactory: ViewModelProvider.Factory
     private lateinit var mViewModel : MovieCrewViewModel
     private lateinit var mAdapter: CrewAdapter
-    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var mAdapterv2: CrewAdapterV2
+    private lateinit var mSwipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
     private var mMovieId : Int = 0
 
@@ -44,15 +46,17 @@ class MovieCrewFragment : DaggerFragment() {
 
         mMovieId = arguments?.getInt(ARGUMENT_MOVIE_ID) ?: 0
 
-        val recyclerView = viewRoot.findViewById<RecyclerView>(R.id.rv_crew_list)
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        val recyclerView = viewRoot.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_crew_list)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        recyclerView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)
 
         mAdapter = CrewAdapter()
-        recyclerView.adapter = mAdapter
+        mAdapterv2 = CrewAdapterV2()
+        //recyclerView.adapter = mAdapter
+        recyclerView.adapter = mAdapterv2
 
-        mSwipeRefreshLayout = viewRoot.findViewById<SwipeRefreshLayout>(R.id.sf_crew_list)
+        mSwipeRefreshLayout = viewRoot.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.sf_crew_list)
 
         mSwipeRefreshLayout.setOnRefreshListener({
             mViewModel.fetchMovieCredits(mMovieId)
@@ -67,9 +71,9 @@ class MovieCrewFragment : DaggerFragment() {
         if(mMovieId != 0){
             mViewModel = ViewModelProviders.of(this, mFactory).get(MovieCrewViewModel::class.java)
 
-            mViewModel.getMovieCrew(mMovieId).observe(this, Observer {
+            mViewModel.getMovieCrewWithPaging(mMovieId).observe(this, Observer {
                 if(it != null){
-                    mAdapter.swapData(it)
+                    mAdapterv2.submitList(it)
                 }
 
                 if(mSwipeRefreshLayout.isRefreshing){

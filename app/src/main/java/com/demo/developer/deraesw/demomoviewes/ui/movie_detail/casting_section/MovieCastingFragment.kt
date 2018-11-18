@@ -2,16 +2,16 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section
 
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CastingAdapter
@@ -46,7 +46,7 @@ class MovieCastingFragment : DaggerFragment() {
     private lateinit var mViewModel : MovieCastingViewModel
     private lateinit var mAdapter : CastingAdapter
     private lateinit var mEmptyView : View
-    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var mSwipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
     private var mMovieId : Int = 0
     private var mSortingCode : String = Constant.SortingCode.BY_DEFAULT
@@ -62,9 +62,9 @@ class MovieCastingFragment : DaggerFragment() {
 
         mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
 
-        val recyclerView = viewRoot.findViewById<RecyclerView>(R.id.rv_casting_list)
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        val recyclerView = viewRoot.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_casting_list)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        recyclerView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)
 
         mAdapter = CastingAdapter()

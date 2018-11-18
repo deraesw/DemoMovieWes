@@ -12,7 +12,7 @@
     </data>
 
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_general_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -173,7 +173,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_overview_value" />
 
-        <android.support.v7.widget.GridLayout
+        <androidx.gridlayout.widget.GridLayout
             android:id="@+id/gl_extra_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -292,7 +292,7 @@
                 android:text="@{String.valueOf(movie.voteCount)}"
                 tools:text="7100" />
 
-        </android.support.v7.widget.GridLayout>
+        </androidx.gridlayout.widget.GridLayout>
 
         <LinearLayout
             android:id="@+id/ll_production_header"
@@ -337,7 +337,7 @@
             </FrameLayout>
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_production_company"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -351,7 +351,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ll_production_header" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

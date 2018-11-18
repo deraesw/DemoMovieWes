@@ -1,7 +1,7 @@
 package com.demo.developer.deraesw.demomoviewes.ui.synchronize_data
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.demo.developer.deraesw.demomoviewes.R
 
 class SynchronizedDataActivity : AppCompatActivity() {

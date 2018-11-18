@@ -10,11 +10,11 @@
             type="com.demo.developer.deraesw.demomoviewes.data.model.CrewItem"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/picture_divider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,5 +51,5 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_crew_name"
             tools:text="Bell complent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.data.entity
 
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "movie")
@@ -36,9 +36,7 @@ open class Movie(
     var voteCount: Int = 0,
     @SerializedName(value = "vote_average")
     var voteAverage: Float = 0.toFloat()
-)
-    {
+) {
     @Ignore
     var genres : List<MovieGenre> = ArrayList()
-
 }

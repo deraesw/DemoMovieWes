@@ -4,14 +4,14 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.demo.developer.deraesw.demomoviewes"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -54,20 +54,19 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     //Support dependencies
-    implementation "com.android.support:design:$extra_version"
-    implementation "com.android.support:appcompat-v7:$extra_version"
-    implementation "com.android.support:support-v4:$extra_version"
-    implementation "com.android.support:recyclerview-v7:$extra_version"
-    implementation "com.android.support:cardview-v7:$extra_version"
-    implementation "com.android.support:gridlayout-v7:$extra_version"
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
 
     //Testing dependencies
-    implementation 'com.android.support:support-v4:27.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
     //Daggers 2
     implementation "com.google.dagger:dagger:$dagger_version"
@@ -77,20 +76,20 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     //Architecture dependency
-    implementation "android.arch.lifecycle:runtime:$architecture_lifecycle_version"
-    kapt "android.arch.lifecycle:compiler:$architecture_version"
-    implementation "android.arch.lifecycle:extensions:$architecture_lifecycle_version"
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    kapt "android.arch.persistence.room:compiler:$architecture_version"
+    implementation "androidx.lifecycle:lifecycle-runtime:$architecture_version"
+    kapt "androidx.lifecycle:lifecycle-compiler:$architecture_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$architecture_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
 
     //Work manager
     implementation "android.arch.work:work-runtime:$work_manager_version"
 
     //Paging library
-    implementation "android.arch.paging:runtime:$paging_version"
+    implementation "androidx.paging:paging-runtime:$paging_version"
 
     //Testing Architecture dependency
-    implementation "android.arch.core:core-testing:$architecture_version"
+    implementation 'androidx.arch.core:core-testing:2.0.0'
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$glide_version"
@@ -101,7 +100,4 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     implementation "com.squareup.okhttp3:logging-interceptor:3.8.0"
 
-    kapt "com.android.databinding:compiler:$build_version"
-
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 }

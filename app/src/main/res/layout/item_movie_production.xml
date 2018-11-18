@@ -9,7 +9,7 @@
             type="com.demo.developer.deraesw.demomoviewes.data.entity.ProductionCompany"/>
 
     </data>
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:background="?android:attr/selectableItemBackground"
@@ -22,7 +22,7 @@
         android:focusable="true"
         >
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -55,6 +55,6 @@
                 app:layout_constraintBottom_toTopOf="@+id/tv_production_name"
                 />
 
-        </android.support.constraint.ConstraintLayout>
-    </android.support.v7.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

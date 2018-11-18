@@ -2,16 +2,16 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
 
 
 import android.app.Activity
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.core.view.GravityCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
@@ -61,8 +61,8 @@ class MoviesInTheaterFragment : DaggerFragment(),
 
         mAdapter = MovieInTheaterAdapter(this)
 
-        mBinding.rvMoviesInTheater.layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.VERTICAL, false)
+        mBinding.rvMoviesInTheater.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
         mBinding.rvMoviesInTheater.adapter = mAdapter
 
         (activity as AppCompatActivity).supportActionBar?.apply {
@@ -75,7 +75,7 @@ class MoviesInTheaterFragment : DaggerFragment(),
             (context as AppCompatActivity)
                     .supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.filter_container, mFilterFragment)
+                    .add(R.id.filter_container, mFilterFragment!!)
                     .commit()
         }
 

@@ -19,6 +19,7 @@ class AccountData(
             const val NO_SYNC = 0
             const val SYNC_PROGRESS = 1
             const val SYNC_DONE = 2
+            const val SYNC_INIT_DONE = 3
             const val SYNC_FAILED = 9
         }
     }

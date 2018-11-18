@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import android.databinding.DataBindingUtil
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.demo.developer.deraesw.demomoviewes.data.model.CrewItem
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemCrewItemBinding
 
-class CrewAdapter(): RecyclerView.Adapter<CrewAdapter.CrewViewHolder>() {
+class CrewAdapter(): androidx.recyclerview.widget.RecyclerView.Adapter<CrewAdapter.CrewViewHolder>() {
     private val TAG = CrewAdapter::class.java.simpleName
 
     private var mList: List<CrewItem> = ArrayList();
@@ -61,7 +61,7 @@ class CrewAdapter(): RecyclerView.Adapter<CrewAdapter.CrewViewHolder>() {
         }
     }
 
-    inner class CrewViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    inner class CrewViewHolder(itemView : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView){
 
         internal var binding:ItemCrewItemBinding? = null
 

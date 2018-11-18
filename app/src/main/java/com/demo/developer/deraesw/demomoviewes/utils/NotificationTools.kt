@@ -7,8 +7,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.ui.MainActivity
 
@@ -17,14 +17,18 @@ class NotificationTools {
 
     companion object {
 
-        fun showNotificationUpdateContent(context: Context){
-
-            val manager = NotificationManagerCompat.from(context)
+        fun showNotificationUpdateContent(context: Context, title : String = "", body: String = ""){
 
             val builder = createNotification(context,
                     Channel.UPDATE_NOTIFICATION_ID,
-                    "",
-                    "")
+                    title,
+                    body)
+
+            val intent = Intent(context, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+            builder.setContentIntent(pendingIntent)
+            builder.setAutoCancel(true)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                 val channel = createAChannel(
@@ -33,16 +37,13 @@ class NotificationTools {
                         "",
                         NotificationManager.IMPORTANCE_DEFAULT
                 )
-                //manager.createNotificationChannel = channel
+                val manager = context.getSystemService(NotificationManager::class.java)
+                manager.createNotificationChannel(channel)
+                manager.notify(NotificationID.FROM_SYNC, builder.build())
+            } else {
+                val manager = NotificationManagerCompat.from(context)
+                manager.notify(NotificationID.FROM_SYNC, builder.build())
             }
-
-            val intent = Intent(context, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-            builder.setContentIntent(pendingIntent)
-            builder.setAutoCancel(true)
-
-            manager.notify(NotificationID.FROM_SYNC, builder.build())
         }
 
         private fun createNotification(

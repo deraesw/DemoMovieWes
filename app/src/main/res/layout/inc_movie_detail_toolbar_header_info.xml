@@ -11,7 +11,7 @@
             type="com.demo.developer.deraesw.demomoviewes.data.entity.Movie"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_movie_cart_header_height"
         android:background="@color/dim_dark_background"
@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Movie Title" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,5 +62,5 @@
             app:placeHolder="@{@drawable/ic_business_grey_24dp}"
             />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

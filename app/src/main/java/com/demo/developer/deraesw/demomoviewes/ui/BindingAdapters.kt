@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.ui
 
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import android.widget.ImageView
 import com.demo.developer.deraesw.demomoviewes.extension.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools

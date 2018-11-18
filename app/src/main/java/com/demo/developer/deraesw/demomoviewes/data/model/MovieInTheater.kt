@@ -1,9 +1,9 @@
 package com.demo.developer.deraesw.demomoviewes.data.model
 
-import android.arch.persistence.room.Ignore
+import androidx.room.Ignore
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 
-class MovieInTheater (
+data class MovieInTheater (
         val id: Int,
         val title: String,
         val posterPath: String? = null,

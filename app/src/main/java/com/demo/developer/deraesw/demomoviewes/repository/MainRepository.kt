@@ -3,6 +3,8 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
+import com.demo.developer.deraesw.demomoviewes.service.DemoMovieScheduler
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import javax.inject.Inject
@@ -23,7 +25,8 @@ class MainRepository
     private var syncStarted = false
     private var mAccountData : AccountData? = null
 
-    var networkError : SingleLiveEvent<NetworkError> = SingleLiveEvent()
+    //var networkError : SingleLiveEvent<NetworkError> = SingleLiveEvent()
+    var syncStatus : SingleLiveEvent<SynchronizationStatus> = SingleLiveEvent()
 
     init {
         genreRepository.mMovieGenreList.observeForever({
@@ -44,7 +47,9 @@ class MainRepository
 
         movieCreditsRepository.errorNetwork.observeForever({
             if(it != null){
-                networkError.postValue(it)
+                val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
+                sync.networkError = it
+                syncStatus.postValue(sync)
             }
         })
     }
@@ -54,7 +59,6 @@ class MainRepository
             Log.d(TAG, "initFullSynchronization - Start sync")
 
             mAccountData = accountData
-
             mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
             sharePrefRepository.updateAccountInformation(mAccountData!!)
 
@@ -73,10 +77,16 @@ class MainRepository
     }
 
     private fun setSynchronizationTerminated() {
+
+        val fromInitialSync = mAccountData!!.lastDateSync.isEmpty()
         Log.d(TAG, "setSynchronizationTerminated")
         mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_DONE
         mAccountData!!.lastDateSync = AppTools.getCurrentDate()
         sharePrefRepository.updateAccountInformation(mAccountData!!)
+
+        if(fromInitialSync){
+            syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE))
+        }
     }
 
     /*

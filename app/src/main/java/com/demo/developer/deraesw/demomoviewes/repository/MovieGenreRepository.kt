@@ -1,6 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
-import android.arch.lifecycle.LiveData
+import androidx.lifecycle.LiveData
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
@@ -31,6 +31,19 @@ class MovieGenreRepository
 
     fun fetchAllMovieGenreData(){
         movieGenreCallHandler.fetchGenreMovieList()
+    }
+
+    fun synchronizeMovieGenre() : Boolean {
+        val response = movieGenreCallHandler.fetchGenreMovieResponse()
+        if(response.isSuccessful){
+            val movieResponse = response.body()
+            if(movieResponse != null) {
+                appDataSource.saveListMovieGenre(movieResponse.genres)
+                return true
+            }
+        }
+
+        return false
     }
 
     companion object {

@@ -1,15 +1,15 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import android.databinding.DataBindingUtil
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemCastingItemBinding
 
-class CastingAdapter(): RecyclerView.Adapter<CastingAdapter.CastingViewHolder>() {
+class CastingAdapter(): androidx.recyclerview.widget.RecyclerView.Adapter<CastingAdapter.CastingViewHolder>() {
     private val TAG = CastingAdapter::class.java.simpleName
 
     private var mList: List<CastingItem> = ArrayList();
@@ -59,7 +59,7 @@ class CastingAdapter(): RecyclerView.Adapter<CastingAdapter.CastingViewHolder>()
         }
     }
 
-    inner class CastingViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    inner class CastingViewHolder(itemView : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView){
 
         internal var binding:ItemCastingItemBinding? = null
 

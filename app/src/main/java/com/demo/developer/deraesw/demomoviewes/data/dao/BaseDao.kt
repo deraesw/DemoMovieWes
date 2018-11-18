@@ -1,7 +1,7 @@
 package com.demo.developer.deraesw.demomoviewes.data.dao
 
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 
 interface BaseDao<T> {
 

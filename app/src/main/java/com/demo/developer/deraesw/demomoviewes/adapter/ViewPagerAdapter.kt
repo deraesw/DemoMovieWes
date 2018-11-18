@@ -1,12 +1,12 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import java.util.*
 
-class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(manager) {
-    private val mFragmentList = ArrayList<Fragment>()
+class ViewPagerAdapter(manager: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentStatePagerAdapter(manager) {
+    private val mFragmentList = ArrayList<androidx.fragment.app.Fragment>()
     private val mFragmentTitleList = ArrayList<String>()
 
     override fun getItem(position: Int) =  mFragmentList[position]
@@ -15,7 +15,7 @@ class ViewPagerAdapter(manager: FragmentManager) : FragmentStatePagerAdapter(man
 
     override fun getPageTitle(position: Int) = mFragmentTitleList[position]
 
-    fun addFragment(fragment: Fragment, title: String) {
+    fun addFragment(fragment: androidx.fragment.app.Fragment, title: String) {
         mFragmentList.add(fragment)
         mFragmentTitleList.add(title)
     }

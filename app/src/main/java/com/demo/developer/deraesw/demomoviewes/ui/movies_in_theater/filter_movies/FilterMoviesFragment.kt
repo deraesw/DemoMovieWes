@@ -1,14 +1,14 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies
 
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,12 +42,12 @@ class FilterMoviesFragment : DaggerFragment(), FilterMovieAdapter.FilterMovieAda
         // Inflate the layout for this fragment
         val viewRoot = inflater.inflate(R.layout.fragment_filter_movies, container, false)
 
-        val recyclerView = viewRoot.findViewById<RecyclerView>(R.id.rv_filter_option)
+        val recyclerView = viewRoot.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_filter_option)
         mClearAllView = viewRoot.findViewById(R.id.iv_clear_all_filter)
         mClearAllTv   = viewRoot.findViewById(R.id.tv_clear_all)
 
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayout.VERTICAL, false)
-        recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, LinearLayout.VERTICAL, false)
+        recyclerView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         recyclerView.setHasFixedSize(true)
 
         mAdapter = FilterMovieAdapter(this)

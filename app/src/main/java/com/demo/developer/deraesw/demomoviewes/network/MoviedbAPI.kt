@@ -19,7 +19,7 @@ interface MoviedbAPI {
             : Call<MovieGenreResponse>
 
     @GET("movie/{id}")
-    fun fetchMovieDetail(@Path("id") movieId: Int, @Query("api_key") apiKey: String)
+    fun fetchMovieDetail(@Path("id") movieId: Int, @Query("api_key") apiKey: String, @Query("append_to_response") append : String = "credits")
             : Call<MovieResponse>
 
     @GET("movie/now_playing")

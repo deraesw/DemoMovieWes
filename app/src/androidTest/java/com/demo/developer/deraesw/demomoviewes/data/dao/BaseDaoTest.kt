@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.data.dao
 
-import android.arch.core.executor.testing.InstantTaskExecutorRule
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.room.Room
+import androidx.test.InstrumentationRegistry
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
 import org.junit.After
 import org.junit.Before

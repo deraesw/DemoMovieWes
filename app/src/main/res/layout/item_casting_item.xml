@@ -10,11 +10,11 @@
             type="com.demo.developer.deraesw.demomoviewes.data.model.CastingItem"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/picture_divider"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -87,5 +87,5 @@
                     />
             </FrameLayout>
         </FrameLayout>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,6 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.network
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
@@ -46,6 +46,10 @@ class MovieGenreCallHandler
                 Log.e(TAG, t.message, t);
             }
         })
+    }
+
+    fun fetchGenreMovieResponse() : Response<MovieGenreResponse> {
+        return mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API).execute()
     }
 
     companion object {

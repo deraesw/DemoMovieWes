@@ -1,6 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import javax.inject.Inject

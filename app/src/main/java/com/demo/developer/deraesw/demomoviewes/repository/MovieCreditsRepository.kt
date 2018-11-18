@@ -41,6 +41,8 @@ class MovieCreditsRepository
 
     fun getCrewFromMovie(movieId: Int) = appDataSource.selectCrewItemFromMovie(movieId)
 
+    fun getCrewFromMovieWithPaging(movieId: Int) = appDataSource.selectCrewItemFromMovieWithPaging(movieId)
+
     fun fetchMovieCredits(id: Int){
         movieCreditsCallHandler.fetchMovieCredits(id)
     }

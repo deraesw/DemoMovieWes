@@ -5,7 +5,9 @@ import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.DemoMovieWesApp
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
+import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MoviedbAPI
+import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -33,6 +35,12 @@ class AppModule constructor(var app : DemoMovieWesApp) {
     @Provides
     fun provideAppDataSource(appDatabase: appDatabase, appExecutors: AppExecutors) : AppDataSource {
         return AppDataSource.getInstance(appDatabase, appExecutors)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMovieGenreRepository(movieGenreCallHandler: MovieGenreCallHandler, appDataSource: AppDataSource ,appExecutors: AppExecutors) : MovieGenreRepository {
+        return MovieGenreRepository(movieGenreCallHandler, appDataSource, appExecutors)
     }
 
     @Provides

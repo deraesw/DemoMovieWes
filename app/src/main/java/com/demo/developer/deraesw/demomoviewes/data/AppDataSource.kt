@@ -50,39 +50,41 @@ class AppDataSource constructor(
 
     fun selectCrewItemFromMovie(movieId: Int) = crewDAO.selectCrewsItemFromMovie(movieId)
 
+    fun selectCrewItemFromMovieWithPaging(movieId: Int) = crewDAO.selectCrewsItemFromMovieWithpaging(movieId)
+
     fun selectProductionFromMovie(movieId: Int) = movieToProductionDao.selectProductionFromMovie(movieId)
 
     fun saveListMovieGenre(list: List<MovieGenre>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             movieGenreDAO.bulkInsertMovieGenre(list)
-        })
+        }
     }
 
     fun saveMovie(movie: Movie){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             movieDAO.insertMovie(movie)
-        })
+        }
     }
 
     fun saveListOfMovie(list: List<Movie>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             movieDAO.bulkInsertMovies(list)
-        })
+        }
 
         handleMovieToGenreFromList(list)
     }
 
     fun saveListOfMovieNetworkResponse(list: List<MovieResponse>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             list.forEach {
                 val movie = it as Movie
                 Log.d(TAG, "Save movie : ${movie.id} - ${movie.title}")
                 movieDAO.insertMovie(movie)
 
                 var movieToGenreList : List<MovieToGenre> = ArrayList()
-                it.genres.forEach({
+                it.genres.forEach {
                     movieToGenreList += MovieToGenre(idMovie = movie.id, idGenre = it.id)
-                })
+                }
                 saveListMovieToGenre(movieToGenreList)
 
                 if(it.production_companies != null){
@@ -99,39 +101,39 @@ class AppDataSource constructor(
                     handleCrewResponse(it.credits!!.crew, movie.id)
                 }
             }
-        })
+        }
     }
 
     fun saveListPeople(list : List<People>) {
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             peopleDAO.bulkInsertPeoples(list)
-        })
+        }
     }
 
     fun saveListCasting(list : List<Casting>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             val movieId = list.get(0).movieId ?: 0
             if(movieId != 0){
                 castingDAO.deleteCastingFromMovie(movieId)
             }
             castingDAO.bulkInsertCastings(list)
-        })
+        }
     }
 
     fun saveListCrew(list: List<Crew>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             val movieId = list.get(0).movieId ?: 0
             if(movieId != 0){
                 crewDAO.deleteCrewFromMovie(movieId)
             }
             crewDAO.bulkInsertCrews(list)
-        })
+        }
     }
 
     fun saveListMovieToGenre(list: List<MovieToGenre>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             movieToGenreDAO.bulkInsertMovieToGenre(list)
-        })
+        }
     }
 
     fun saveListProductionCompany(list: List<ProductionCompany>){
@@ -174,13 +176,13 @@ class AppDataSource constructor(
 
     private fun handleMovieToGenreFromList(list : List<Movie>){
         var movieToGenreList : List<MovieToGenre> = ArrayList()
-        list.forEach({
+        list.forEach {
             val idMovie = it.id
-            it.genres.forEach({
+            it.genres.forEach {
                 val idGenre = it.id
                 movieToGenreList += MovieToGenre(idMovie, idGenre)
-            })
-        })
+            }
+        }
 
         saveListMovieToGenre(movieToGenreList)
     }

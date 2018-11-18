@@ -6,7 +6,7 @@
     tools:context=".ui.movies_in_theater.MoviesInTheaterFragment"
     >
 
-    <android.support.v4.widget.DrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/dl_movie_in_theater"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -47,7 +47,7 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_movies_in_theater"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -63,5 +63,5 @@
             android:layout_gravity="end"
             />
 
-    </android.support.v4.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

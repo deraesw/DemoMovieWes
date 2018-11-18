@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import android.databinding.DataBindingUtil
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,7 @@ import com.demo.developer.deraesw.demomoviewes.data.model.CrewItem
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemCrewItemBinding
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieProductionBinding
 
-class ProductionAdapter(): RecyclerView.Adapter<ProductionAdapter.ProductionViewHolder>() {
+class ProductionAdapter(): androidx.recyclerview.widget.RecyclerView.Adapter<ProductionAdapter.ProductionViewHolder>() {
     private val TAG = ProductionAdapter::class.java.simpleName
 
     private var mList: List<ProductionCompany> = ArrayList();
@@ -63,7 +63,7 @@ class ProductionAdapter(): RecyclerView.Adapter<ProductionAdapter.ProductionView
         }
     }
 
-    inner class ProductionViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    inner class ProductionViewHolder(itemView : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView){
 
         internal var binding:ItemMovieProductionBinding? = null
 

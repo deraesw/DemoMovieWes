@@ -3,7 +3,7 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.sorting_mov
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.FrameLayout
 import com.demo.developer.deraesw.demomoviewes.R
 

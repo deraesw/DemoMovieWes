@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.data
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import android.content.Context
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
@@ -31,6 +31,10 @@ abstract class appDatabase : RoomDatabase(){
     abstract fun crewDAO() : CrewDAO
     abstract fun productionCompanyDao() : ProductionCompanyDao
     abstract fun movieToProductionDao() : MovieToProductionDao
+
+    override fun clearAllTables() {
+        //todo see what to implement here
+    }
 
     companion object {
         private const val NAME_DATABASE = "demo_movie_wes.db"

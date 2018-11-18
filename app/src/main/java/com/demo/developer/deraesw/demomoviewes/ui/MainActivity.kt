@@ -1,17 +1,19 @@
 package com.demo.developer.deraesw.demomoviewes.ui
 
 import android.app.ActivityOptions
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.LinearLayout
 import com.demo.developer.deraesw.demomoviewes.R
+import com.demo.developer.deraesw.demomoviewes.background.workers.WorkScheduler
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.service.DemoMovieScheduler
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivity
@@ -42,14 +44,14 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
         //Goal Create ViewModel and Factory with dagger 2
         val viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
 
-        //DemoMovieScheduler.initDummyJobScheduler(this)
-
         viewModel.accountData.observe(this, Observer {
             if(it != null){
 
                 if(it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC){
                     if(it.syncStatus != AccountData.SyncStatus.SYNC_PROGRESS) {
-                        DemoMovieScheduler.initScheduler(this)
+                        //DemoMovieScheduler.initScheduler(this)
+                        //WorkScheduler.initSynchronisation()
+                        viewModel.callFullSyncData(it)
                     }
                 }
 
@@ -57,6 +59,23 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
                     displayLoadingDataContainer()
                 } else {
                     hideLoadingDataContainer()
+                }
+            }
+        })
+
+        viewModel.syncStatus.observe(this, Observer {
+            if(it != null){
+                hideLoadingDataContainer()
+                when(it.status){
+                    AccountData.SyncStatus.SYNC_INIT_DONE -> {
+                        Log.d(TAG, "init done launch service")
+                        DemoMovieScheduler.initScheduler(this)
+                    }
+                    AccountData.SyncStatus.SYNC_FAILED -> {
+                        Log.d(TAG, "Failed status receive")
+                        Log.e(TAG, "Error => ${it.networkError?.statusMessage}")
+                        //todo display failed info
+                    }
                 }
             }
         })
