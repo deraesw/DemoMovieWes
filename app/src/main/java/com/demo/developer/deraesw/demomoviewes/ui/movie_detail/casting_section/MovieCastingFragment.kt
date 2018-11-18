@@ -16,6 +16,7 @@ import android.view.*
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CastingAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
+import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingActivity
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingFragment
@@ -46,7 +47,7 @@ class MovieCastingFragment : DaggerFragment() {
     private lateinit var mViewModel : MovieCastingViewModel
     private lateinit var mAdapter : CastingAdapter
     private lateinit var mEmptyView : View
-    private lateinit var mSwipeRefreshLayout: androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
     private var mMovieId : Int = 0
     private var mSortingCode : String = Constant.SortingCode.BY_DEFAULT
@@ -63,9 +64,7 @@ class MovieCastingFragment : DaggerFragment() {
         mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
 
         val recyclerView = viewRoot.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_casting_list)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
-        recyclerView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
-        recyclerView.setHasFixedSize(true)
+        recyclerView.setLinearLayout()
 
         mAdapter = CastingAdapter()
         recyclerView.adapter = mAdapter

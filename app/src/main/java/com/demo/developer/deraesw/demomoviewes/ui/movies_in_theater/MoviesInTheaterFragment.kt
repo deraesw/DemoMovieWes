@@ -19,6 +19,7 @@ import com.demo.developer.deraesw.demomoviewes.adapter.MovieInTheaterAdapter
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheaterBinding
+import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment
@@ -61,8 +62,7 @@ class MoviesInTheaterFragment : DaggerFragment(),
 
         mAdapter = MovieInTheaterAdapter(this)
 
-        mBinding.rvMoviesInTheater.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
+        mBinding.rvMoviesInTheater.setLinearLayout(hasDivider = false)
         mBinding.rvMoviesInTheater.adapter = mAdapter
 
         (activity as AppCompatActivity).supportActionBar?.apply {
@@ -79,9 +79,9 @@ class MoviesInTheaterFragment : DaggerFragment(),
                     .commit()
         }
 
-        mBinding.ivClearAllFilter.setOnClickListener({
+        mBinding.ivClearAllFilter.setOnClickListener {
             mFilterFragment?.clearAllFilter()
-        })
+        }
 
         return mBinding.root
     }

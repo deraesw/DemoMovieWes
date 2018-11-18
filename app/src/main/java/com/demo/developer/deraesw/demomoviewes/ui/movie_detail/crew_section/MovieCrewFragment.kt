@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CrewAdapter
 import com.demo.developer.deraesw.demomoviewes.adapter.CrewAdapterV2
+import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -47,9 +48,7 @@ class MovieCrewFragment : DaggerFragment() {
         mMovieId = arguments?.getInt(ARGUMENT_MOVIE_ID) ?: 0
 
         val recyclerView = viewRoot.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_crew_list)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.VERTICAL, false)
-        recyclerView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
-        recyclerView.setHasFixedSize(true)
+        recyclerView.setLinearLayout()
 
         mAdapter = CrewAdapter()
         mAdapterv2 = CrewAdapterV2()
@@ -58,9 +57,9 @@ class MovieCrewFragment : DaggerFragment() {
 
         mSwipeRefreshLayout = viewRoot.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.sf_crew_list)
 
-        mSwipeRefreshLayout.setOnRefreshListener({
+        mSwipeRefreshLayout.setOnRefreshListener {
             mViewModel.fetchMovieCredits(mMovieId)
-        })
+        }
 
         return viewRoot
     }
