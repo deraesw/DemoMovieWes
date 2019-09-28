@@ -97,7 +97,7 @@ class SortingFragment : androidx.fragment.app.Fragment(), SortingAdapter.Sorting
         return viewRoot
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
             mHandle = context as SortingFragmentInterface

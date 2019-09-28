@@ -20,6 +20,7 @@ import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheaterBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
+import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment
@@ -35,21 +36,19 @@ import javax.inject.Inject
  */
 class MoviesInTheaterFragment : DaggerFragment(),
         MovieInTheaterAdapter.MovieInTheaterAdapterInterface,
-        FilterListenerInterface{
-
-    private val TAG = MoviesInTheaterFragment::class.java.simpleName
+        FilterListenerInterface {
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private lateinit var mBinding : FragmentMoviesInTheaterBinding
     private lateinit var mAdapter: MovieInTheaterAdapter
     private lateinit var mViewModel : MoviesInTheaterViewModel
     private lateinit var mNavigationHandler : NavigationInterface
 
     private var mFilterFragment : FilterMoviesFragment? = null
-
-    private var mOriginalList : List<MovieInTheater> = ArrayList()
-    private var mFilterItem : List<Int> = ArrayList()
-    private var mAllGenreList : List<MovieGenre> = ArrayList()
+    private var mOriginalList : List<MovieInTheater> = listOf()
+    private var mFilterItem : List<Int> = listOf()
+    private var mAllGenreList : List<MovieGenre> = listOf()
     private var mSortingByCode : String = Constant.SortingCode.BY_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,13 +56,19 @@ class MoviesInTheaterFragment : DaggerFragment(),
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?): View? {
+
         mBinding = FragmentMoviesInTheaterBinding.inflate(layoutInflater)
 
         mAdapter = MovieInTheaterAdapter(this)
 
         mBinding.rvMoviesInTheater.setLinearLayout(hasDivider = false)
         mBinding.rvMoviesInTheater.adapter = mAdapter
+
+        mViewModel = viewModelProvider(viewModelFactory)
 
         (activity as AppCompatActivity).supportActionBar?.apply {
             setTitle(R.string.title_movies_in_theater)
@@ -89,8 +94,6 @@ class MoviesInTheaterFragment : DaggerFragment(),
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mViewModel = ViewModelProviders.of(this, viewModelFactory).get(MoviesInTheaterViewModel::class.java)
-
         mViewModel.mMovieGenre.observe(this, Observer {
             if(it != null){
                 mAllGenreList = it
@@ -110,24 +113,23 @@ class MoviesInTheaterFragment : DaggerFragment(),
         })
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
-
         try {
             mNavigationHandler = context as NavigationInterface
         } catch (ex : Exception) {
-            Log.e(TAG, "must instance NavigationInterface interface")
+            error("must instance NavigationInterface interface")
         }
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_movie_in_theater, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_movie_in_theater, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
             R.id.action_filter_content -> {
                 toggleFilterDrawer()
                 return true

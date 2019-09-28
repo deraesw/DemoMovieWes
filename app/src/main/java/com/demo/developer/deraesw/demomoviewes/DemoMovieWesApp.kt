@@ -8,7 +8,11 @@ import dagger.android.DaggerApplication
 
 class DemoMovieWesApp : DaggerApplication(){
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder().application(this).appModule(AppModule(this)).build()
+        return DaggerAppComponent
+                .builder()
+                .application(this)
+                .appModule(AppModule(this))
+                .build()
     }
 
 

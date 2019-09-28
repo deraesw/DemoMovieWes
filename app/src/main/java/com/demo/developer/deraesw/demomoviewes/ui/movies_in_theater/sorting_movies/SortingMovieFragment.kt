@@ -84,7 +84,7 @@ class SortingMovieFragment : androidx.fragment.app.Fragment(), SortingAdapter.So
         return viewRoot
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         try {
             mHandle = context as SortingMovieFragmentInterface

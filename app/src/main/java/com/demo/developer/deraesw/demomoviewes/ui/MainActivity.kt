@@ -15,6 +15,8 @@ import android.widget.LinearLayout
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.background.workers.WorkScheduler
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.extension.debug
+import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.service.DemoMovieScheduler
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivity
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFragment
@@ -24,13 +26,10 @@ import javax.inject.Inject
 
 class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
 
-
-    private val TAG = MainActivity::class.java.simpleName
-
-    private lateinit var mLoadingContainer : LinearLayout
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var mLoadingContainer : LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,8 +40,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
 
         mLoadingContainer = findViewById(R.id.ll_loading_data)
 
-        //Goal Create ViewModel and Factory with dagger 2
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainActivityViewModel::class.java)
+        val viewModel: MainActivityViewModel = viewModelProvider(viewModelFactory)
 
         viewModel.accountData.observe(this, Observer {
             if(it != null){
@@ -68,12 +66,12 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
                 hideLoadingDataContainer()
                 when(it.status){
                     AccountData.SyncStatus.SYNC_INIT_DONE -> {
-                        Log.d(TAG, "init done launch service")
+                        debug("init done launch service")
                         DemoMovieScheduler.initScheduler(this)
                     }
                     AccountData.SyncStatus.SYNC_FAILED -> {
-                        Log.d(TAG, "Failed status receive")
-                        Log.e(TAG, "Error => ${it.networkError?.statusMessage}")
+                        debug( "Failed status receive")
+                        error("Error => ${it.networkError?.statusMessage}")
                         //todo display failed info
                     }
                 }
@@ -88,8 +86,6 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
         }
 
     }
-
-
 
     override fun clickOnLaunchMovieDetailView(key: Int) {
         launchMovieDetailActivity(key)

@@ -11,7 +11,7 @@ import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.NotificationTools
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
-import dagger.android.HasServiceInjector
+//import dagger.android.HasServiceInjector
 import javax.inject.Inject
 //
 //class SynchronizationWorker @Inject constructor(): Worker(){

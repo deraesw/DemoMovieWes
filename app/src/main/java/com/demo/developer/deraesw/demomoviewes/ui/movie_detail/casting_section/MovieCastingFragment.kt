@@ -63,7 +63,7 @@ class MovieCastingFragment : DaggerFragment() {
 
         mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
 
-        val recyclerView = viewRoot.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.rv_casting_list)
+        val recyclerView = viewRoot.findViewById<RecyclerView>(R.id.rv_casting_list)
         recyclerView.setLinearLayout()
 
         mAdapter = CastingAdapter()
@@ -107,14 +107,14 @@ class MovieCastingFragment : DaggerFragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        menu?.clear()
-        inflater?.inflate(R.menu.menu_movie_detail_casting, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_movie_detail_casting, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId){
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
             R.id.action_sort_content -> {
                 launchSortingActivity()
                 true

@@ -84,7 +84,11 @@ inline fun <reified VM : ViewModel> Fragment.parentViewModelProvider(
 ) = ViewModelProviders.of(parentFragment!!, provider).get(VM::class.java)
 
 
-inline fun <reified T> debug(text : String) {
+inline fun <reified T> T.debug(text : String) {
     Log.d(T::class.java.simpleName, text)
+}
+
+inline fun <reified T> T.error(text : String) {
+    Log.e(T::class.java.simpleName, text)
 }
 
