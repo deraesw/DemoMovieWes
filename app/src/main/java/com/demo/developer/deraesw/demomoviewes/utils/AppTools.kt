@@ -26,7 +26,7 @@ class AppTools {
         fun convertMinuteToHours(minutes: Int): String {
             val hour = minutes / 60
             val minute = minutes % 60
-            return String.format("%02d", hour) + ":" + String.format("%02d", minute)
+            return String.format("%02d", hour) + "h" + String.format("%02d", minute) + " min"
         }
 
         @JvmStatic

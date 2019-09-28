@@ -8,10 +8,10 @@
     <dimen name="movie_in_theater_height">160dp</dimen>
 
     <!-- Text size -->
-    <dimen name="item_header_title">22sp</dimen>
-    <dimen name="item_header_subtitle">20sp</dimen>
-    <dimen name="item_secondary_item">16sp</dimen>
-    <dimen name="movie_item_secondary_item">14sp</dimen>
+    <dimen name="item_header_title">18sp</dimen>
+    <dimen name="item_header_subtitle">16sp</dimen>
+    <dimen name="item_secondary_item">14sp</dimen>
+    <dimen name="movie_item_secondary_item">12sp</dimen>
 
     <!-- standard metrics -->
     <dimen name="spacing_micro">4dp</dimen>

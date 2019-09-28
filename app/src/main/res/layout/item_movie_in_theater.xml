@@ -8,9 +8,9 @@
         <variable
             name="movie"
             type="com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater"/>
-
     </data>
-    <androidx.cardview.widget.CardView
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -20,8 +20,7 @@
         android:layout_marginTop="@dimen/spacing_normal"
         android:layout_marginBottom="@dimen/spacing_normal"
         android:clickable="true"
-        android:focusable="true"
-        >
+        android:focusable="true">
 
         <include
             android:id="@+id/inc_content"
@@ -29,5 +28,5 @@
             app:movie="@{movie}"
             />
 
-    </androidx.cardview.widget.CardView>
+    </FrameLayout>
 </layout>

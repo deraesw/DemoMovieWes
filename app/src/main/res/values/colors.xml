@@ -11,6 +11,7 @@
     <color name="divider">#BDBDBD</color>
     <color name="background">#EEEEEE</color>
     <color name="colorSubTitle">#00e5ff</color>
+    <color name="start_color">#FFC107</color>
 
 
     <color name="dim_dark_background">#CC000000</color>

@@ -3,6 +3,8 @@ package com.demo.developer.deraesw.demomoviewes.ui
 import androidx.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import android.widget.TextView
+import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.extension.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
@@ -62,5 +64,21 @@ object BindingAdapter {
                 errorRes,
                 placeholderRes,
                 isCenterCrop = true)
+    }
+
+    @BindingAdapter("movieGenre")
+    @JvmStatic fun displayMovieGenreList(
+            textView: TextView,
+            item: MovieInTheater) {
+
+        textView.text = item.genres.joinToString (transform = {it.name})
+    }
+
+    @BindingAdapter("movieDuration")
+    @JvmStatic fun displayMovieDuration(
+            textView: TextView,
+            item: MovieInTheater) {
+
+        textView.text = AppTools.convertMinuteToHours(item.runtime)
     }
 }

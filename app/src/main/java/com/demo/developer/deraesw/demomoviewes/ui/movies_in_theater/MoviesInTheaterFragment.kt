@@ -158,8 +158,8 @@ class MoviesInTheaterFragment : DaggerFragment(),
         }
     }
 
-    override fun clickOnItem(position: Int) {
-        mNavigationHandler.clickOnLaunchMovieDetailView(mAdapter.getItemAt(position).id)
+    override fun clickOnItem(id: Int) {
+        mNavigationHandler.clickOnLaunchMovieDetailView(id)
     }
 
     override fun onFilterChange(list: List<Int>) {
@@ -202,7 +202,7 @@ class MoviesInTheaterFragment : DaggerFragment(),
             else -> filterList.sortedBy { it.id }
         }
 
-        mAdapter.swapData(filterList)
+        mAdapter.submitList(filterList)
 
         //Test code
         mBinding.rvMoviesInTheater.scrollToPosition(0)

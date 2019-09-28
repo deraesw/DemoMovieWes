@@ -1,92 +1,60 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import androidx.databinding.DataBindingUtil
+
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieInTheaterBinding
-import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
-class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface): androidx.recyclerview.widget.RecyclerView.Adapter<MovieInTheaterAdapter.MovieInTheaterViewHolder>() {
-    private val TAG = MovieInTheaterAdapter::class.java.simpleName
-
-    private var mList: List<MovieInTheater> = ArrayList();
+class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface)
+    : ListAdapter<MovieInTheater, RecyclerView.ViewHolder>(MovieInTheaterDiffCallback()) {
 
     interface MovieInTheaterAdapterInterface {
-        fun clickOnItem(position : Int)
+        fun clickOnItem(id : Int)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val movieInTheater = getItem(position)
+        (holder as MovieInTheaterViewHolder).bind(movieInTheater)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieInTheaterViewHolder {
-        val binding = ItemMovieInTheaterBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false)
-
-        return MovieInTheaterViewHolder(binding.root)
+        return MovieInTheaterViewHolder(ItemMovieInTheaterBinding.inflate(
+                LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: MovieInTheaterViewHolder, position: Int) {
-        val movieInTheater = mList.get(position)
-        val content = holder.binding?.incContent
-
-        holder.binding?.movie = movieInTheater
-
-        if(movieInTheater.releaseDate != null){
-            content?.tvMovieReleaseDate?.text = AppTools.convertDateString(movieInTheater.releaseDate!!, AppTools.DatePattern.MM_DD_YYY_S_PATTERN)
-        }
-
-        val genreListName = movieInTheater.genres.joinToString (transform = {it.name})
-        content?.tvMovieGenre?.text = genreListName
-
-        holder.binding?.executePendingBindings()
-    }
-
-    override fun getItemCount(): Int = mList.size
-
-    fun getItemAt(position : Int) : MovieInTheater = mList.get(position)
-
-    fun swapData(list: List<MovieInTheater>){
-        Log.d(TAG, "call swap")
-
-        if(mList.isEmpty()){
-            mList = list
-            notifyDataSetChanged()
-        } else {
-            val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun getOldListSize(): Int = mList.size
-
-                override fun getNewListSize(): Int = list.size
-
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return mList.get(oldItemPosition).id == list.get(newItemPosition).id
-                }
-
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val isContentSame =
-                            mList.get(oldItemPosition).equals(list.get(newItemPosition))
-                    return isContentSame
-                }
-            })
-            mList = list
-            result.dispatchUpdatesTo(this)
-        }
-    }
-
-    inner class MovieInTheaterViewHolder(itemView : View) :
-            androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView), View.OnClickListener{
-
-        internal var binding:ItemMovieInTheaterBinding? = null
+    inner class MovieInTheaterViewHolder(private val binding:ItemMovieInTheaterBinding)
+        : RecyclerView.ViewHolder(binding.root), View.OnClickListener{
 
         init {
-            binding = DataBindingUtil.bind(itemView)
             itemView.setOnClickListener(this)
         }
 
-        override fun onClick(p0: View?) {
-            val position = adapterPosition;
-            mHandler.clickOnItem(position)
+        fun bind(item: MovieInTheater) {
+            binding.apply {
+                movie = item
+                executePendingBindings()
+            }
         }
+
+        override fun onClick(p0: View?) {
+            val position = adapterPosition
+            mHandler.clickOnItem(getItem(position).id)
+        }
+    }
+}
+
+private class MovieInTheaterDiffCallback: DiffUtil.ItemCallback<MovieInTheater>() {
+
+    override fun areItemsTheSame(oldItem: MovieInTheater, newItem: MovieInTheater): Boolean {
+        return  oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: MovieInTheater, newItem: MovieInTheater): Boolean {
+        return  oldItem == newItem
     }
 }
