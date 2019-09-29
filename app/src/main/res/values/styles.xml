@@ -1,11 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorOnPrimary">@color/yellow</item>
+        <item name="colorPrimaryDark">@color/blue_dark</item>
+        <item name="colorOnSurface">@color/black</item>
+        <item name="colorAccent">@color/blue_dark</item>
+        <item name="colorSurface">@color/gray_dark</item>
+        <item name="colorSecondary">@color/yellow</item>
+        <item name="android:colorBackground">@color/white</item>
     </style>
+
+    <style name="AppTheme" parent="Base.AppTheme"/>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -22,7 +29,7 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
@@ -38,6 +45,11 @@
 
     <style name="Text_ItemTitle.light" parent="AppTheme">
         <item name="android:textSize">@dimen/item_header_title</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Text_ItemTitle.secondary.light" parent="AppTheme">
+        <item name="android:textSize">@dimen/item_secondary_item</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
@@ -64,6 +76,8 @@
     <style name="MovieDetail_ExtraInfoValue">
         <item name="android:padding">@dimen/padding_normal</item>
         <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
     <style name="MovieDetail_GeneralInfoSubTitle" parent="Margin_Lateral_Large">
@@ -74,5 +88,11 @@
 
     <style name="MovieDetail_GeneralInfoContent" parent="Margin_Lateral_Large">
         <item name="android:layout_marginTop">@dimen/spacing_normal</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="TextAppearance.Movie.Toolbar.Text" parent="TextAppearance.MaterialComponents.Headline5" >
+        <item name="android:textColor">@color/white</item>
     </style>
 </resources>

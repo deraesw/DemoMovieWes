@@ -22,11 +22,11 @@ class MovieGenreRepository
     val mGenreForFilter : LiveData<List<GenreFilter>> = appDataSource.movieGenreDAO.selectAllMovieGenreForFilter()
 
     init {
-        movieGenreCallHandler.mMovieGenreList.observeForever({
+        movieGenreCallHandler.mMovieGenreList.observeForever {
             if(it != null){
                 appDataSource.saveListMovieGenre(it)
             }
-        })
+        }
     }
 
     fun fetchAllMovieGenreData(){

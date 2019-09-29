@@ -43,109 +43,9 @@
                 android:paddingRight="@dimen/spacing_large"
                 android:paddingStart="@dimen/spacing_large"
                 android:paddingTop="@dimen/padding_light"
-                android:text="General information"
+                android:text="Synopsis"
                 android:textColor="@android:color/white" />
         </FrameLayout>
-
-        <TextView
-            android:id="@+id/tv_original_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/original_title"
-            style="@style/MovieDetail_GeneralInfoSubTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fl_content_title" />
-
-        <TextView
-            android:id="@+id/tv_original_title_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoContent"
-            android:text="@{movie.originalTitle}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_original_title"
-            tools:text="Orginal title" />
-
-        <TextView
-            android:id="@+id/tv_genre_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoSubTitle"
-            android:text="@string/genre_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_original_title_value" />
-
-
-        <TextView
-            android:id="@+id/tv_gender_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoContent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_genre_title"
-            tools:text="Aventure, comedie" />
-
-        <TextView
-            android:id="@+id/tv_duration_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoSubTitle"
-            android:text="@string/duration_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_gender_value" />
-
-        <TextView
-            android:id="@+id/tv_duration_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoContent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_duration_title"
-            tools:text="145 min" />
-
-        <TextView
-            android:id="@+id/tv_release_date_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoSubTitle"
-            android:text="@string/release_date_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_duration_value" />
-
-        <TextView
-            android:id="@+id/tv_release_date_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoContent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_release_date_title"
-            tools:text="Mars 12, 2018" />
-
-        <TextView
-            android:id="@+id/tv_overview_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/MovieDetail_GeneralInfoSubTitle"
-            android:text="@string/overview_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_release_date_value" />
 
         <TextView
             android:id="@+id/tv_overview_value"
@@ -155,18 +55,18 @@
             android:text="@{movie.overview}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_overview_title"
+            app:layout_constraintTop_toBottomOf="@+id/fl_content_title"
             tools:text="Overview Content Value" />
 
         <View
             android:id="@+id/divider_extra_info"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="@dimen/spacing_small_large"
+            android:layout_marginLeft="@dimen/spacing_small_large"
+            android:layout_marginRight="@dimen/spacing_small_large"
+            android:layout_marginStart="@dimen/spacing_small_large"
+            android:layout_marginTop="@dimen/spacing_large"
             android:background="@color/teal"
             app:elevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -224,7 +124,9 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/MovieDetail_ExtraInfoValue"
                 app:layout_columnWeight="1"
-                tools:text="100 million" />
+                tools:text="100 million"
+                app:amountWithSuffix="@{movie.budget}"
+                />
 
             <TextView
                 android:id="@+id/tv_revenue_title"
@@ -241,7 +143,8 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/MovieDetail_ExtraInfoValue"
                 app:layout_columnWeight="1"
-                tools:text="200 million" />
+                tools:text="200 million"
+                app:amountWithSuffix="@{movie.revenue}"/>
 
             <TextView
                 android:id="@+id/tv_popularity_title"
@@ -256,7 +159,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:theme="@style/MovieDetail_ExtraInfoValue"
-                app:layout_columnWeight="1" />
+                app:layout_columnWeight="1"
+                app:amountWithSuffix="@{movie.popularity}"
+                />
 
             <TextView
                 android:id="@+id/tv_average_vote_title"

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "production_company")
-class ProductionCompany(
+data class ProductionCompany(
         @PrimaryKey
         var id : Int,
         @SerializedName("logo_path")

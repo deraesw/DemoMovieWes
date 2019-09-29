@@ -5,15 +5,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
+import androidx.core.widget.NestedScrollView
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setAmountWithSuffix
-import com.demo.developer.deraesw.demomoviewes.extension.setImageUrl
+import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
@@ -22,8 +22,8 @@ import javax.inject.Inject
  * A placeholder fragment containing a simple view.
  */
 class MovieDetailActivityFragment : DaggerFragment() {
-    private val TAG = MovieDetailActivityFragment::class.java.simpleName
 
+    //Todo remove - using navigation component
     companion object {
         private const val ARGUMENT_MOVIE_ID = "ARGUMENT_MOVIE_ID"
 
@@ -34,13 +34,13 @@ class MovieDetailActivityFragment : DaggerFragment() {
         }
     }
 
-    @Inject lateinit var mFactory : ViewModelProvider.Factory
-    private lateinit var mBinding : FragmentMovieDetailBinding
-    private lateinit var mViewModel : MovieDetailViewModel
-    private val adapter = ProductionAdapter()
+    @Inject lateinit var factory : ViewModelProvider.Factory
+    private lateinit var binding : FragmentMovieDetailBinding
+    private lateinit var viewModel : MovieDetailViewModel
 
-    //val args: MovieDetailActivityFragmentArgs by navArgs()
-    private var mMovieId : Int = 0
+    private val adapter = ProductionAdapter()
+    private val args: MovieDetailActivityFragmentArgs by navArgs()
+    private var movieId : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,72 +49,67 @@ class MovieDetailActivityFragment : DaggerFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        mBinding = FragmentMovieDetailBinding.inflate(layoutInflater, container, false)
+        binding = FragmentMovieDetailBinding.inflate(layoutInflater, container, false)
 
         (activity as AppCompatActivity).apply {
-            setSupportActionBar(mBinding.toolbarMovieDetail)
+            setSupportActionBar(binding.toolbarMovieDetail)
             supportActionBar?.apply {
                 setDisplayShowTitleEnabled(false)
                 setDisplayHomeAsUpEnabled(true)
             }
         }
 
-        //TODO see compiler java 1.8, temp code
-        mMovieId =  MovieDetailActivityFragmentArgs.fromBundle(arguments!!).EXTRAMOVIEID//args.EXTRAMOVIEID
+        movieId = args.EXTRAMOVIEID
 
-        val productionRecyclerView = mBinding.incMovieContentInfo!!.rvProductionCompany
+        binding.apply {
+            var isToolbarShown = false
+            movieDetailContentScrollview.setOnScrollChangeListener(
+                    NestedScrollView.OnScrollChangeListener { _, _, scrollY, _, _ ->
+                        val shouldShowToolbar = scrollY > toolbarMovieDetail.height
+                        if (isToolbarShown != shouldShowToolbar) {
+                            isToolbarShown = shouldShowToolbar
+                            appbar.isActivated = shouldShowToolbar
+                            toolbarLayout.isTitleEnabled = shouldShowToolbar
+                        }
+                    }
+            )
+        }
+
+        val productionRecyclerView = binding.incMovieContentInfo!!.rvProductionCompany
         productionRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
         productionRecyclerView.setHasFixedSize(true)
         productionRecyclerView.adapter = adapter
 
-        return mBinding.root
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mViewModel = ViewModelProviders.of(this, mFactory).get(MovieDetailViewModel::class.java)
+        viewModel = viewModelProvider(factory)
 
-        if(mMovieId != 0){
-            mViewModel.getMovieDetail(mMovieId).observe(this, Observer {
-                if(it != null){
-                    mBinding.movie = it
-                    initMovieContent(it)
-                }
-            })
+        if(movieId != 0){
 
-            mViewModel.getGenreFromMovie(mMovieId).observe(this, Observer {
-                if(it != null){
-                    mBinding.incMovieContentInfo!!.tvGenderValue.text = it.joinToString(transform = {it.name})
-                }
-            })
+            viewModel.apply{
+                getMovieDetail(movieId).observe(this@MovieDetailActivityFragment, Observer {
+                    if(it != null){
+                        binding.movie = it
+                    }
+                })
 
-            mViewModel.getProductionFromMovie(mMovieId).observe(this, Observer {
-                if(it != null){
-                    adapter.swapData(it)
-                }
-            })
+                getGenreFromMovie(movieId).observe(this@MovieDetailActivityFragment, Observer {
+                    if(it != null){
+                        binding.incMovieHeaderInfo!!.tvMovieGenres.text = it.joinToString(transform = {it.name})
+                    }
+                })
+
+                getProductionFromMovie(movieId).observe(this@MovieDetailActivityFragment, Observer {
+                    if(it != null){
+                        adapter.submitList(it)
+                    }
+                })
+            }
         }
-    }
-
-    private fun initMovieContent(movie: Movie){
-        //mBinding.incMovieHeaderInfo?.ivMoviePoster?.setImageUrl(movie.posterPath, AppTools.PosterSize.SMALL)
-        //mBinding.ivBackdropPath.setImageUrl(movie.backdropPath, AppTools.BackdropSize.SMALL)
-
-        val contentInfo = mBinding.incMovieContentInfo!!
-        contentInfo.tvBudget.setAmountWithSuffix(movie.budget)
-        contentInfo.tvRevenue.setAmountWithSuffix(movie.revenue)
-        contentInfo.tvPopularity.setAmountWithSuffix(movie.popularity.toDouble())
-        contentInfo.tvDurationValue.text = String.format(getString(R.string.format_movie_full_time_detail),
-                        AppTools.convertMinuteToHours(movie.runtime),
-                        movie.runtime.toString())
-        if(movie.releaseDate != null){
-            contentInfo.tvReleaseDateValue.text = AppTools.convertDateString(
-                    movie.releaseDate!!,
-                    AppTools.DatePattern.MMMM_S_DD_C_YYYY
-            )
-        }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

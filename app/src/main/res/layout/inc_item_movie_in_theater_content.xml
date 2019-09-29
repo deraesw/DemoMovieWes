@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground">
+
+        <TextView
+            android:id="@+id/tv_movie_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@{movie.title}"
+            android:theme="@style/Text_ItemTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="title" />
+
+        <TextView
+            android:id="@+id/tv_movie_genre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:theme="@style/Text_SecondaryItem"
+            app:layout_constraintBottom_toTopOf="@+id/tv_movie_duration"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toBottomOf="@+id/iv_movie_vote"
+            app:movieGenre="@{movie}"
+            tools:text="Comedy, Horror" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/iv_movie_poster"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/desc_movie_poster"
+                app:error="@{@drawable/ic_broken_image_grey_24dp}"
+                app:placeHolder="@{@drawable/ic_business_grey_24dp}"
+                app:posterImageUrl="@{movie.posterPath}" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/movie_in_theater_height" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/movie_in_theater_poster_item_width" />
+
+        <ImageView
+            android:id="@+id/iv_movie_vote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/desc_movie_vote_icon"
+            android:tint="@color/start_color"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+            app:srcCompat="@drawable/ic_star_white_24dp" />
+
+        <TextView
+            android:id="@+id/tv_movie_vote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="@{String.valueOf(movie.voteAverage)}"
+            android:theme="@style/Text_SecondaryItem"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_movie_vote"
+            app:layout_constraintStart_toEndOf="@+id/iv_movie_vote"
+            app:layout_constraintTop_toTopOf="@+id/iv_movie_vote"
+            app:layout_constraintVertical_bias="0.39"
+            tools:text="7.0" />
+
+        <TextView
+            android:id="@+id/tv_movie_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:theme="@style/Text_SecondaryItem"
+            app:layout_constraintBottom_toTopOf="@+id/guideline3"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_title"
+            app:movieDuration="@{movie}"
+            tools:text="02h30 min" />
+
+
+
+        <!--        <LinearLayout-->
+        <!--            android:id="@+id/ll_top_container"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="0dp"-->
+        <!--            android:background="@color/colorPrimary"-->
+        <!--            app:layout_constraintBottom_toTopOf="@+id/guideline3"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/guideline5"-->
+        <!--            android:padding="@dimen/spacing_normal"-->
+        <!--            android:orientation="horizontal"-->
+        <!--            >-->
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:layout_weight="2"-->
+        <!--                >-->
+        <!--                <ImageView-->
+        <!--                    android:id="@+id/iv_movie_duration"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    app:srcCompat="@drawable/ic_access_time_white_24dp"-->
+        <!--                    android:layout_alignParentStart="true"-->
+        <!--                    android:layout_alignParentLeft="true"-->
+        <!--                    android:layout_centerVertical="true"-->
+        <!--                    android:contentDescription="@string/desc_movie_duration_icon"-->
+        <!--                    android:layout_gravity="center_vertical"-->
+        <!--                    />-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tv_movie_duration"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    tools:text="02:30"-->
+        <!--                    android:theme="@style/MovieItemExtraInfoText"-->
+        <!--                    android:text="@{AppTools.convertMinuteToHours(movie.runtime)}"-->
+        <!--                    />-->
+        <!--            </LinearLayout>-->
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:layout_weight="1"-->
+        <!--                >-->
+        <!--                <ImageView-->
+        <!--                    android:id="@+id/iv_movie_vote"-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    app:srcCompat="@drawable/ic_star_white_24dp"-->
+        <!--                    android:contentDescription="@string/desc_movie_vote_icon"-->
+        <!--                    android:layout_gravity="center_vertical"-->
+        <!--                    />-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tv_movie_vote"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    tools:text="7.0"-->
+        <!--                    android:text="@{String.valueOf(movie.voteAverage)}"-->
+        <!--                    android:theme="@style/MovieItemExtraInfoText"-->
+        <!--                    />-->
+        <!--            </LinearLayout>-->
+
+        <!--            <LinearLayout-->
+        <!--                android:layout_width="0dp"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:layout_weight="2"-->
+        <!--                >-->
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tv_movie_release_date"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:theme="@style/MovieItemExtraInfoText"-->
+        <!--                    tools:text="2, july 2017"-->
+        <!--                    android:gravity="end|center_vertical"-->
+        <!--                    />-->
+        <!--            </LinearLayout>-->
+
+        <!--        </LinearLayout>-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <data>
+        <variable
+            name="movie"
+            type="com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater" />
+    </data>
+</layout>

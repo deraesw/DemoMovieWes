@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- OLD -->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="teal">#00796B</color>
+
+    <!-- TEMP -->
+    <color name="blue">#1976d2</color>
+    <color name="blue_light">#63a4ff</color>
+    <color name="blue_dark">#004ba0</color>
+    <color name="yellow">#eeff41</color>
+    <color name="yellow_light">#ffff78</color>
+    <color name="yellow_dark">#b8cc00</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="gray_light">#fafafa</color>
+    <color name="gray_dark">#99fafafa</color>
 
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>

@@ -29,9 +29,4 @@ interface MoviedbAPI {
     @GET("movie/{id}/credits")
     fun fetchMovieCredit(@Path("id") movieId: Int, @Query("api_key") apiKey: String)
             : Call<MovieCreditsListResponse>
-
-    /*
-    @GET("movie/{id}/reviews")
-    fun fetchMovieReview(@Path("id") movieId: Int, @Query("api_key") apiKey: String)
-    */
 }

@@ -9,6 +9,7 @@
             type="com.demo.developer.deraesw.demomoviewes.data.entity.ProductionCompany"/>
 
     </data>
+
     <androidx.cardview.widget.CardView
         android:layout_width="160dp"
         android:layout_height="160dp"
@@ -20,6 +21,7 @@
         android:layout_marginBottom="@dimen/spacing_normal"
         android:clickable="true"
         android:focusable="true"
+        app:cardBackgroundColor="@color/white"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,7 +1,8 @@
 <resources>
 
     <!-- App dimension -->
-    <dimen name="detail_movie_app_bar_height">296dp</dimen>
+    <dimen name="detail_movie_app_bar_height">346dp</dimen>
+    <dimen name="detail_movie_app_bar_image_height">296dp</dimen>
     <dimen name="detail_movie_cart_header_height">160dp</dimen>
     <dimen name="movie_filter_width">296dp</dimen>
     <dimen name="movie_in_theater_poster_item_width">112dp</dimen>
