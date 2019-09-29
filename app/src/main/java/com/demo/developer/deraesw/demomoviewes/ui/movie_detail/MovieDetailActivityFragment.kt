@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.*
+import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
@@ -38,6 +39,7 @@ class MovieDetailActivityFragment : DaggerFragment() {
     private lateinit var mViewModel : MovieDetailViewModel
     private val adapter = ProductionAdapter()
 
+    //val args: MovieDetailActivityFragmentArgs by navArgs()
     private var mMovieId : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,7 +59,8 @@ class MovieDetailActivityFragment : DaggerFragment() {
             }
         }
 
-        mMovieId = arguments?.getInt(ARGUMENT_MOVIE_ID) ?: 0
+        //TODO see compiler java 1.8, temp code
+        mMovieId =  MovieDetailActivityFragmentArgs.fromBundle(arguments!!).EXTRAMOVIEID//args.EXTRAMOVIEID
 
         val productionRecyclerView = mBinding.incMovieContentInfo!!.rvProductionCompany
         productionRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)

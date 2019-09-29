@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/moviesInTheaterFragment">
+
+    <fragment
+        android:id="@+id/moviesInTheaterFragment"
+        android:name="com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterFragment"
+        android:label="fragment_movies_in_theater"
+        tools:layout="@layout/fragment_movies_in_theater" >
+        <action
+            android:id="@+id/action_moviesInTheaterFragment_to_movieDetailActivityFragment3"
+            app:destination="@id/movieDetailActivityFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieDetailActivityFragment"
+        android:name="com.demo.developer.deraesw.demomoviewes.ui.movie_detail.MovieDetailActivityFragment"
+        android:label="fragment_movie_detail"
+        tools:layout="@layout/fragment_movie_detail" >
+        <argument
+            android:name="EXTRA_MOVIE_ID"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>

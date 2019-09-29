@@ -13,7 +13,9 @@
         android:theme="@style/AppTheme"
         android:name=".DemoMovieWesApp"
         >
-        <activity android:name=".ui.MainActivity">
+        <activity
+            android:theme="@style/AppTheme.NoActionBar"
+            android:name=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

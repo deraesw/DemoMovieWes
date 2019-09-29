@@ -34,56 +34,56 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
-
-        mLoadingContainer = findViewById(R.id.ll_loading_data)
-
-        val viewModel: MainActivityViewModel = viewModelProvider(viewModelFactory)
-
-        viewModel.accountData.observe(this, Observer {
-            if(it != null){
-
-                if(it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC){
-                    if(it.syncStatus != AccountData.SyncStatus.SYNC_PROGRESS) {
-                        //DemoMovieScheduler.initScheduler(this)
-                        //WorkScheduler.initSynchronisation()
-                        viewModel.callFullSyncData(it)
-                    }
-                }
-
-                if(it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS){
-                    displayLoadingDataContainer()
-                } else {
-                    hideLoadingDataContainer()
-                }
-            }
-        })
-
-        viewModel.syncStatus.observe(this, Observer {
-            if(it != null){
-                hideLoadingDataContainer()
-                when(it.status){
-                    AccountData.SyncStatus.SYNC_INIT_DONE -> {
-                        debug("init done launch service")
-                        DemoMovieScheduler.initScheduler(this)
-                    }
-                    AccountData.SyncStatus.SYNC_FAILED -> {
-                        debug( "Failed status receive")
-                        error("Error => ${it.networkError?.statusMessage}")
-                        //todo display failed info
-                    }
-                }
-            }
-        })
-
-        if(savedInstanceState == null){
-            supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.main_container, MoviesInTheaterFragment())
-                    .commit()
-        }
+//
+//        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+//        setSupportActionBar(toolbar)
+//
+//        mLoadingContainer = findViewById(R.id.ll_loading_data)
+//
+//        val viewModel: MainActivityViewModel = viewModelProvider(viewModelFactory)
+//
+//        viewModel.accountData.observe(this, Observer {
+//            if(it != null){
+//
+//                if(it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC){
+//                    if(it.syncStatus != AccountData.SyncStatus.SYNC_PROGRESS) {
+//                        //DemoMovieScheduler.initScheduler(this)
+//                        //WorkScheduler.initSynchronisation()
+//                        viewModel.callFullSyncData(it)
+//                    }
+//                }
+//
+//                if(it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS){
+//                    displayLoadingDataContainer()
+//                } else {
+//                    hideLoadingDataContainer()
+//                }
+//            }
+//        })
+//
+//        viewModel.syncStatus.observe(this, Observer {
+//            if(it != null){
+//                hideLoadingDataContainer()
+//                when(it.status){
+//                    AccountData.SyncStatus.SYNC_INIT_DONE -> {
+//                        debug("init done launch service")
+//                        DemoMovieScheduler.initScheduler(this)
+//                    }
+//                    AccountData.SyncStatus.SYNC_FAILED -> {
+//                        debug( "Failed status receive")
+//                        error("Error => ${it.networkError?.statusMessage}")
+//                        //todo display failed info
+//                    }
+//                }
+//            }
+//        })
+//
+//        if(savedInstanceState == null){
+//            supportFragmentManager
+//                    .beginTransaction()
+//                    .add(R.id.main_container, MoviesInTheaterFragment())
+//                    .commit()
+//        }
 
     }
 

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.*
+import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.MovieInTheaterAdapter
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
@@ -159,7 +160,10 @@ class MoviesInTheaterFragment : DaggerFragment(),
     }
 
     override fun clickOnItem(id: Int) {
-        mNavigationHandler.clickOnLaunchMovieDetailView(id)
+        //mNavigationHandler.clickOnLaunchMovieDetailView(id)
+        val direction = MoviesInTheaterFragmentDirections
+                .actionMoviesInTheaterFragmentToMovieDetailActivityFragment3(id)
+        this.findNavController().navigate(direction)
     }
 
     override fun onFilterChange(list: List<Int>) {
@@ -175,22 +179,10 @@ class MoviesInTheaterFragment : DaggerFragment(),
     private fun manageItems(){
         var filterList = mOriginalList
         if(mFilterItem.isNotEmpty()){
-            //Method 1 AND
-            /*
-            list.forEach({
-                val id = it
-                filterList = filterList.filter {
-                    it.genres.any({
-                        it.id == id
-                    })
-                }
-            })*/
-
-            //Method 2 OR
             filterList = filterList.filter {
-                it.genres.any({
-                    mFilterItem.contains(it.id)
-                })
+                it.genres.any { movieGenre ->
+                    mFilterItem.contains(movieGenre.id)
+                }
             }
         }
 
