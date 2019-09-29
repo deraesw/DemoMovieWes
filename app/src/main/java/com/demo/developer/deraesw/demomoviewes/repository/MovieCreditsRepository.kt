@@ -39,6 +39,8 @@ class MovieCreditsRepository
 
     fun getCastingFromMovie(movieId : Int) = appDataSource.selectCastingItemFromMovie(movieId)
 
+    fun getLimitedCastingFromMovie(movieId : Int, limit : Int) = appDataSource.selectLimitedCastingItemFromMovie(movieId, limit)
+
     fun getCrewFromMovie(movieId: Int) = appDataSource.selectCrewItemFromMovie(movieId)
 
     fun getCrewFromMovieWithPaging(movieId: Int) = appDataSource.selectCrewItemFromMovieWithPaging(movieId)

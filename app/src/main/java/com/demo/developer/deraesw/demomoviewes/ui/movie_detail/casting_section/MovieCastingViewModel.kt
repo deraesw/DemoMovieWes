@@ -12,6 +12,8 @@ class MovieCastingViewModel
 
     fun getMovieCasting(movieId: Int) = movieCreditsRepository.getCastingFromMovie(movieId)
 
+    fun getLimitedMovieCasting(movieId: Int, limit : Int) = movieCreditsRepository.getLimitedCastingFromMovie(movieId, limit)
+
     fun fetchMovieCredits(movieId : Int){
         movieCreditsRepository.fetchMovieCredits(movieId)
     }

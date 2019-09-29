@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.*
+import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CastingAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
@@ -49,6 +50,7 @@ class MovieCastingFragment : DaggerFragment() {
     private lateinit var mEmptyView : View
     private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
 
+    private val args: MovieCastingFragmentArgs by navArgs()
     private var mMovieId : Int = 0
     private var mSortingCode : String = Constant.SortingCode.BY_DEFAULT
     private var mOriginalList : List<CastingItem> = ArrayList()
@@ -61,7 +63,7 @@ class MovieCastingFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val viewRoot = inflater.inflate(R.layout.fragment_movie_casting, container, false)
 
-        mMovieId = arguments?.getInt(KEY_MOVIE_ID) ?: 0
+        mMovieId = args.EXTRAMOVIEID
 
         val recyclerView = viewRoot.findViewById<RecyclerView>(R.id.rv_casting_list)
         recyclerView.setLinearLayout()

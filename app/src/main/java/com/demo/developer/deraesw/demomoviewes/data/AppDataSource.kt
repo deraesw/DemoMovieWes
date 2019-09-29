@@ -48,6 +48,8 @@ class AppDataSource constructor(
 
     fun selectCastingItemFromMovie(movieId : Int) = castingDAO.selectCastingItemFromMovie(movieId)
 
+    fun selectLimitedCastingItemFromMovie(movieId : Int, limit : Int) = castingDAO.selectLimitedCastingItemFromMovie(movieId, limit)
+
     fun selectCrewItemFromMovie(movieId: Int) = crewDAO.selectCrewsItemFromMovie(movieId)
 
     fun selectCrewItemFromMovieWithPaging(movieId: Int) = crewDAO.selectCrewsItemFromMovieWithpaging(movieId)

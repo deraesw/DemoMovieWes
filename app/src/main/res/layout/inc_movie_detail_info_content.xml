@@ -58,6 +58,21 @@
             app:layout_constraintTop_toBottomOf="@+id/fl_content_title"
             tools:text="Overview Content Value" />
 
+        <include
+            android:id="@+id/inc_movie_casting_member"
+            layout="@layout/inc_movie_detail_casting_section"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_overview_value"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_small_large"
+            android:layout_marginLeft="@dimen/spacing_small_large"
+            android:layout_marginRight="@dimen/spacing_small_large"
+            android:layout_marginStart="@dimen/spacing_small_large"
+            android:layout_marginTop="@dimen/spacing_large"
+            />
+
         <View
             android:id="@+id/divider_extra_info"
             android:layout_width="0dp"
@@ -71,7 +86,7 @@
             app:elevation="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_overview_value" />
+            app:layout_constraintTop_toBottomOf="@+id/inc_movie_casting_member" />
 
         <androidx.gridlayout.widget.GridLayout
             android:id="@+id/gl_extra_content"

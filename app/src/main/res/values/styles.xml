@@ -38,6 +38,11 @@
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
+    <style name="Text_Item.Secondary.Title" parent="AppTheme">
+        <item name="android:textSize">@dimen/item_header_subtitle</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
     <style name="Margin_Lateral_Large">
         <item name="android:layout_marginLeft">@dimen/spacing_small_large</item>
         <item name="android:layout_marginRight">@dimen/spacing_small_large</item>
@@ -55,6 +60,11 @@
 
     <style name="Text_SecondaryItem" parent="AppTheme">
         <item name="android:textSize">@dimen/item_secondary_item</item>
+        <item name="android:textColor">@color/secondary_text</item>
+    </style>
+
+    <style name="Text_TertiaryItem" parent="AppTheme">
+        <item name="android:textSize">@dimen/movie_item_secondary_item</item>
         <item name="android:textColor">@color/secondary_text</item>
     </style>
 

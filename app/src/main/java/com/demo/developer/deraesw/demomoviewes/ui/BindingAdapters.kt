@@ -48,7 +48,7 @@ object BindingAdapter {
             placeholderRes: Drawable) {
         imageView.setImageUrl(
                 url,
-                AppTools.ProfileSize.SMALL,
+                AppTools.ProfileSize.MEDIUM,
                 errorRes,
                 placeholderRes,
                 isCircleCrop = true)

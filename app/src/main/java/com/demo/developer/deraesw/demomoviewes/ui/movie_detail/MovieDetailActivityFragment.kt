@@ -7,21 +7,27 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import androidx.core.widget.NestedScrollView
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
+import com.demo.developer.deraesw.demomoviewes.adapter.MovieDetailCastingAdapter
 import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
+import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setAmountWithSuffix
+import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
+import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingViewModel
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.inc_movie_detail_casting_section.view.*
 import javax.inject.Inject
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class MovieDetailActivityFragment : DaggerFragment() {
+class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.MovieDetailCastingAdapterInterface {
 
     //Todo remove - using navigation component
     companion object {
@@ -37,8 +43,10 @@ class MovieDetailActivityFragment : DaggerFragment() {
     @Inject lateinit var factory : ViewModelProvider.Factory
     private lateinit var binding : FragmentMovieDetailBinding
     private lateinit var viewModel : MovieDetailViewModel
+    private lateinit var castingViewModel : MovieCastingViewModel
 
     private val adapter = ProductionAdapter()
+    private val castingAdapter = MovieDetailCastingAdapter(this)
     private val args: MovieDetailActivityFragmentArgs by navArgs()
     private var movieId : Int = 0
 
@@ -80,6 +88,11 @@ class MovieDetailActivityFragment : DaggerFragment() {
         productionRecyclerView.setHasFixedSize(true)
         productionRecyclerView.adapter = adapter
 
+        binding.incMovieContentInfo!!.incMovieCastingMember!!.rv_casting_member.apply {
+            setLinearLayout(hasDivider = false, isVertical = false)
+            adapter = castingAdapter
+        }
+
         return binding.root
     }
 
@@ -87,6 +100,7 @@ class MovieDetailActivityFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel = viewModelProvider(factory)
+        castingViewModel = viewModelProvider(factory)
 
         if(movieId != 0){
 
@@ -109,11 +123,26 @@ class MovieDetailActivityFragment : DaggerFragment() {
                     }
                 })
             }
+
+            castingViewModel.getLimitedMovieCasting(movieId, 3).observe(this, Observer {
+                if(it != null){
+                    if(it.isNotEmpty()){
+                        castingAdapter.submitList(it.plus(
+                                CastingItem(name = "See more", specialItemAction = true))
+                        )
+                    }
+                }
+            })
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun clickOnMoreAction() {
+        val destination = MovieDetailActivityFragmentDirections.actionMovieDetailActivityFragmentToMovieCastingFragment(movieId)
+        this.findNavController().navigate(destination)
     }
 }
