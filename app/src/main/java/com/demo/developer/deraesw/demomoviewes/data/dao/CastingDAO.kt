@@ -14,7 +14,8 @@ interface CastingDAO {
     @Query("SELECT people.id, people.name, people.profilePath, casting.character " +
             "FROM casting " +
             "INNER JOIN people ON casting.peopleId = people.id " +
-            "WHERE casting.movieId = :movieId ")
+            "WHERE casting.movieId = :movieId " +
+            "ORDER BY casting.position")
     fun selectCastingItemFromMovie(movieId : Int) : LiveData<List<CastingItem>>
 
     @Query("SELECT people.id, people.name, people.profilePath, casting.character " +

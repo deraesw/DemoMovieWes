@@ -28,4 +28,5 @@ class Casting(
     var character : String = "",
     var peopleId : Int = 0,
     var movieId : Int = 0,
-    var creditId : String = "")
+    var creditId : String = "",
+    var position: Int = 0)

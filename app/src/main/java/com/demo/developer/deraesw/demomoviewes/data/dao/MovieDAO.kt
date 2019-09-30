@@ -7,6 +7,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
+import com.demo.developer.deraesw.demomoviewes.utils.Constant
 
 @Dao
 interface MovieDAO {
@@ -17,8 +19,11 @@ interface MovieDAO {
     @Query("SELECT * FROM movie")
     fun selectAllMovies() : LiveData<List<Movie>>
 
-    @Query("SELECT id, title, posterPath, runtime, voteAverage, releaseDate FROM movie")
+    @Query("SELECT id, title, posterPath, runtime, voteAverage, releaseDate FROM movie WHERE filterStatus = 1")
     fun selectMoviesInTheater() : LiveData<List<MovieInTheater>>
+
+    @Query("SELECT id, title, posterPath, runtime, releaseDate FROM movie WHERE filterStatus = 2")
+    fun selectUpcomingMovies() : LiveData<List<UpcomingMovie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovie(movie: Movie)

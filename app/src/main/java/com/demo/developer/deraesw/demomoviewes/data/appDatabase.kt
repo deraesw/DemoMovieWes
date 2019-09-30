@@ -19,9 +19,8 @@ import javax.inject.Named
             (ProductionCompany::class),
             (MovieToProduction::class)
         ],
-        version = 2)
+        version = 6)
 abstract class appDatabase : RoomDatabase(){
-    private val TAG = appDatabase::class.java.simpleName
 
     abstract fun movieGenreDao() : MovieGenreDAO
     abstract fun movieDAO() : MovieDAO

@@ -98,9 +98,13 @@ class AppDataSource constructor(
                     saveListMovieToProduction(listMovieProduction)
                 }
 
-                if(it.credits != null){
-                    handleCastResponse(it.credits!!.cast, movie.id)
-                    handleCrewResponse(it.credits!!.crew, movie.id)
+                it.credits?.apply {
+                    if(cast.count() > 0) {
+                        handleCastResponse(cast, movie.id)
+                    }
+                    if(crew.count() > 0) {
+                        //handleCrewResponse(crew, movie.id)
+                    }
                 }
             }
         }
