@@ -17,6 +17,7 @@ class MainActivityViewModel
     val movieGenreList: LiveData<List<MovieGenre>> = mainRepository.genreRepository.mMovieGenreList
     val accountData : LiveData<AccountData> = mainRepository.sharePrefRepository.account
     val syncStatus : SingleLiveEvent<SynchronizationStatus> = mainRepository.syncStatus
+    var syncInformationMessage :  SingleLiveEvent<String> = mainRepository.syncInformationMessage
 
     fun callFullSyncData(accountData: AccountData){
         mainRepository.initFullSynchronization(accountData)

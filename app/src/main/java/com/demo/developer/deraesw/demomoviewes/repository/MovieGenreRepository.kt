@@ -6,6 +6,7 @@ import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
+import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,6 +19,7 @@ class MovieGenreRepository
 
     private val TAG = MovieGenreRepository::class.java.simpleName
 
+    var syncInformationMessage : SingleLiveEvent<String> = SingleLiveEvent()
     val mMovieGenreList : LiveData<List<MovieGenre>> = appDataSource.movieGenreDAO.selectAllMovieGenre()
     val mGenreForFilter : LiveData<List<GenreFilter>> = appDataSource.movieGenreDAO.selectAllMovieGenreForFilter()
 
@@ -29,7 +31,8 @@ class MovieGenreRepository
         }
     }
 
-    fun fetchAllMovieGenreData(){
+    fun fetchAllMovieGenreData() {
+        syncInformationMessage.postValue("Fetching movie genre list...")
         movieGenreCallHandler.fetchGenreMovieList()
     }
 

@@ -2,9 +2,8 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
-import com.demo.developer.deraesw.demomoviewes.service.DemoMovieScheduler
+import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import javax.inject.Inject
@@ -16,47 +15,75 @@ class MainRepository
         val genreRepository: MovieGenreRepository,
         val sharePrefRepository: SharePrefRepository,
         val movieCreditsRepository: MovieCreditsRepository,
-        val movieRepository: MovieRepository){
+        val movieRepository: MovieRepository) {
 
     private val TAG = MainRepository::class.java.simpleName
 
     private var syncMovieGenreDone = false
     private var syncMovieDone = false
+    private var syncUpcomingMovieDone = false
     private var syncStarted = false
-    private var mAccountData : AccountData? = null
+    private var mAccountData: AccountData? = null
 
     //var networkError : SingleLiveEvent<NetworkError> = SingleLiveEvent()
-    var syncStatus : SingleLiveEvent<SynchronizationStatus> = SingleLiveEvent()
+    var syncStatus: SingleLiveEvent<SynchronizationStatus> = SingleLiveEvent()
+    var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
 
     init {
-        genreRepository.mMovieGenreList.observeForever({
-            if(it?.size != 0 && syncStarted){
+        genreRepository.mMovieGenreList.observeForever {
+            if (it?.size != 0 && syncStarted && !syncMovieGenreDone) {
                 syncMovieGenreDone = true
                 movieRepository.fetchNowPlayingMovie()
             }
-        })
+        }
 
-        movieRepository.mMovieList.observeForever({
-            if(it?.size != 0 && syncStarted){
-                syncMovieDone = true
-                if(checkSynchronizationTerminated()) {
-                    setSynchronizationTerminated()
-                }
+        genreRepository.syncInformationMessage.observeForever {
+            if (it != null) {
+                syncInformationMessage.postValue(it)
             }
-        })
+        }
 
-        movieCreditsRepository.errorNetwork.observeForever({
-            if(it != null){
+        movieRepository.moviesInTheater.observeForever {
+            if (it?.size != 0 && syncStarted && !syncMovieDone) {
+                debug("movieRepository.moviesInTheater")
+                syncMovieDone = true
+                movieRepository.fetchUpcomingMovies()
+            }
+        }
+
+        movieRepository.upcomingMovies.observeForever {
+            if (it?.size != 0 && syncStarted && !syncUpcomingMovieDone) {
+                debug("movieRepository.upcomingMovies")
+                syncUpcomingMovieDone = true
+            }
+        }
+
+
+        movieRepository.movieList.observeForever {
+            if (it?.size != 0 && syncStarted && checkSynchronizationTerminated()) {
+                setSynchronizationTerminated()
+                syncStarted = false
+            }
+        }
+
+        movieRepository.syncInformationMessage.observeForever {
+            if (it != null) {
+                syncInformationMessage.postValue(it)
+            }
+        }
+
+        movieCreditsRepository.errorNetwork.observeForever {
+            if (it != null) {
                 val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
                 sync.networkError = it
                 syncStatus.postValue(sync)
             }
-        })
+        }
     }
 
-    fun initFullSynchronization(accountData: AccountData){
-        if(accountData.syncStatus == AccountData.SyncStatus.NO_SYNC){
-            Log.d(TAG, "initFullSynchronization - Start sync")
+    fun initFullSynchronization(accountData: AccountData) {
+        if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC) {
+            debug("initFullSynchronization - Start sync")
 
             mAccountData = accountData
             mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
@@ -64,12 +91,14 @@ class MainRepository
 
             syncStarted = true
 
+            syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS))
+
             genreRepository.fetchAllMovieGenreData()
         }
     }
 
-    private fun checkSynchronizationTerminated() : Boolean {
-        if(syncMovieGenreDone && syncMovieDone){
+    private fun checkSynchronizationTerminated(): Boolean {
+        if (syncMovieGenreDone && syncMovieDone && syncUpcomingMovieDone) {
             return true
         }
 
@@ -84,27 +113,8 @@ class MainRepository
         mAccountData!!.lastDateSync = AppTools.getCurrentDate()
         sharePrefRepository.updateAccountInformation(mAccountData!!)
 
-        if(fromInitialSync){
+        if (fromInitialSync) {
             syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE))
         }
     }
-
-    /*
-    companion object {
-        @Volatile private var sInstance : MainRepository? = null
-
-        fun getInstance(
-                genreRepository: MovieGenreRepository,
-                sharePrefRepository: SharePrefRepository,
-                movieRepository: MovieRepository) : MainRepository {
-            sInstance ?: synchronized(this){
-                sInstance = MainRepository(
-                        genreRepository,
-                        sharePrefRepository,
-                        movieRepository)
-            }
-
-            return sInstance!!
-        }
-    }*/
 }

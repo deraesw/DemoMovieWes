@@ -8,6 +8,7 @@ import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.M
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.crew_section.MovieCrewViewModel
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.MoviesInTheaterViewModel
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMovieViewModel
+import com.demo.developer.deraesw.demomoviewes.ui.upcoming.UpcomingMoviesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -47,4 +48,9 @@ internal abstract class ViewModelBuilder {
     @IntoMap
     @ViewModelKey(MovieCrewViewModel::class)
     abstract fun bindMovieCrewViewModel(viewModel : MovieCrewViewModel) : ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(UpcomingMoviesViewModel::class)
+    abstract fun bindUpcomingMoviesViewModel(viewModel : UpcomingMoviesViewModel) : ViewModel
 }

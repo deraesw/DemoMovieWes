@@ -12,11 +12,10 @@ import javax.inject.Singleton
 
 @Singleton
 class SharePrefRepository
-@Inject constructor(@Named("context_app") mContext : Context){
-    private val TAG = SharePrefRepository::class.java.simpleName
+@Inject constructor(@Named("context_app") mContext : Context) {
 
     val account : MutableLiveData<AccountData> = MutableLiveData()
-    internal val sharedPreferences : SharedPreferences =
+    private val sharedPreferences : SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(mContext)
 
     init {
@@ -27,7 +26,7 @@ class SharePrefRepository
         return getAccountData()
     }
 
-    fun fetchAccountInformation(){
+    private fun fetchAccountInformation() {
         account.postValue(getAccountData())
     }
 

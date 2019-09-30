@@ -1,67 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.movies_in_theater.MoviesInTheaterFragment"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.movies_in_theater.MoviesInTheaterFragment">
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/dl_movie_in_theater"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
+            android:id="@+id/ll_filter_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/divider"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_normal"
+            android:visibility="gone"
+            app:elevation="4dp">
+
+            <ImageView
+                android:id="@+id/iv_clear_all_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_delete_sweep_primary_24dp" />
+
+            <TextView
+                android:id="@+id/tv_filter_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                tools:text="Animation, Drama" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_movies_in_theater"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:layout_below="@+id/ll_filter_content" />
 
-            <LinearLayout
-                android:id="@+id/ll_filter_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_alignParentTop="true"
-                android:background="@color/divider"
-                android:padding="@dimen/padding_normal"
-                app:elevation="4dp"
-                android:visibility="gone"
-                >
-
-                <TextView
-                    android:id="@+id/tv_filter_content"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    tools:text="Animation, Drama"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    />
-
-                <ImageView
-                    android:id="@+id/iv_clear_all_filter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/ic_delete_sweep_primary_24dp" />
-
-
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_movies_in_theater"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/ll_filter_content"
-                />
-
-        </RelativeLayout>
-
-        <FrameLayout
-            android:id="@+id/filter_container"
-            android:layout_width="@dimen/movie_filter_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            />
-
-    </androidx.drawerlayout.widget.DrawerLayout>
+    </RelativeLayout>
 </layout>

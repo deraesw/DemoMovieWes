@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="Base.AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/blue</item>
         <item name="colorOnPrimary">@color/yellow</item>
         <item name="colorPrimaryDark">@color/blue_dark</item>
@@ -31,7 +31,7 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
 
     <style name="Text_ItemTitle" parent="AppTheme">
         <item name="android:textSize">@dimen/item_header_title</item>

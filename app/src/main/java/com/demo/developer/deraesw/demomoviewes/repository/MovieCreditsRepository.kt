@@ -23,17 +23,17 @@ class MovieCreditsRepository
     val errorNetwork = movieCreditsCallHandler.mErrorMessage
 
     init {
-        movieCreditsCallHandler.mCreditsList.observeForever({
+        movieCreditsCallHandler.mCreditsList.observeForever {
             if(it != null){
                 if(it.cast.isNotEmpty()){
                     handleCastResponse(it.cast, it.id)
                 }
 
                 if(it.crew.isNotEmpty()){
-                    handleCrewResponse(it.crew, it.id)
+                    //handleCrewResponse(it.crew, it.id)
                 }
             }
-        })
+        }
 
     }
 

@@ -16,6 +16,7 @@ class MovieCreditsListResponse {
     class Casting() : People() {
         val cast_id : Int = 0
         val character : String = ""
+        val order: Int = 0
     }
 
     class Crew(): People() {

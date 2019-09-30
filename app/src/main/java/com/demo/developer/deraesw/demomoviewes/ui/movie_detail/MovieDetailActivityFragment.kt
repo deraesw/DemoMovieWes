@@ -7,6 +7,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.*
 import androidx.core.widget.NestedScrollView
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
@@ -91,6 +92,12 @@ class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.
         binding.incMovieContentInfo!!.incMovieCastingMember!!.rv_casting_member.apply {
             setLinearLayout(hasDivider = false, isVertical = false)
             adapter = castingAdapter
+        }
+
+        binding.toolbarMovieDetail.apply {
+            setNavigationOnClickListener {
+                it.findNavController().navigateUp()
+            }
         }
 
         return binding.root

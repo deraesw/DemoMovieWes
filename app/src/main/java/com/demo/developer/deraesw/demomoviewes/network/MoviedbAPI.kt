@@ -23,7 +23,11 @@ interface MoviedbAPI {
             : Call<MovieResponse>
 
     @GET("movie/now_playing")
-    fun fetchNowPlayingMovies(@Query("api_key") apiKey: String)
+    fun fetchNowPlayingMovies(@Query("api_key") apiKey: String, @Query("region") region : String)
+            : Call<MoviesResponse>
+
+    @GET("movie/upcoming")
+    fun fetchUpcomingMovies(@Query("api_key") apiKey: String, @Query("region") region : String)
             : Call<MoviesResponse>
 
     @GET("movie/{id}/credits")

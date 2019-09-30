@@ -1,70 +1,46 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemCastingItemBinding
 
-class CastingAdapter(): androidx.recyclerview.widget.RecyclerView.Adapter<CastingAdapter.CastingViewHolder>() {
-    private val TAG = CastingAdapter::class.java.simpleName
+class CastingAdapter: ListAdapter<CastingItem, RecyclerView.ViewHolder>(CastingDiffCallback()) {
 
-    private var mList: List<CastingItem> = ArrayList();
-
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = getItem(position)
+        (holder as CastingViewHolder).bind(item)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CastingViewHolder {
         val binding = ItemCastingItemBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false)
 
-        return CastingViewHolder(binding.root)
+        return CastingViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: CastingViewHolder, position: Int) {
-        val item = mList.get(position)
+    inner class CastingViewHolder(var binding:ItemCastingItemBinding)
+        : RecyclerView.ViewHolder(binding.root){
 
-        holder.binding?.casting = item
-        holder.binding?.executePendingBindings()
-    }
-
-    override fun getItemCount(): Int = mList.size
-
-    fun getItemAt(position : Int) : CastingItem = mList.get(position)
-
-    fun swapData(list: List<CastingItem>){
-
-        if(mList.isEmpty()){
-            mList = list
-            notifyDataSetChanged()
-        } else {
-            val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun getOldListSize(): Int = mList.size
-
-                override fun getNewListSize(): Int = list.size
-
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return mList.get(oldItemPosition).id == list.get(newItemPosition).id
-                }
-
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val isContentSame =
-                            mList.get(oldItemPosition).equals(list.get(newItemPosition))
-                    return isContentSame
-                }
-            })
-            mList = list
-            result.dispatchUpdatesTo(this)
+        fun bind(item: CastingItem) {
+            binding.apply {
+                casting = item
+                executePendingBindings()
+            }
         }
     }
+}
 
-    inner class CastingViewHolder(itemView : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView){
+private class CastingDiffCallback: DiffUtil.ItemCallback<CastingItem>() {
 
-        internal var binding:ItemCastingItemBinding? = null
+    override fun areItemsTheSame(oldItem: CastingItem, newItem: CastingItem): Boolean {
+        return  oldItem.id == newItem.id
+    }
 
-        init {
-            binding = DataBindingUtil.bind(itemView)
-        }
+    override fun areContentsTheSame(oldItem: CastingItem, newItem: CastingItem): Boolean {
+        return  oldItem == newItem
     }
 }

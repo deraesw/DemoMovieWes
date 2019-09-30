@@ -22,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/detail_movie_app_bar_height"
             android:fitsSystemWindows="true"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:background="@android:color/transparent">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/toolbar_layout"
@@ -76,6 +77,8 @@
                     android:layout_height="?attr/actionBarSize"
                     app:popupTheme="@style/AppTheme.PopupOverlay"
                     app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_navigate_before_24dp"
+                    app:contentInsetStartWithNavigation="0dp"
                     />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>

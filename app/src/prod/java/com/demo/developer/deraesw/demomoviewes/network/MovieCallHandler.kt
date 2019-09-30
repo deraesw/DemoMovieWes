@@ -10,10 +10,12 @@ import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
+import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -49,6 +51,7 @@ class MovieCallHandler
         call.enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>?, t: Throwable?) {
                 Log.e(TAG, t?.message, t)
+                //todo
             }
 
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
@@ -62,8 +65,10 @@ class MovieCallHandler
         })
     }
 
-    fun fetchNowPlayingMovies(){
-        val call = mMovieDbApi.fetchNowPlayingMovies(mApi)
+    private fun callFetchNowPlayingMovies() = mMovieDbApi.fetchNowPlayingMovies(mApi, Locale.getDefault().country)
+
+    fun fetchNowPlayingMovies() {
+        val call = callFetchNowPlayingMovies()
 
         call.enqueue(object : Callback<MoviesResponse> {
             override fun onResponse(call: Call<MoviesResponse>, response: Response<MoviesResponse>) {
@@ -71,7 +76,7 @@ class MovieCallHandler
                     if (response.body() != null) {
                         val list = response.body()?.results
                         if(list != null){
-                            handleFetchingMovieDetailFromList(list)
+                            handleFetchingMovieDetailFromList(list, Constant.MovieFilterStatus.NOW_PLAYING_MOVIES)
                         }
                     }
                 } else {
@@ -84,20 +89,49 @@ class MovieCallHandler
 
             override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
                 //todo
-                Log.e(TAG, t.message, t);
+                Log.e(TAG, t.message, t)
+            }
+        })
+    }
+
+    private fun callFetchUpcomingMovies() = mMovieDbApi.fetchUpcomingMovies(mApi, Locale.getDefault().country)
+
+    fun fetchUpcomingMovies() {
+        val call = callFetchUpcomingMovies()
+
+        call.enqueue(object : Callback<MoviesResponse> {
+            override fun onResponse(call: Call<MoviesResponse>, response: Response<MoviesResponse>) {
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        val list = response.body()?.results
+                        if(list != null){
+                            handleFetchingMovieDetailFromList(list, Constant.MovieFilterStatus.UPCOMING_MOVIES)
+                        }
+                    }
+                } else {
+                    if (response.errorBody() != null) {
+                        //todo
+                        Log.w(TAG, "Empty body")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
+                //todo
+                Log.e(TAG, t.message, t)
             }
         })
     }
 
     fun fetchNowPlayingResponse() :  Response<MoviesResponse> {
-        return mMovieDbApi.fetchNowPlayingMovies(mApi).execute()
+        return callFetchNowPlayingMovies().execute()
     }
 
     fun fetchingMovieDetailFromList(movieList: List<Movie>) : List<MovieResponse> {
         var completeMovieList : List<MovieResponse> = listOf()
 
         val handler = Handler()
-        movieList.forEach({
+        movieList.forEach {
             handler.postDelayed({
                 val res = mMovieDbApi.fetchMovieDetail(it.id, mApi).execute()
                 if(res.isSuccessful){
@@ -111,16 +145,16 @@ class MovieCallHandler
                 }
 
             }, 500)
-        })
+        }
 
         return completeMovieList
     }
 
-    private fun handleFetchingMovieDetailFromList(movieList: List<Movie>) {
+    private fun handleFetchingMovieDetailFromList(movieList: List<Movie>, filterStatus : Int) {
         var completeMovieList : List<MovieResponse> = listOf()
 
         val handler = Handler()
-        movieList.forEach({
+        movieList.forEach {
             handler.postDelayed({
                 val call = mMovieDbApi.fetchMovieDetail(it.id, mApi)
 
@@ -133,9 +167,9 @@ class MovieCallHandler
                         if(response.isSuccessful) {
                             val movie = response.body()
                             if(movie != null){
+                                movie.filterStatus = filterStatus
                                 completeMovieList += movie
                                 if(movieList.size == completeMovieList.size){
-                                    //mMovieList.postValue(completeMovieList)
                                     mMovieNetworkResponseList.postValue(completeMovieList)
                                 }
                             }
@@ -147,6 +181,6 @@ class MovieCallHandler
                     }
                 })
             }, 500)
-        })
+        }
     }
 }

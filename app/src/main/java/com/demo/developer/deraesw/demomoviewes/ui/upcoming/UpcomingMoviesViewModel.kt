@@ -1,27 +1,24 @@
-package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
+package com.demo.developer.deraesw.demomoviewes.ui.upcoming
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import javax.inject.Inject
 
-class MoviesInTheaterViewModel
+class UpcomingMoviesViewModel
 @Inject constructor(
         private val movieRepository: MovieRepository,
         private val movieGenreRepository : MovieGenreRepository) : ViewModel() {
 
-    val movieList : LiveData<List<MovieInTheater>> = movieRepository.moviesInTheater
-    val movieInTheaterWithGender : LiveData<List<MovieInTheater>> = movieRepository.mMovieInTheaterWithGenres
+    val upcomingMovieList : LiveData<List<UpcomingMovie>> = movieRepository.upcomingMovies
+    val upcomingMoviesWithGender : LiveData<List<UpcomingMovie>> = movieRepository.upcomingMoviesWithGenres
     val movieGenre : LiveData<List<MovieGenre>> = movieGenreRepository.mMovieGenreList
 
-    fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>){
-        movieRepository.populateMovieInTheaterWithGenre(list)
-    }
-
-    fun fetchNowPlayingMoving(){
-        movieRepository.fetchNowPlayingMovie()
+    fun populateUpcomingMoviesWithGenre(list: List<UpcomingMovie>){
+        movieRepository.populateUpcomingMoviesWithGenre(list)
     }
 }

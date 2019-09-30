@@ -9,15 +9,19 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.*
+import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CastingAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
+import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieCastingBinding
+import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
+import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingActivity
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingFragment
@@ -30,9 +34,7 @@ import javax.inject.Inject
  * A simple [Fragment] subclass.
  *
  */
-class MovieCastingFragment : DaggerFragment() {
-
-    private val TAG = MovieCastingFragment::class.java.simpleName
+class MovieCastingFragment : DaggerFragment(), SearchView.OnQueryTextListener {
 
     companion object {
         private const val KEY_MOVIE_ID = "KEY_MOVIE_ID"
@@ -44,66 +46,66 @@ class MovieCastingFragment : DaggerFragment() {
         }
     }
 
-    @Inject lateinit var mFactory : ViewModelProvider.Factory
-    private lateinit var mViewModel : MovieCastingViewModel
-    private lateinit var mAdapter : CastingAdapter
-    private lateinit var mEmptyView : View
-    private lateinit var mSwipeRefreshLayout: SwipeRefreshLayout
+    @Inject lateinit var factory : ViewModelProvider.Factory
+    private lateinit var viewModel : MovieCastingViewModel
+    private lateinit var adapter : CastingAdapter
+    private lateinit var binding : FragmentMovieCastingBinding
 
     private val args: MovieCastingFragmentArgs by navArgs()
-    private var mMovieId : Int = 0
-    private var mSortingCode : String = Constant.SortingCode.BY_DEFAULT
-    private var mOriginalList : List<CastingItem> = ArrayList()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
+    private var movieId : Int = 0
+    private var originalList : List<CastingItem> = ArrayList()
+    private var searchingInfo : String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val viewRoot = inflater.inflate(R.layout.fragment_movie_casting, container, false)
+        binding = FragmentMovieCastingBinding.inflate(layoutInflater , container, false)
 
-        mMovieId = args.EXTRAMOVIEID
+        movieId = args.EXTRAMOVIEID
 
-        val recyclerView = viewRoot.findViewById<RecyclerView>(R.id.rv_casting_list)
+        (activity as AppCompatActivity).apply {
+            setSupportActionBar(binding.castingToolbar)
+        }
+
+        val recyclerView = binding.rvCastingList
         recyclerView.setLinearLayout()
 
-        mAdapter = CastingAdapter()
-        recyclerView.adapter = mAdapter
+        adapter = CastingAdapter()
+        recyclerView.adapter = adapter
 
-        mEmptyView = viewRoot.findViewById(R.id.inc_empty_list)
+        binding.sfCastingList.setOnRefreshListener(this@MovieCastingFragment::fetchMovieCredits)
 
-        mSwipeRefreshLayout = viewRoot.findViewById(R.id.sf_casting_list)
+        binding.castingToolbar.apply {
+            setNavigationOnClickListener {
+                it.findNavController().navigateUp()
+            }
+        }
 
-        mSwipeRefreshLayout.setOnRefreshListener(this@MovieCastingFragment::fetchMovieCredits)
-
-        return viewRoot
+        setHasOptionsMenu(true)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if(mMovieId != 0){
-            mViewModel = ViewModelProviders.of(this, mFactory).get(MovieCastingViewModel::class.java)
+        if(movieId != 0){
+            viewModel = viewModelProvider(factory)
 
-            mViewModel.getMovieCasting(mMovieId).observe(this, Observer {
+            viewModel.getMovieCasting(movieId).observe(this, Observer {
                 if(it != null){
                     if(it.isNotEmpty()){
-                        mOriginalList = it
+                        originalList = it
                         manageItems()
                     }
                 }
 
-                if(mSwipeRefreshLayout.isRefreshing){
-                    mSwipeRefreshLayout.isRefreshing = false
+                if(binding.sfCastingList.isRefreshing){
+                    binding.sfCastingList.isRefreshing = false
+                    binding.rvCastingList.scrollToPosition(0)
                 }
-
-                manageDisplayEmptyView()
             })
 
-            mViewModel.errorNetwork.observe(this, Observer {
+            viewModel.errorNetwork.observe(this, Observer {
                 if(it != null){
-                    mSwipeRefreshLayout.isRefreshing = false
+                    binding.sfCastingList.isRefreshing = false
                 }
             })
         }
@@ -112,61 +114,45 @@ class MovieCastingFragment : DaggerFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_movie_detail_casting, menu)
+
+        (menu.findItem(R.id.action_search).actionView as SearchView).apply {
+            setOnQueryTextListener(this@MovieCastingFragment)
+            queryHint = getString(R.string.search_actor)
+        }
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.action_sort_content -> {
-                launchSortingActivity()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
+        return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode){
-            NavigationInterface.RC_CASTING_SORTING_OPTION -> {
-                if(resultCode == Activity.RESULT_OK ){
-                    mSortingCode =
-                            data?.getStringExtra(SortingActivity.EXTRA_NEW_CODE_SELECTED) ?:
-                            Constant.SortingCode.BY_DEFAULT
-                    manageItems()
-                }
-            }
-        }
+    override fun onQueryTextSubmit(query: String?) = true
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        searchingInfo = newText ?: ""
+        manageItems()
+        return true
     }
 
     private fun fetchMovieCredits() {
-        mViewModel.fetchMovieCredits(mMovieId)
+        viewModel.fetchMovieCredits(movieId)
     }
 
-    private fun manageItems(){
-        var filterList = mOriginalList
-
-        filterList = when(mSortingCode){
-            Constant.SortingCode.BY_DEFAULT -> filterList.sortedBy { it.id }
-            Constant.SortingCode.Casting.BY_NAME_ASC -> filterList.sortedBy { it.name }
-            Constant.SortingCode.Casting.BY_NAME_DESC -> filterList.sortedByDescending { it.name }
-            Constant.SortingCode.Casting.BY_CHARACTER_NAME_ASC -> filterList.sortedBy { it.character }
-            Constant.SortingCode.Casting.BY_CHARACTER_NAME_DESC -> filterList.sortedByDescending { it.character }
-            else -> filterList.sortedBy { it.id }
+    private fun manageItems() {
+        adapter.apply {
+            if(searchingInfo.isEmpty()) {
+                submitList(originalList)
+                manageDisplayEmptyView(originalList.count() > 0)
+            } else {
+                val filterList = originalList.filter { it.name.contains(searchingInfo, true) }
+                submitList(filterList)
+                manageDisplayEmptyView(filterList.count() > 0)
+            }
         }
-
-        mAdapter.swapData(filterList)
     }
 
-    private fun manageDisplayEmptyView(){
-        mEmptyView.visibility = if(mOriginalList.isNotEmpty()) View.GONE else View.VISIBLE
-    }
-
-    private fun launchSortingActivity(){
-        val intent = SortingActivity.setup(
-                context!!,
-                SortingFragment.Category.SORT_CASTING,
-                mSortingCode
-        )
-        startActivityForResult(intent, NavigationInterface.RC_CASTING_SORTING_OPTION)
+    private fun manageDisplayEmptyView(display: Boolean) {
+        binding.incEmptyList.visibility = if(display) View.GONE else View.VISIBLE
     }
 }

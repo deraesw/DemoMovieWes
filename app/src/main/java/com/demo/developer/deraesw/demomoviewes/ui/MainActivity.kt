@@ -40,7 +40,7 @@ class MainActivity : DaggerAppCompatActivity(), NavigationInterface {
 //
 //        mLoadingContainer = findViewById(R.id.ll_loading_data)
 //
-//        val viewModel: MainActivityViewModel = viewModelProvider(viewModelFactory)
+//        val viewModel: MainActivityViewModel = viewModelProvider(factory)
 //
 //        viewModel.accountData.observe(this, Observer {
 //            if(it != null){

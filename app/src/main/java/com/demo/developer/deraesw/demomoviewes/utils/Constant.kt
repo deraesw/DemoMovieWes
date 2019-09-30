@@ -7,6 +7,13 @@ class Constant {
         const val MOVIE_API_IMAGE = "https://image.tmdb.org/t/p/"
     }
 
+    class  MovieFilterStatus {
+        companion object {
+            const val NOW_PLAYING_MOVIES = 1
+            const val UPCOMING_MOVIES = 2
+        }
+    }
+
     class ShareKey {
         companion object {
             const val LAST_DATE_SYNC = "LAST_DATE_SYNC"

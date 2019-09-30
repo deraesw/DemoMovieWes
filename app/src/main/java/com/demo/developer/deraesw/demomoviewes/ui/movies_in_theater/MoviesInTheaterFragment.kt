@@ -4,15 +4,11 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
 import android.app.Activity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.core.view.GravityCompat
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import android.util.Log
 import android.view.*
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
@@ -23,11 +19,14 @@ import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheat
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
+import com.demo.developer.deraesw.demomoviewes.ui.home.HomeFragmentDirections
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterBottomSheet
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterMoviesFragment
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingActivity
 import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingFragment
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -39,18 +38,16 @@ class MoviesInTheaterFragment : DaggerFragment(),
         MovieInTheaterAdapter.MovieInTheaterAdapterInterface,
         FilterListenerInterface {
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var factory: ViewModelProvider.Factory
 
-    private lateinit var mBinding : FragmentMoviesInTheaterBinding
-    private lateinit var mAdapter: MovieInTheaterAdapter
-    private lateinit var mViewModel : MoviesInTheaterViewModel
-    private lateinit var mNavigationHandler : NavigationInterface
+    private lateinit var binding : FragmentMoviesInTheaterBinding
+    private lateinit var adapter: MovieInTheaterAdapter
+    private lateinit var viewModel : MoviesInTheaterViewModel
 
-    private var mFilterFragment : FilterMoviesFragment? = null
-    private var mOriginalList : List<MovieInTheater> = listOf()
-    private var mFilterItem : List<Int> = listOf()
-    private var mAllGenreList : List<MovieGenre> = listOf()
-    private var mSortingByCode : String = Constant.SortingCode.BY_DEFAULT
+    private var originalList : List<MovieInTheater> = listOf()
+    private var filterItem : List<Int> = listOf()
+    private var allGenreList : List<MovieGenre> = listOf()
+    private var sortingByCode : String = Constant.SortingCode.BY_DEFAULT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,66 +59,44 @@ class MoviesInTheaterFragment : DaggerFragment(),
             container: ViewGroup?,
             savedInstanceState: Bundle?): View? {
 
-        mBinding = FragmentMoviesInTheaterBinding.inflate(layoutInflater)
+        binding = FragmentMoviesInTheaterBinding.inflate(layoutInflater)
 
-        mAdapter = MovieInTheaterAdapter(this)
+        adapter = MovieInTheaterAdapter(this)
 
-        mBinding.rvMoviesInTheater.setLinearLayout(hasDivider = false)
-        mBinding.rvMoviesInTheater.adapter = mAdapter
-
-        mViewModel = viewModelProvider(viewModelFactory)
-
-        (activity as AppCompatActivity).supportActionBar?.apply {
-            setTitle(R.string.title_movies_in_theater)
+        binding.rvMoviesInTheater.apply {
+            setLinearLayout(hasDivider = false)
+            adapter = this@MoviesInTheaterFragment.adapter
         }
 
-        if(savedInstanceState == null){
-            mFilterFragment = FilterMoviesFragment()
-            mFilterFragment!!.setFilterListener(this)
-            (context as AppCompatActivity)
-                    .supportFragmentManager
-                    .beginTransaction()
-                    .add(R.id.filter_container, mFilterFragment!!)
-                    .commit()
+        viewModel = viewModelProvider(factory)
+
+        binding.ivClearAllFilter.setOnClickListener {
+            //filterFragment?.clearAllFilter()
         }
 
-        mBinding.ivClearAllFilter.setOnClickListener {
-            mFilterFragment?.clearAllFilter()
-        }
-
-        return mBinding.root
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mViewModel.mMovieGenre.observe(this, Observer {
+        viewModel.movieGenre.observe(this, Observer {
             if(it != null){
-                mAllGenreList = it
+                allGenreList = it
             }
         })
 
-        mViewModel.mMovieList.observe(this, Observer {
+        viewModel.movieList.observe(this, Observer {
             if(it != null){
-                mViewModel.populateMovieInTheaterWithGenre(it)
+                viewModel.populateMovieInTheaterWithGenre(it)
             }
         })
 
-        mViewModel.mMovieInTheaterWithGender.observe(this, Observer {
-            mOriginalList = it ?: ArrayList()
+        viewModel.movieInTheaterWithGender.observe(this, Observer {
+            originalList = it ?: ArrayList()
             manageItems()
             manageFilterContentView()
         })
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            mNavigationHandler = context as NavigationInterface
-        } catch (ex : Exception) {
-            error("must instance NavigationInterface interface")
-        }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -132,61 +107,62 @@ class MoviesInTheaterFragment : DaggerFragment(),
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.action_filter_content -> {
-                toggleFilterDrawer()
+                //toggleFilterDrawer()
+
+                val b: FilterBottomSheet = FilterBottomSheet()
+                b.show(activity!!.supportFragmentManager, "test")
                 return true
             }
             R.id.action_sort_content -> {
-                toggleFilterDrawer(false)
-                launchSortingActivity()
+                //toggleFilterDrawer(false)
+                //launchSortingActivity()
             }
             R.id.actiob_refresh -> {
-                mViewModel.fetchNowPlayingMoving()
+                viewModel.fetchNowPlayingMoving()
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        when(requestCode){
-            NavigationInterface.RC_MOVIE_SORTING_OPTION -> {
-                if(resultCode == Activity.RESULT_OK ){
-                    mSortingByCode =
-                            data?.getStringExtra(SortingActivity.EXTRA_NEW_CODE_SELECTED) ?:
-                            Constant.SortingCode.BY_DEFAULT
-                    manageItems()
-                }
-            }
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        when(requestCode){
+//            NavigationInterface.RC_MOVIE_SORTING_OPTION -> {
+//                if(resultCode == Activity.RESULT_OK ){
+//                    sortingByCode =
+//                            data?.getStringExtra(SortingActivity.EXTRA_NEW_CODE_SELECTED) ?:
+//                            Constant.SortingCode.BY_DEFAULT
+//                    manageItems()
+//                }
+//            }
+//        }
+//    }
 
     override fun clickOnItem(id: Int) {
-        //mNavigationHandler.clickOnLaunchMovieDetailView(id)
-        val direction = MoviesInTheaterFragmentDirections
-                .actionMoviesInTheaterFragmentToMovieDetailActivityFragment3(id)
+        val direction = HomeFragmentDirections.actionHomeFragmentToMovieDetailActivityFragment(id)
         this.findNavController().navigate(direction)
     }
 
     override fun onFilterChange(list: List<Int>) {
-        mFilterItem = list
+        filterItem = list
         manageItems()
         manageFilterContentView()
     }
 
     override fun clearFilter() {
-        mFilterItem = ArrayList()
+        filterItem = ArrayList()
     }
 
     private fun manageItems(){
-        var filterList = mOriginalList
-        if(mFilterItem.isNotEmpty()){
+        var filterList = originalList
+        if(filterItem.isNotEmpty()){
             filterList = filterList.filter {
                 it.genres.any { movieGenre ->
-                    mFilterItem.contains(movieGenre.id)
+                    filterItem.contains(movieGenre.id)
                 }
             }
         }
 
-        filterList = when(mSortingByCode){
+        filterList = when(sortingByCode){
             Constant.SortingCode.BY_DEFAULT -> filterList.sortedBy { it.id }
             Constant.SortingCode.BY_TITLE -> filterList.sortedBy { it.title }
             Constant.SortingCode.BY_DURATION -> filterList.sortedBy { it.runtime }
@@ -194,45 +170,27 @@ class MoviesInTheaterFragment : DaggerFragment(),
             else -> filterList.sortedBy { it.id }
         }
 
-        mAdapter.submitList(filterList)
-
-        //Test code
-        mBinding.rvMoviesInTheater.scrollToPosition(0)
+        adapter.submitList(filterList)
     }
 
     private fun manageFilterContentView(){
-        if(mFilterItem.isNotEmpty()){
+        if(filterItem.isNotEmpty()){
 
-            mBinding.llFilterContent.visibility = View.VISIBLE
+            binding.llFilterContent.visibility = View.VISIBLE
 
-            val filterContent = mAllGenreList.filter {
-                mFilterItem.contains(it.id)
+            val filterContent = allGenreList.filter {
+                filterItem.contains(it.id)
             } .sortedBy {
                 it.name
             }.joinToString(transform = {
                 it.name
             })
 
-            mBinding.tvFilterContent.text = filterContent
+            binding.tvFilterContent.text = filterContent
 
         } else {
-            mBinding.tvFilterContent.text = ""
-            mBinding.llFilterContent.visibility = View.GONE
+            binding.tvFilterContent.text = ""
+            binding.llFilterContent.visibility = View.GONE
         }
-    }
-
-    private fun toggleFilterDrawer(showing : Boolean = true){
-        if(mBinding.dlMovieInTheater.isDrawerOpen(GravityCompat.END)){
-            mBinding.dlMovieInTheater.closeDrawer(GravityCompat.END)
-        } else {
-            if(showing) mBinding.dlMovieInTheater.openDrawer(GravityCompat.END)
-        }
-    }
-
-    private fun launchSortingActivity(){
-        val intent = SortingActivity.setup(context!!,
-                SortingFragment.Category.SORT_MOVIE,
-                mSortingByCode)
-        startActivityForResult(intent, NavigationInterface.RC_MOVIE_SORTING_OPTION)
     }
 }

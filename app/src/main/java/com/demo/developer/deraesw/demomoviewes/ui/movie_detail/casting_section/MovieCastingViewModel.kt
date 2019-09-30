@@ -1,6 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.repository.MovieCreditsRepository
 import javax.inject.Inject
 

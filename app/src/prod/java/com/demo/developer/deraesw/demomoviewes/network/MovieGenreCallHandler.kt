@@ -16,7 +16,7 @@ class MovieGenreCallHandler
 @Inject constructor(){
 
     private val TAG = MovieGenreCallHandler::class.java.simpleName
-    val mMovieGenreList : MutableLiveData<List<MovieGenre>> = MutableLiveData();
+    val mMovieGenreList : MutableLiveData<List<MovieGenre>> = MutableLiveData()
 
     @Inject
     lateinit var mMoviedbAPI: MoviedbAPI
@@ -26,13 +26,16 @@ class MovieGenreCallHandler
 
         call.enqueue(object : Callback<MovieGenreResponse> {
             override fun onResponse(call: Call<MovieGenreResponse>, response: Response<MovieGenreResponse>) {
-                if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        val list = response.body()?.genres
-                        if(list != null){
-                            mMovieGenreList.postValue(list)
-                        }
+                if (response.isSuccessful && response.body() != null) {
+                    //TODO remove if test successful
+                    response.body()?.genres?.also {
+                        mMovieGenreList.postValue(it)
                     }
+//                        val list = response.body()?.genres
+//                        if(list != null){
+//                            mMovieGenreList.postValue(list)
+//                        }
+
                 } else {
                     if (response.errorBody() != null) {
                         //todo
@@ -43,7 +46,7 @@ class MovieGenreCallHandler
 
             override fun onFailure(call: Call<MovieGenreResponse>, t: Throwable) {
                 //todo
-                Log.e(TAG, t.message, t);
+                Log.e(TAG, t.message, t)
             }
         })
     }

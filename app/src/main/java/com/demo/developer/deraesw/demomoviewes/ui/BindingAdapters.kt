@@ -6,18 +6,20 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
 import com.demo.developer.deraesw.demomoviewes.extension.setAmountWithSuffix
 import com.demo.developer.deraesw.demomoviewes.extension.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
 object BindingAdapter {
 
-    @BindingAdapter(value = ["posterImageUrl", "error", "placeHolder"])
+    @BindingAdapter(value = ["posterImageUrl", "error", "placeHolder", "loaderRes"], requireAll = false)
     @JvmStatic fun setPosterImageUrl(
             imageView: ImageView,
             url : String?,
             errorRes : Drawable,
-            placeholderRes: Drawable) {
+            placeholderRes: Drawable,
+            loaderRes: Drawable? = null) {
         imageView.setImageUrl(
                 url,
                 AppTools.PosterSize.MEDIUM,
@@ -45,7 +47,7 @@ object BindingAdapter {
             imageView: ImageView,
             url: String?,
             errorRes : Drawable,
-            placeholderRes: Drawable) {
+            placeholderRes: Drawable? = null) {
         imageView.setImageUrl(
                 url,
                 AppTools.ProfileSize.MEDIUM,
@@ -54,12 +56,13 @@ object BindingAdapter {
                 isCircleCrop = true)
     }
 
-    @BindingAdapter(value = ["backdropImageUrl", "error", "placeHolder"])
+    @BindingAdapter(value = ["backdropImageUrl", "error", "placeHolder", "loaderRes"], requireAll = false)
     @JvmStatic fun setBackdropImageUrl(
             imageView: ImageView,
             url: String?,
             errorRes : Drawable,
-            placeholderRes: Drawable) {
+            placeholderRes: Drawable? = null,
+            loaderRes: Drawable? = null) {
         imageView.setImageUrl(
                 url,
                 AppTools.BackdropSize.MEDIUM,
@@ -76,10 +79,26 @@ object BindingAdapter {
         textView.text = item.genres.joinToString (transform = {it.name})
     }
 
+    @BindingAdapter("upcomingMovieGenre")
+    @JvmStatic fun displayUpcomingMovieGenreList(
+            textView: TextView,
+            item: UpcomingMovie) {
+
+        textView.text = item.genres.joinToString (transform = {it.name})
+    }
+
     @BindingAdapter("movieDuration")
     @JvmStatic fun displayMovieDuration(
             textView: TextView,
             item: MovieInTheater) {
+
+        textView.text = AppTools.convertMinuteToHours(item.runtime)
+    }
+
+    @BindingAdapter("upcomingMovieDuration")
+    @JvmStatic fun displayUpcomingMovieDuration(
+            textView: TextView,
+            item: UpcomingMovie) {
 
         textView.text = AppTools.convertMinuteToHours(item.runtime)
     }
@@ -96,6 +115,19 @@ object BindingAdapter {
     @JvmStatic fun displayMovieReleaseDate(
             textView: TextView,
             item: Movie?) {
+
+        item?.releaseDate?.apply {
+            textView.text = AppTools.convertDateString(
+                    this,
+                    AppTools.DatePattern.MMMM_S_DD_C_YYYY
+            )
+        }
+    }
+
+    @BindingAdapter("upcomingMovieReleaseDate")
+    @JvmStatic fun displayMovieReleaseDate(
+            textView: TextView,
+            item: UpcomingMovie?) {
 
         item?.releaseDate?.apply {
             textView.text = AppTools.convertDateString(

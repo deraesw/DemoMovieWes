@@ -8,29 +8,6 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground">
 
-        <ImageView
-            android:id="@+id/iv_movie_vote"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center_vertical"
-            android:contentDescription="@string/desc_movie_vote_icon"
-            android:tint="@color/start_color"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_movie_vote"
-            app:layout_constraintStart_toStartOf="@+id/tv_movie_title"
-            app:layout_constraintTop_toTopOf="@+id/tv_movie_vote"
-            app:srcCompat="@drawable/ic_star_white_24dp" />
-
-        <ImageView
-            android:id="@+id/iv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:tint="@color/gray_dark"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_movie_duration"
-            app:layout_constraintEnd_toEndOf="@+id/iv_movie_vote"
-            app:layout_constraintStart_toStartOf="@+id/iv_movie_vote"
-            app:layout_constraintTop_toTopOf="@+id/tv_movie_duration"
-            app:srcCompat="@drawable/ic_access_time_white_24dp" />
-
         <TextView
             android:id="@+id/tv_movie_title"
             android:layout_width="0dp"
@@ -48,30 +25,6 @@
             tools:text="title" />
 
         <TextView
-            android:id="@+id/tv_movie_vote"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@{String.valueOf(movie.voteAverage)}"
-            android:theme="@style/Text_SecondaryItem"
-            app:layout_constraintStart_toEndOf="@+id/iv_movie_vote"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
-            tools:text="7.0" />
-
-
-        <TextView
-            android:id="@+id/tv_movie_duration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:theme="@style/Text_SecondaryItem"
-            app:layout_constraintStart_toStartOf="@+id/tv_movie_vote"
-            app:layout_constraintTop_toBottomOf="@+id/tv_movie_vote"
-            app:movieDuration="@{movie}"
-            tools:text="02h30 min" />
-
-        <TextView
             android:id="@+id/tv_movie_genre"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +36,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
             app:layout_constraintTop_toBottomOf="@+id/tv_movie_duration"
-            app:movieGenre="@{movie}"
+            app:upcomingMovieGenre="@{movie}"
             tools:text="Comedy, Horror" />
 
         <androidx.cardview.widget.CardView
@@ -114,6 +67,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="@dimen/movie_in_theater_height" />
 
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"
             android:layout_width="wrap_content"
@@ -121,12 +75,57 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="@dimen/movie_in_theater_poster_item_width" />
 
+        <ImageView
+            android:id="@+id/iv_movie_release_date"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/desc_movie_vote_icon"
+            android:tint="@color/gray_dark"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_movie_release_date"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_title"
+            app:layout_constraintTop_toTopOf="@+id/tv_movie_release_date"
+            app:srcCompat="@drawable/ic_date_range_white_24dp" />
+
+        <TextView
+            android:id="@+id/tv_movie_release_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/Text_SecondaryItem"
+            app:layout_constraintStart_toEndOf="@+id/iv_movie_release_date"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_title"
+            app:upcomingMovieReleaseDate="@{movie}"
+            tools:text="29 september 2019" />
+
+        <TextView
+            android:id="@+id/tv_movie_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:theme="@style/Text_SecondaryItem"
+            app:layout_constraintStart_toStartOf="@+id/tv_movie_release_date"
+            app:layout_constraintTop_toBottomOf="@+id/tv_movie_release_date"
+            app:upcomingMovieDuration="@{movie}"
+            tools:text="02h30 min" />
+
+        <ImageView
+            android:id="@+id/iv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:tint="@color/gray_dark"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_movie_duration"
+            app:layout_constraintEnd_toEndOf="@+id/iv_movie_release_date"
+            app:layout_constraintStart_toStartOf="@+id/iv_movie_release_date"
+            app:layout_constraintTop_toTopOf="@+id/tv_movie_duration"
+            app:srcCompat="@drawable/ic_access_time_white_24dp" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <data>
-
         <variable
             name="movie"
-            type="com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater" />
+            type="com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie" />
     </data>
 </layout>

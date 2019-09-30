@@ -24,6 +24,7 @@ class MapperUtils {
                 casting.character = cast.character
                 casting.peopleId = cast.id
                 casting.movieId = movieId
+                casting.position = cast.order
                 return casting
             }
 

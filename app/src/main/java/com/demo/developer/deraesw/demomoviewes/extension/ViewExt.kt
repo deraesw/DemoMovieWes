@@ -10,13 +10,25 @@ import com.demo.developer.deraesw.demomoviewes.GlideApp
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 
-fun ImageView.setImageUrl(url: String?, size: String, errorRes : Drawable, placeholderRes: Drawable, isCenterCrop : Boolean = false, isFitCenter : Boolean = false, isCircleCrop : Boolean = false) {
+fun ImageView.setImageUrl(
+        url: String?,
+        size: String,
+        errorRes : Drawable,
+        placeholderRes: Drawable? = null,
+        loaderRes: Drawable? = null,
+        isCenterCrop : Boolean = false,
+        isFitCenter : Boolean = false,
+        isCircleCrop : Boolean = false) {
+
     if(url != null && url != ""){
         val glide = GlideApp
                 .with(context)
                 .load(AppTools.getUrlStringForImage(url, size))
                 .error(errorRes)
-                .placeholder(placeholderRes)
+
+        if(loaderRes != null) {
+            glide.placeholder(loaderRes)
+        }
 
         if(isCenterCrop) {
             glide.centerCrop()
