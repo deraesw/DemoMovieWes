@@ -100,6 +100,7 @@
                 android:id="@+id/iv_movie_poster"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:transitionName="movie_poster"
                 android:contentDescription="@string/desc_movie_poster"
                 app:error="@{@drawable/ic_broken_image_grey_24dp}"
                 app:placeHolder="@{@drawable/ic_theaters_gray_24dp}"

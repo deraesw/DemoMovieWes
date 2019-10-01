@@ -10,12 +10,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.core.view.GravityCompat
 import android.view.*
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.MovieInTheaterAdapter
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheaterBinding
+import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.NavigationInterface
@@ -28,6 +30,7 @@ import com.demo.developer.deraesw.demomoviewes.ui.sorting.SortingFragment
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.inc_movie_detail_toolbar_header_info.*
 import javax.inject.Inject
 
 /**
@@ -74,6 +77,8 @@ class MoviesInTheaterFragment : DaggerFragment(),
             //filterFragment?.clearAllFilter()
         }
 
+        binding.sfMoviesInTheatersList.setOnRefreshListener(this@MoviesInTheaterFragment::fetchMoviesInTheater)
+
         return binding.root
     }
 
@@ -96,12 +101,33 @@ class MoviesInTheaterFragment : DaggerFragment(),
             originalList = it ?: ArrayList()
             manageItems()
             manageFilterContentView()
+            stopRefresh()
+        })
+
+        viewModel.errorMessage.observe(this, Observer {
+            if(it != null) {
+                stopRefresh()
+            }
         })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_movie_in_theater, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onResume() {
+        super.onResume()
+//        if(binding.sfMoviesInTheatersList.isRefreshing) {
+//            binding.sfMoviesInTheatersList.isRefreshing = false
+//        }
+        debug("onResume")
+    }
+
+    override fun onPause() {
+        stopRefresh()
+        super.onPause()
+        debug("onPause")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -137,9 +163,12 @@ class MoviesInTheaterFragment : DaggerFragment(),
 //        }
 //    }
 
-    override fun clickOnItem(id: Int) {
+    override fun clickOnItem(id: Int, view: View) {
         val direction = HomeFragmentDirections.actionHomeFragmentToMovieDetailActivityFragment(id)
-        this.findNavController().navigate(direction)
+        val extras = FragmentNavigatorExtras(
+                view to "movie_poster"
+        )
+        this.findNavController().navigate(direction, extras)
     }
 
     override fun onFilterChange(list: List<Int>) {
@@ -191,6 +220,16 @@ class MoviesInTheaterFragment : DaggerFragment(),
         } else {
             binding.tvFilterContent.text = ""
             binding.llFilterContent.visibility = View.GONE
+        }
+    }
+
+    private fun fetchMoviesInTheater() {
+        viewModel.fetchNowPlayingMoving()
+    }
+
+    private fun stopRefresh() {
+        if(binding.sfMoviesInTheatersList.isRefreshing) {
+            binding.sfMoviesInTheatersList.isRefreshing = false
         }
     }
 }

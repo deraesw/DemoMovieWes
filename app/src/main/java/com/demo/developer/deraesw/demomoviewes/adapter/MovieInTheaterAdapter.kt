@@ -14,7 +14,7 @@ class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface)
     : ListAdapter<MovieInTheater, RecyclerView.ViewHolder>(MovieInTheaterDiffCallback()) {
 
     interface MovieInTheaterAdapterInterface {
-        fun clickOnItem(id : Int)
+        fun clickOnItem(id : Int, view: View)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -43,7 +43,7 @@ class MovieInTheaterAdapter(val mHandler: MovieInTheaterAdapterInterface)
 
         override fun onClick(p0: View?) {
             val position = adapterPosition
-            mHandler.clickOnItem(getItem(position).id)
+            mHandler.clickOnItem(getItem(position).id, binding.incContent.ivMoviePoster)
         }
     }
 }

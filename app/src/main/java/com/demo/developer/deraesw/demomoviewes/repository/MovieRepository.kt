@@ -8,6 +8,7 @@ import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
@@ -23,6 +24,7 @@ class MovieRepository
         private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){
 
+    val errorMessage = movieCallHandler.errorMessage
     var syncInformationMessage : SingleLiveEvent<String> = SingleLiveEvent()
     val mMovieInTheaterWithGenres : MutableLiveData<List<MovieInTheater>> = MutableLiveData()
     val upcomingMoviesWithGenres : MutableLiveData<List<UpcomingMovie>> = MutableLiveData()

@@ -11,6 +11,7 @@ import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsList
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
+import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,6 +40,7 @@ class MovieCallHandler
     val mMovieList : MutableLiveData<List<Movie>> = MutableLiveData()
     val mMovie : MutableLiveData<MovieResponse> = MutableLiveData()
     val mMovieNetworkResponseList : MutableLiveData<List<MovieResponse>> = MutableLiveData()
+    val errorMessage : SingleLiveEvent<NetworkError> = SingleLiveEvent()
 
     @Inject
     lateinit var mMovieDbApi: MoviedbAPI
@@ -81,15 +83,16 @@ class MovieCallHandler
                     }
                 } else {
                     if (response.errorBody() != null) {
-                        //todo
                         Log.w(TAG, "Empty body")
+                        val error = mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java)
+                        errorMessage.postValue(error)
                     }
                 }
             }
 
             override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
-                //todo
                 Log.e(TAG, t.message, t)
+                errorMessage.postValue(NetworkError(t.message ?: "unknown error", 0))
             }
         })
     }
@@ -110,15 +113,16 @@ class MovieCallHandler
                     }
                 } else {
                     if (response.errorBody() != null) {
-                        //todo
                         Log.w(TAG, "Empty body")
+                        val error = mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java)
+                        errorMessage.postValue(error)
                     }
                 }
             }
 
             override fun onFailure(call: Call<MoviesResponse>, t: Throwable) {
-                //todo
                 Log.e(TAG, t.message, t)
+                errorMessage.postValue(NetworkError(t.message ?: "unknown error", 0))
             }
         })
     }
@@ -141,7 +145,7 @@ class MovieCallHandler
                     }
                 } else {
                     Log.d(TAG, "something went wrong")
-                    //todo throw execption
+                    errorMessage.postValue(NetworkError("unknown error", 0))
                 }
 
             }, 500)
@@ -176,6 +180,7 @@ class MovieCallHandler
                         } else {
                             if (response.errorBody() != null) {
                                 val error = mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java)
+                                errorMessage.postValue(error)
                             }
                         }
                     }

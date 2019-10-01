@@ -16,6 +16,7 @@ class MoviesInTheaterViewModel
     val movieList : LiveData<List<MovieInTheater>> = movieRepository.moviesInTheater
     val movieInTheaterWithGender : LiveData<List<MovieInTheater>> = movieRepository.mMovieInTheaterWithGenres
     val movieGenre : LiveData<List<MovieGenre>> = movieGenreRepository.mMovieGenreList
+    val errorMessage = movieRepository.errorMessage
 
     fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>){
         movieRepository.populateMovieInTheaterWithGenre(list)
