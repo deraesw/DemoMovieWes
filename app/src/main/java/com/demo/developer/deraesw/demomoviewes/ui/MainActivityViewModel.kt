@@ -26,4 +26,8 @@ class MainActivityViewModel
     fun callUpdateAccountData(accountData: AccountData){
         mainRepository.sharePrefRepository.updateAccountInformation(accountData)
     }
+
+    fun resetFailedStatus(accountData: AccountData) {
+        mainRepository.resetFailedStatus(accountData)
+    }
 }

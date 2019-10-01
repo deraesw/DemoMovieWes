@@ -22,7 +22,7 @@ class MovieGenreCallHandler
     lateinit var mMoviedbAPI: MoviedbAPI
 
     fun fetchGenreMovieList(){
-        val call = mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API);
+        val call = mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API)
 
         call.enqueue(object : Callback<MovieGenreResponse> {
             override fun onResponse(call: Call<MovieGenreResponse>, response: Response<MovieGenreResponse>) {

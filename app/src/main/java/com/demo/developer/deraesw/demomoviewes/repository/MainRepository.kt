@@ -32,6 +32,7 @@ class MainRepository
     init {
         genreRepository.mMovieGenreList.observeForever {
             if (it?.size != 0 && syncStarted && !syncMovieGenreDone) {
+                debug("movieRepository.mMovieGenreList")
                 syncMovieGenreDone = true
                 movieRepository.fetchNowPlayingMovie()
             }
@@ -74,6 +75,16 @@ class MainRepository
 
         movieCreditsRepository.errorNetwork.observeForever {
             if (it != null) {
+                setSynchronizationFailed()
+                val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
+                sync.networkError = it
+                syncStatus.postValue(sync)
+            }
+        }
+
+        movieRepository.errorMessage.observeForever {
+            if (it != null) {
+                setSynchronizationFailed()
                 val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
                 sync.networkError = it
                 syncStatus.postValue(sync)
@@ -89,12 +100,22 @@ class MainRepository
             mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
             sharePrefRepository.updateAccountInformation(mAccountData!!)
 
+            syncMovieDone = false
+            syncMovieGenreDone = false
+            syncUpcomingMovieDone = false
             syncStarted = true
 
             syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS))
 
             genreRepository.fetchAllMovieGenreData()
         }
+    }
+
+    fun resetFailedStatus(accountData: AccountData) {
+        mAccountData = accountData
+        mAccountData!!.syncStatus = AccountData.SyncStatus.NO_SYNC
+        mAccountData!!.lastDateSync = ""
+        sharePrefRepository.updateAccountInformation(mAccountData!!)
     }
 
     private fun checkSynchronizationTerminated(): Boolean {
@@ -116,5 +137,13 @@ class MainRepository
         if (fromInitialSync) {
             syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE))
         }
+    }
+
+    private fun setSynchronizationFailed() {
+
+        Log.d(TAG, "setSynchronizationFailed")
+        mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_FAILED
+        mAccountData!!.lastDateSync = AppTools.getCurrentDate()
+        sharePrefRepository.updateAccountInformation(mAccountData!!)
     }
 }

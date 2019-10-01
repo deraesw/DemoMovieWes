@@ -31,8 +31,8 @@ class HomeFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    lateinit var binding: FragmentHomeBinding
-    lateinit var viewModel: MainActivityViewModel
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
@@ -46,9 +46,13 @@ class HomeFragment : DaggerFragment() {
                     this.findNavController().navigate(destination)
                 }
 
-                if(it.lastDateSync != AppTools.getCurrentDate()) {
+                if((it.lastDateSync != "" && it.lastDateSync != AppTools.getCurrentDate()) && (it.syncStatus == AccountData.SyncStatus.SYNC_DONE || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)) {
                     val destination = HomeFragmentDirections.actionHomeFragmentToSynchronizedDataActivityFragment()
                     this.findNavController().navigate(destination)
+                }
+
+                if(it.syncStatus == AccountData.SyncStatus.SYNC_FAILED) {
+                    viewModel.resetFailedStatus(it)
                 }
             }
         })

@@ -60,8 +60,9 @@
     </string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="lbl_loading_please_wait">Fetching data. Please wait.</string>
+    <string name="lbl_loading_please_wait">Synchronization in progress please wait.</string>
     <string name="menu_search_action">Search</string>
+    <string name="lbl_retry">Retry</string>
 
     <!-- Formatted string -->
     <string-array name="movie_sorting_label">
