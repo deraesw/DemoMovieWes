@@ -2,10 +2,6 @@
 
 Simple movie application showing movies currently in theaters as well as the upcoming one.
 
-![home screen](https://bitbucket.org/deraesw/demomoviewes/src/master/printscreen/home_screen_1.jpg)
-![detail screen](https://bitbucket.org/deraesw/demomoviewes/raw/4ed9124e3738c1ec849c589ca15ed37da711962f/printscreen/movie_detail_1.jpg)
-![casting screen](https://bitbucket.org/deraesw/demomoviewes/src/master/printscreen/casting.jpg)
-
 ## Goals
 
 This is an application created for learning purposed only.
