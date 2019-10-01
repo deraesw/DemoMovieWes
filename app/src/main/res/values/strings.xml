@@ -63,6 +63,9 @@
     <string name="lbl_loading_please_wait">Synchronization in progress please wait.</string>
     <string name="menu_search_action">Search</string>
     <string name="lbl_retry">Retry</string>
+    <string name="lbl_production">Production</string>
+    <string name="lbl_no_production_found">No production found!</string>
+    <string name="lbl_no_castings_found">No castings found!</string>
 
     <!-- Formatted string -->
     <string-array name="movie_sorting_label">

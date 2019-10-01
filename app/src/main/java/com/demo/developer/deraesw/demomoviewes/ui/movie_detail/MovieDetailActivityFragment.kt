@@ -128,6 +128,9 @@ class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.
                 getProductionFromMovie(movieId).observe(this@MovieDetailActivityFragment, Observer {
                     if(it != null){
                         adapter.submitList(it)
+                        if(it.isEmpty()) {
+                            binding.incMovieContentInfo.tvNoProductionFound.visibility = View.VISIBLE
+                        }
                     }
                 })
             }
@@ -138,6 +141,8 @@ class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.
                         castingAdapter.submitList(it.plus(
                                 CastingItem(name = "See more", specialItemAction = true))
                         )
+                    } else {
+                        binding.incMovieContentInfo.incMovieCastingMember.tv_no_castings_found.visibility = View.VISIBLE
                     }
                 }
             })
