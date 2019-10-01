@@ -15,7 +15,8 @@
         >
         <activity
             android:theme="@style/AppTheme.NoActionBar"
-            android:name=".ui.MainActivity">
+            android:name=".ui.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,24 +28,8 @@
             android:label="@string/title_activity_synchronized_data"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.movie_detail.MovieDetailActivity"
-            android:label="@string/title_activity_movie_detail"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.movies_in_theater.sorting_movies.SortingMovieActivity"
-            android:theme="@style/AppTheme.Transparent"
-            />
-        <activity
             android:name=".ui.sorting.SortingActivity"
             android:theme="@style/AppTheme.Transparent"
-            />
-
-        <service
-            android:name=".service.DemoMovieJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            />
-        <service android:name=".service.DummyJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
             />
     </application>
 
