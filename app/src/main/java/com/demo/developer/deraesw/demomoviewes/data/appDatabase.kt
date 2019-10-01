@@ -19,7 +19,7 @@ import javax.inject.Named
             (ProductionCompany::class),
             (MovieToProduction::class)
         ],
-        version = 6)
+        version = 7)
 abstract class appDatabase : RoomDatabase(){
 
     abstract fun movieGenreDao() : MovieGenreDAO

@@ -35,4 +35,7 @@ interface MovieDAO {
     @Query("DELETE FROM movie")
     fun removeAllMovies()
 
+    @Query("DELETE FROM movie WHERE insertDate <> :date")
+    fun removeObsoleteMovies(date: String)
+
 }

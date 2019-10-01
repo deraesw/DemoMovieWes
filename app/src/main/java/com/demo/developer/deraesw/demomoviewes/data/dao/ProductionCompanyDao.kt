@@ -13,4 +13,7 @@ interface ProductionCompanyDao : BaseDao<ProductionCompany> {
 
     @Query("DELETE FROM production_company")
     fun deleteAll()
+
+    @Query("DELETE FROM production_company WHERE insertDate <> :date")
+    fun removeObsoleteProduction(date: String)
 }

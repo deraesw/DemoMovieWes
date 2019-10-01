@@ -12,5 +12,7 @@ data class ProductionCompany(
         var logoPath : String?,
         var name : String,
         @SerializedName("origin_country")
-        var originCountry : String
+        var originCountry : String,
+        @SerializedName(value = "insert_date")
+        var insertDate: String= ""
 )

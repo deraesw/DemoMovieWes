@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "casting",
         indices = [
@@ -29,4 +30,6 @@ class Casting(
     var peopleId : Int = 0,
     var movieId : Int = 0,
     var creditId : String = "",
-    var position: Int = 0)
+    var position: Int = 0,
+    @SerializedName(value = "insert_date")
+    var insertDate: String= "")

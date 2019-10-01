@@ -38,7 +38,9 @@ open class Movie(
     var voteAverage: Float = 0.toFloat(),
 
     @SerializedName(value = "filter_status")
-    var filterStatus: Int = 0
+    var filterStatus: Int = 0,
+    @SerializedName(value = "insert_date")
+    var insertDate: String= ""
 ) {
     @Ignore
     var genres : List<MovieGenre> = ArrayList()

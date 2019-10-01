@@ -6,6 +6,7 @@ import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
+import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.MapperUtils
 import javax.inject.Inject
 
@@ -90,7 +91,9 @@ class AppDataSource constructor(
                 saveListMovieToGenre(movieToGenreList)
 
                 if(it.production_companies != null){
-                    saveListProductionCompany(it.production_companies!!)
+                    var prodComp = it.production_companies!!
+                    prodComp.forEach { item -> item.insertDate = AppTools.getCurrentDate() }
+                    saveListProductionCompany(prodComp)
                     var listMovieProduction : List<MovieToProduction> = listOf()
                     it.production_companies!!.forEach {
                         listMovieProduction += MovieToProduction(idMovie = movie.id, idProduction = it.id)
@@ -107,12 +110,14 @@ class AppDataSource constructor(
                     }
                 }
             }
+            movieDAO.removeObsoleteMovies(AppTools.getCurrentDate())
         }
     }
 
     fun saveListPeople(list : List<People>) {
         appExecutors.diskIO().execute {
             peopleDAO.bulkInsertPeoples(list)
+            peopleDAO.removeObsoletePeople(AppTools.getCurrentDate())
         }
     }
 
@@ -123,6 +128,7 @@ class AppDataSource constructor(
                 castingDAO.deleteCastingFromMovie(movieId)
             }
             castingDAO.bulkInsertCastings(list)
+            castingDAO.removeObsoleteCasting(AppTools.getCurrentDate())
         }
     }
 
@@ -143,15 +149,16 @@ class AppDataSource constructor(
     }
 
     fun saveListProductionCompany(list: List<ProductionCompany>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             productionCompanyDao.bulkIgnoreInsert(list)
-        })
+            productionCompanyDao.removeObsoleteProduction(AppTools.getCurrentDate())
+        }
     }
 
     fun saveListMovieToProduction(list: List<MovieToProduction>){
-        appExecutors.diskIO().execute({
+        appExecutors.diskIO().execute {
             movieToProductionDao.bulkForceInsert(list)
-        })
+        }
     }
 
     private fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){

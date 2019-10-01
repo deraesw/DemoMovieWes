@@ -15,6 +15,7 @@ class MapperUtils {
                 people.gender = cast.gender ?: 0
                 people.name = cast.name
                 people.profilePath = cast.profile_path ?: ""
+                people.insertDate = AppTools.getCurrentDate()
                 return people
             }
 
@@ -25,6 +26,7 @@ class MapperUtils {
                 casting.peopleId = cast.id
                 casting.movieId = movieId
                 casting.position = cast.order
+                casting.insertDate = AppTools.getCurrentDate()
                 return casting
             }
 
@@ -34,6 +36,7 @@ class MapperUtils {
                 people.gender = cast.gender ?: 0
                 people.name = cast.name
                 people.profilePath = cast.profile_path ?: ""
+                people.insertDate = AppTools.getCurrentDate()
                 return people
             }
 
@@ -43,6 +46,7 @@ class MapperUtils {
                 crew.job = c.job
                 crew.movieId = movieId
                 crew.peopleId = c.id
+                crew.insertDate = AppTools.getCurrentDate()
                 return crew
             }
         }

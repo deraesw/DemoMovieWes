@@ -19,4 +19,7 @@ interface PeopleDAO {
 
     @Query("DELETE FROM people")
     fun deleteAll()
+
+    @Query("DELETE FROM people WHERE insertDate <> :date")
+    fun removeObsoletePeople(date: String)
 }

@@ -30,4 +30,7 @@ interface CrewDAO {
 
     @Query("DELETE FROM crew WHERE movieId = :movieId")
     fun deleteCrewFromMovie(movieId : Int)
+
+    @Query("DELETE FROM crew WHERE insertDate <> :date")
+    fun removeObsoleteCrew(date: String)
 }

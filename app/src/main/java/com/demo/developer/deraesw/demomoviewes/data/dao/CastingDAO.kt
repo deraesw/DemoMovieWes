@@ -31,4 +31,7 @@ interface CastingDAO {
 
     @Query("DELETE FROM casting WHERE movieId = :movieId ")
     fun deleteCastingFromMovie(movieId: Int)
+
+    @Query("DELETE FROM casting WHERE insertDate <> :date")
+    fun removeObsoleteCasting(date: String)
 }
