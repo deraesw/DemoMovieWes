@@ -10,6 +10,7 @@ import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
+import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import com.google.gson.Gson
@@ -172,6 +173,7 @@ class MovieCallHandler
                             val movie = response.body()
                             if(movie != null){
                                 movie.filterStatus = filterStatus
+                                movie.insertDate = AppTools.getCurrentDate()
                                 completeMovieList += movie
                                 if(movieList.size == completeMovieList.size){
                                     mMovieNetworkResponseList.postValue(completeMovieList)

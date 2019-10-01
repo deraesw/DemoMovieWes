@@ -82,7 +82,7 @@ class MainRepository
     }
 
     fun initFullSynchronization(accountData: AccountData) {
-        if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC) {
+        if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC || accountData.lastDateSync != AppTools.getCurrentDate()) {
             debug("initFullSynchronization - Start sync")
 
             mAccountData = accountData
@@ -107,7 +107,7 @@ class MainRepository
 
     private fun setSynchronizationTerminated() {
 
-        val fromInitialSync = mAccountData!!.lastDateSync.isEmpty()
+        val fromInitialSync = mAccountData!!.lastDateSync.isEmpty() || mAccountData!!.lastDateSync != AppTools.getCurrentDate()
         Log.d(TAG, "setSynchronizationTerminated")
         mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_DONE
         mAccountData!!.lastDateSync = AppTools.getCurrentDate()

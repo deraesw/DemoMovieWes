@@ -6,93 +6,67 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemFilterMovieBinding
 
-class FilterMovieAdapter(val mHandler: FilterMovieAdapterInterface): androidx.recyclerview.widget.RecyclerView.Adapter<FilterMovieAdapter.FilterMovieViewHolder>() {
-    private val TAG = FilterMovieAdapter::class.java.simpleName
-
-    private var mList: List<GenreFilter> = ArrayList()
-
+class FilterMovieAdapter(val handler: FilterMovieAdapterInterface)
+    : ListAdapter<GenreFilter, RecyclerView.ViewHolder>(FilterMovieDiffCallback()) {
     interface FilterMovieAdapterInterface {
+
         fun clickOnItem(id : Int, checked: Boolean)
+    }
+
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val item = getItem(position)
+        (holder as FilterMovieViewHolder).bind(item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterMovieViewHolder {
         val binding = ItemFilterMovieBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false)
 
-        return FilterMovieViewHolder(binding.root)
+        return FilterMovieViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: FilterMovieViewHolder, position: Int) {
-        val genre = mList.get(position)
-        holder.binding?.genre = genre
-        holder.binding?.executePendingBindings()
-    }
-
-    override fun getItemCount(): Int = mList.size
-
-    fun getItemAt(position : Int) : GenreFilter = mList.get(position)
-
-    fun unSelectAllFilter(){
-        mList.forEach({
-            it.checked = false
-        })
-        notifyDataSetChanged()
-    }
-
-    fun isAtLeastOneItemSelected() : Boolean{
-        return mList.any({
-            it.checked
-        })
-    }
-
-    fun swapData(list: List<GenreFilter>){
-        if(mList.isEmpty()){
-            mList = list
-            notifyDataSetChanged()
-        } else {
-            val result = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
-                override fun getOldListSize(): Int = mList.size
-
-                override fun getNewListSize(): Int = list.size
-
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return mList.get(oldItemPosition).id == list.get(newItemPosition).id
-                }
-
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    val isContentSame =
-                            mList.get(oldItemPosition).equals(list.get(newItemPosition))
-                    return isContentSame
-                }
-            })
-            mList = list
-            result.dispatchUpdatesTo(this)
-        }
-    }
-
-    inner class FilterMovieViewHolder(itemView : View) :
-            androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView), View.OnClickListener{
-
-        internal var binding : ItemFilterMovieBinding ? = null
+    inner class FilterMovieViewHolder(var binding : ItemFilterMovieBinding ) :
+            RecyclerView.ViewHolder(binding.root), View.OnClickListener{
 
         init {
-            binding = DataBindingUtil.bind(itemView)
-            itemView.setOnClickListener(this)
-            binding!!.cbGenre.setOnClickListener({
-                mHandler.clickOnItem(
-                        mList.get(adapterPosition).id,
-                        binding!!.cbGenre.isChecked)
-            })
+            binding.root.setOnClickListener(this)
+//            binding!!.cbGenre.setOnClickListener {
+//                handler.clickOnItem(
+//                        mList.get(adapterPosition).id,
+//                        binding!!.cbGenre.isChecked)
+//            }
         }
 
         override fun onClick(p0: View?) {
             val checkStatus =  !(binding!!.cbGenre.isChecked)
             binding!!.cbGenre.isChecked = checkStatus
-
-            mHandler.clickOnItem(mList.get(adapterPosition).id, checkStatus)
+            handler.clickOnItem(getItem(adapterPosition).id, checkStatus)
         }
+
+        fun bind(item : GenreFilter) {
+            binding.apply {
+                genre = item
+                cbGenre.setOnClickListener {
+                    handler.clickOnItem(item.id, cbGenre.isChecked)
+                }
+                executePendingBindings()
+            }
+        }
+    }
+}
+
+private class FilterMovieDiffCallback: DiffUtil.ItemCallback<GenreFilter>() {
+
+    override fun areItemsTheSame(oldItem: GenreFilter, newItem: GenreFilter): Boolean {
+        return  oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItem: GenreFilter, newItem: GenreFilter): Boolean {
+        return  oldItem == newItem
     }
 }

@@ -8,7 +8,8 @@
         android:title="@string/menu_filter"
         android:icon="@drawable/ic_sort_white_24dp"
         android:orderInCategory="5"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
+        android:visible="false"
         />
 
     <item
@@ -19,10 +20,4 @@
         app:showAsAction="ifRoom"
         />
 
-    <item
-        android:id="@+id/actiob_refresh"
-        android:title="Refresh"
-        android:orderInCategory="999"
-        app:showAsAction="never"
-        />
 </menu>

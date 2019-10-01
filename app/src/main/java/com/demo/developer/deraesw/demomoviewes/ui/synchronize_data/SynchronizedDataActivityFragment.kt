@@ -15,6 +15,7 @@ import com.demo.developer.deraesw.demomoviewes.databinding.FragmentSynchronizedD
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
+import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -37,7 +38,7 @@ class SynchronizedDataActivityFragment : DaggerFragment() {
         viewModel.accountData.observe(this, Observer {
             if(it != null) {
                 //Meaning first time open application or clear data
-                if(it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC){
+                if((it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC) || (it.lastDateSync != AppTools.getCurrentDate() && it.syncStatus == AccountData.SyncStatus.SYNC_DONE)){
                     Handler().postDelayed({
                         viewModel.callFullSyncData(it)
                     }, 1000)

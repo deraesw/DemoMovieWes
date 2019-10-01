@@ -10,6 +10,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.transition.TransitionInflater
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.MovieDetailCastingAdapter
 import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter

@@ -102,7 +102,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     testImplementation "androidx.room:room-testing:$room_version"
     //Work manager
-    implementation "android.arch.work:work-runtime:$work_manager_version"
+    def work_version = "2.2.0"
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+    androidTestImplementation "androidx.work:work-testing:$work_version"
     //Paging library
     implementation "androidx.paging:paging-runtime:$paging_version"
     //Navigation
