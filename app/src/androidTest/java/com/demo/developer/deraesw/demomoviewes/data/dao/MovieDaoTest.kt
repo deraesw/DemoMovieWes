@@ -2,13 +2,12 @@ package com.demo.developer.deraesw.demomoviewes.data.dao
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
-import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
-import androidx.test.runner.AndroidJUnit4
-import com.demo.developer.deraesw.demomoviewes.data.LiveDataTestUtil
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
-import junit.framework.Assert.assertFalse
-import junit.framework.Assert.assertTrue
+import com.demo.developer.deraesw.demomoviewes.data.getValue
+import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.not
 import org.junit.After
@@ -20,20 +19,23 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class MovieDaoTest {
 
-    @JvmField
-    @Rule
-    val rule = InstantTaskExecutorRule()
-
     private lateinit var database: appDatabase
     private lateinit var movieDAO: MovieDAO
 
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
+
     @Before
     fun initDb(){
-        database = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getContext(), appDatabase::class.java)
-                .allowMainThreadQueries()
-                .build()
+        return runBlocking {
+            database = Room
+                    .inMemoryDatabaseBuilder(
+                        InstrumentationRegistry.getInstrumentation().targetContext,
+                        appDatabase::class.java)
+                    .build()
 
-        movieDAO = database.movieDAO()
+            movieDAO = database.movieDAO()
+        }
     }
 
     @After
@@ -42,80 +44,96 @@ class MovieDaoTest {
     }
 
     @Test
-    fun selectAllOnEmptyTable(){
-        val list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertTrue(list.isEmpty())
+    fun testSelectOnEmptyTable(){
+        val list = getValue(movieDAO.selectAllMovies())
+        assertThat(list.isEmpty(), equalTo(true))
     }
 
     @Test
-    fun insertMovieAndCheckContent(){
-        var list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertTrue(list.isEmpty())
-
+    fun testInsertSingleMovie(){
         movieDAO.insertMovie(DataTestUtils.movie1)
 
-        list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertFalse(list.isEmpty())
-        assertTrue(list.size == 1)
-
-        val movieInserted = LiveDataTestUtil.getValue(movieDAO.selectMovie(DataTestUtils.movie1.id))
-
-        assertTrue(movieInserted.id == DataTestUtils.movie1.id)
-        assertTrue(movieInserted.title == DataTestUtils.movie1.title)
-        assertFalse(movieInserted.id == DataTestUtils.movie2.id)
-
-        //assertThat(movieInserted, equalTo(DataTestUtils.movie1))
-        assertThat(movieInserted, not(DataTestUtils.movie2))
+        val list = getValue(movieDAO.selectAllMovies())
+        assertThat(list.isEmpty(), equalTo(false))
+        assertThat(list.size, equalTo(1))
+        assertThat(list[0].title, equalTo(DataTestUtils.movie1.title))
     }
 
     @Test
-    fun insertMovieWithDuplicateAndCheckContent(){
-        var list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertTrue(list.isEmpty())
+    fun testBulkInsert(){
+        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
 
+        val list = getValue(movieDAO.selectAllMovies())
+        assertThat(list.isEmpty(), equalTo(false))
+        assertThat(list.size, equalTo(DataTestUtils.movieList.size))
+        assertThat(list[0].title, equalTo(DataTestUtils.movieList[0].title))
+        assertThat(list[1].title, equalTo(DataTestUtils.movieList[1].title))
+        assertThat(list[2].title, equalTo(DataTestUtils.movieList[2].title))
+    }
+
+    @Test
+    fun testInsertWithDuplicate(){
         movieDAO.insertMovie(DataTestUtils.movie2)
-        list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertFalse(list.isEmpty())
-        assertTrue(list.size == 1)
-
-        val movieInserted = LiveDataTestUtil.getValue(movieDAO.selectMovie(DataTestUtils.movie2.id))
-        assertTrue(movieInserted.id == DataTestUtils.movie2.id)
-        assertTrue(movieInserted.title == DataTestUtils.movie2.title)
+        val list = getValue(movieDAO.selectAllMovies())
 
         movieDAO.insertMovie(DataTestUtils.movie2Duplicate)
-        list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertFalse(list.isEmpty())
-        assertTrue(list.size == 1)
-
-        val movieInsertedDuplicate = LiveDataTestUtil.getValue(movieDAO.selectMovie(DataTestUtils.movie2.id))
-        assertTrue(movieInsertedDuplicate.id == DataTestUtils.movie2Duplicate.id)
-        assertTrue(movieInsertedDuplicate.title == DataTestUtils.movie2Duplicate.title)
-        assertFalse(movieInserted == movieInsertedDuplicate)
+        val listDuplicate = getValue(movieDAO.selectAllMovies())
+        assertThat(listDuplicate.isEmpty(), equalTo(false))
+        assertThat(listDuplicate.size, equalTo(1))
+        assertThat(listDuplicate[0].title, not(list[0].title))
     }
 
     @Test
-    fun insertListMovieAndSelectAll(){
-        var list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertTrue(list.isEmpty())
-
+    fun testBulkInsertWithDuplicate(){
         movieDAO.bulkInsertMovies(DataTestUtils.movieList)
-        list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertFalse(list.isEmpty())
-        assertTrue(list.size == DataTestUtils.movieList.size)
+        val list = getValue(movieDAO.selectAllMovies())
+
+        movieDAO.bulkInsertMovies(DataTestUtils.movieListWithDuplicate)
+        val listDuplicate = getValue(movieDAO.selectAllMovies())
+        assertThat(listDuplicate.isEmpty(), equalTo(false))
+        assertThat(listDuplicate.size, equalTo(DataTestUtils.movieListWithDuplicate.size))
+        assertThat(listDuplicate[0].title, equalTo(list[0].title))
+        assertThat(listDuplicate[1].title, not(list[1].title))
+        assertThat(listDuplicate[2].title, equalTo(list[2].title))
     }
 
     @Test
-    fun insertListLinkAndRemoveAll(){
-        var list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertTrue(list.isEmpty())
-
+    fun testDeleteAllData() {
         movieDAO.bulkInsertMovies(DataTestUtils.movieList)
-        list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertFalse(list.isEmpty())
-        assertTrue(list.size == DataTestUtils.movieList.size)
+        val list = getValue(movieDAO.selectAllMovies())
+        assertThat(list.isEmpty(), equalTo(false))
 
         movieDAO.removeAllMovies()
-        list = LiveDataTestUtil.getValue(movieDAO.selectAllMovies())
-        assertTrue(list.isEmpty())
+        val listEmpty = getValue(movieDAO.selectAllMovies())
+        assertThat(listEmpty.isEmpty(), equalTo(true))
+    }
+
+    @Test
+    fun testDeleteObsoleteData() {
+        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+        val list = getValue(movieDAO.selectAllMovies())
+        assertThat(list.isEmpty(), equalTo(false))
+
+        movieDAO.removeObsoleteMovies("10-01-2019")
+        val listRemain = getValue(movieDAO.selectAllMovies())
+        assertThat(listRemain.isEmpty(), equalTo(false))
+        assertThat(listRemain.size, equalTo(list.size - 1))
+        assertThat(listRemain[0].title, not(list[0].title))
+    }
+
+    @Test
+    fun testSelectMoviesInTheater() {
+        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+        val list = getValue(movieDAO.selectMoviesInTheater())
+        assertThat(list.isEmpty(), equalTo(false))
+        assertThat(list.size, equalTo(DataTestUtils.movieList.filter { it.filterStatus == 1 }.count()))
+    }
+
+    @Test
+    fun testSelectUpcomingMovies() {
+        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+        val list = getValue(movieDAO.selectUpcomingMovies())
+        assertThat(list.isEmpty(), equalTo(false))
+        assertThat(list.size, equalTo(DataTestUtils.movieList.filter { it.filterStatus == 2 }.count()))
     }
 }
