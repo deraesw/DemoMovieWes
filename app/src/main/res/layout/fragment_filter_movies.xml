@@ -8,8 +8,7 @@
     android:orientation="vertical"
     android:background="@color/background"
     android:layout_gravity="end"
-    tools:ignore="Overdraw"
-    tools:context=".ui.movies_in_theater.filter_movies.FilterMoviesFragment">
+    tools:ignore="Overdraw">
 
     <RelativeLayout
         android:id="@+id/ll_filter_header"

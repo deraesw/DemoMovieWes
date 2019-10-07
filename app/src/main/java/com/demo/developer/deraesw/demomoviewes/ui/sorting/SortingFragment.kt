@@ -84,13 +84,13 @@ class SortingFragment : androidx.fragment.app.Fragment(), SortingAdapter.Sorting
         }
 
         var movieSortList : List<SortItem> = ArrayList()
-        sortingOptionCode.toSortedMap().forEach{
-            index, value -> movieSortList += SortItem(
-                value,
-                sortingOptionLabel[index],
-                (value == mCode)
-            )
-        }
+//        sortingOptionCode.toSortedMap().forEach{
+//            index, value -> movieSortList += SortItem(
+//                value,
+//                sortingOptionLabel[index],
+//                (value == mCode)
+//            )
+//        }
 
         mAdapter.swapData(movieSortList)
 

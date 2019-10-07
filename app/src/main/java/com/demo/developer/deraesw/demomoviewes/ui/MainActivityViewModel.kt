@@ -28,6 +28,11 @@ class MainActivityViewModel
     }
 
     fun resetFailedStatus(accountData: AccountData) {
-        mainRepository.resetFailedStatus(accountData)
+        mainRepository.resetStatus(accountData)
     }
+
+    fun resetSyncStatus(accountData: AccountData) {
+        mainRepository.resetStatus(accountData)
+    }
+
 }

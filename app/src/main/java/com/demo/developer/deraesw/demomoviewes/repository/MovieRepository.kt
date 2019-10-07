@@ -65,12 +65,6 @@ class MovieRepository
         return appDataSource.movieToGenreDAO.observeGenreListFromMovie(idMovie)
     }
 
-    fun fetchMovieDetail(id: Int){
-        appExecutors.networkIO().execute {
-            movieCallHandler.fetchMovieDetail(id)
-        }
-    }
-
     fun fetchNowPlayingMovie() {
         syncInformationMessage.postValue("Fetching movies in theaters...")
         appExecutors.networkIO().execute {
@@ -103,6 +97,10 @@ class MovieRepository
 
             upcomingMoviesWithGenres.postValue(list)
         }
+    }
+
+    fun cleanAllData() {
+        appDataSource.cleanAllData()
     }
 
 

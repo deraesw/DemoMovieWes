@@ -2,6 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.ui.home
 
 
 import android.os.Bundle
+import android.os.Handler
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -39,6 +40,7 @@ class HomeFragment : DaggerFragment() {
 
         viewModel = viewModelProvider(viewModelFactory)
 
+
         viewModel.accountData.observe(this, Observer {
             if(it != null) {
                 if(it.lastDateSync == "" && (it.syncStatus == AccountData.SyncStatus.NO_SYNC || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)){
@@ -47,8 +49,7 @@ class HomeFragment : DaggerFragment() {
                 }
 
                 if((it.lastDateSync != "" && it.lastDateSync != AppTools.getCurrentDate()) && (it.syncStatus == AccountData.SyncStatus.SYNC_DONE || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)) {
-                    val destination = HomeFragmentDirections.actionHomeFragmentToSynchronizedDataActivityFragment()
-                    this.findNavController().navigate(destination)
+                    viewModel.resetSyncStatus(it)
                 }
 
                 if(it.syncStatus == AccountData.SyncStatus.SYNC_FAILED) {

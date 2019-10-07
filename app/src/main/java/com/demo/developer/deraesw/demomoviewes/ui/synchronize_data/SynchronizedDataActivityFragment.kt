@@ -43,7 +43,7 @@ class SynchronizedDataActivityFragment : DaggerFragment() {
             if(it != null) {
                 accountData = it
                 //Meaning first time open application or clear data
-                if((it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC) || (it.lastDateSync != AppTools.getCurrentDate() && it.syncStatus == AccountData.SyncStatus.SYNC_DONE)){
+                if(it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC){
                     Handler().postDelayed({
                         viewModel.callFullSyncData(it)
                     }, 1000)

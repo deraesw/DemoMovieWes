@@ -161,6 +161,15 @@ class AppDataSource constructor(
         }
     }
 
+    fun cleanAllData() {
+        appExecutors.diskIO().execute {
+            movieDAO.removeAllMovies()
+            peopleDAO.deleteAll()
+            productionCompanyDao.deleteAll()
+            movieGenreDAO.removeAllData()
+        }
+    }
+
     private fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){
         var peopleList : List<People> = listOf()
         var castList : List<Casting> = listOf()

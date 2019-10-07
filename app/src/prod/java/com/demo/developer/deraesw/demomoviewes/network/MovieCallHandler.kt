@@ -7,6 +7,7 @@ import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.entity.ProductionCompany
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
@@ -161,6 +162,7 @@ class MovieCallHandler
         val handler = Handler()
         movieList.forEach {
             handler.postDelayed({
+                debug("start process " + it.id)
                 val call = mMovieDbApi.fetchMovieDetail(it.id, mApi)
 
                 call.enqueue(object : Callback<MovieResponse> {
@@ -187,7 +189,7 @@ class MovieCallHandler
                         }
                     }
                 })
-            }, 500)
+            }, 1000)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
+import android.os.Handler
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
@@ -48,7 +49,9 @@ class MainRepository
             if (it?.size != 0 && syncStarted && !syncMovieDone) {
                 debug("movieRepository.moviesInTheater")
                 syncMovieDone = true
-                movieRepository.fetchUpcomingMovies()
+                Handler().postDelayed({
+                    movieRepository.fetchUpcomingMovies()
+                }, 10000)
             }
         }
 
@@ -100,6 +103,8 @@ class MainRepository
             mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
             sharePrefRepository.updateAccountInformation(mAccountData!!)
 
+            movieRepository.cleanAllData()
+
             syncMovieDone = false
             syncMovieGenreDone = false
             syncUpcomingMovieDone = false
@@ -111,11 +116,13 @@ class MainRepository
         }
     }
 
-    fun resetFailedStatus(accountData: AccountData) {
+    fun resetStatus(accountData: AccountData) {
         mAccountData = accountData
-        mAccountData!!.syncStatus = AccountData.SyncStatus.NO_SYNC
-        mAccountData!!.lastDateSync = ""
-        sharePrefRepository.updateAccountInformation(mAccountData!!)
+        mAccountData?.apply {
+            syncStatus = AccountData.SyncStatus.NO_SYNC
+            lastDateSync = ""
+            sharePrefRepository.updateAccountInformation(this)
+        }
     }
 
     private fun checkSynchronizationTerminated(): Boolean {
