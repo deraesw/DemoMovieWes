@@ -26,7 +26,7 @@ class MovieCreditsRepository
         movieCreditsCallHandler.mCreditsList.observeForever {
             if(it != null){
                 if(it.cast.isNotEmpty()){
-                    handleCastResponse(it.cast, it.id)
+                    //handleCastResponse(it.cast, it.id)
                 }
 
                 if(it.crew.isNotEmpty()){
@@ -49,7 +49,7 @@ class MovieCreditsRepository
         movieCreditsCallHandler.fetchMovieCredits(id)
     }
 
-    private fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){
+    private suspend fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){
         var peopleList : List<People> = ArrayList()
         var castList : List<Casting> = ArrayList()
 
@@ -62,18 +62,18 @@ class MovieCreditsRepository
         appDataSource.saveListCasting(castList)
     }
 
-    private fun handleCrewResponse(list : List<MovieCreditsListResponse.Crew>, movieId : Int){
-        var peopleList : List<People> = ArrayList()
-        var crewList : List<Crew> = ArrayList()
-
-        list.forEach {
-            peopleList += MapperUtils.Data.mapCrewResponseToPeople(it)
-            crewList += MapperUtils.Data.mapCrewResponseToCrew(it, movieId)
-        }
-
-        appDataSource.saveListPeople(peopleList)
-        appDataSource.saveListCrew(crewList)
-    }
+//    private fun handleCrewResponse(list : List<MovieCreditsListResponse.Crew>, movieId : Int){
+//        var peopleList : List<People> = ArrayList()
+//        var crewList : List<Crew> = ArrayList()
+//
+//        list.forEach {
+//            peopleList += MapperUtils.Data.mapCrewResponseToPeople(it)
+//            crewList += MapperUtils.Data.mapCrewResponseToCrew(it, movieId)
+//        }
+//
+//        appDataSource.saveListPeople(peopleList)
+//        appDataSource.saveListCrew(crewList)
+//    }
 
     companion object {
         @Volatile private var sInstance : MovieCreditsRepository? = null

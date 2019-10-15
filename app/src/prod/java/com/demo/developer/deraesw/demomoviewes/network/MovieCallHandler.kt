@@ -5,8 +5,10 @@ import android.os.Handler
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
+import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.entity.ProductionCompany
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
@@ -15,6 +17,9 @@ import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import com.google.gson.Gson
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -97,6 +102,53 @@ class MovieCallHandler
                 errorMessage.postValue(NetworkError(t.message ?: "unknown error", 0))
             }
         })
+    }
+
+    suspend fun getNowPlayingMovies() : List<MovieResponse> {
+        return  coroutineScope {
+
+            val list = async {
+                val fullList = mutableListOf<MovieResponse>()
+                debug("Call response getNowPlayingMovies")
+                val responseFullList = callFetchNowPlayingMovies().execute()
+                debug("Call response received")
+                when {
+                    responseFullList.isSuccessful && responseFullList.body() != null -> {
+                        responseFullList.body()?.results?.forEach { movie ->
+                            debug("Call response movie detail - ${movie.id}")
+                            fullList += getMovieResponseDetail(movie, Constant.MovieFilterStatus.NOW_PLAYING_MOVIES)
+                            delay(1000)
+                        }
+                        return@async fullList
+                    }
+                    responseFullList.errorBody() != null ->
+                        throw NetworkException(mGson.fromJson(responseFullList.errorBody()?.string(), NetworkError::class.java))
+                    else ->
+                        return@async fullList
+                }
+            }
+
+            list.await()
+        }
+    }
+
+    private suspend fun getMovieResponseDetail(movieItem: Movie, filterStatus : Int) : MovieResponse {
+        return coroutineScope {
+            val movieResponse = async {
+                val response = mMovieDbApi.fetchMovieDetail(movieItem.id, mApi).execute()
+                when {
+                    response.isSuccessful && response.body() != null -> {
+                        return@async response.body()?.apply {
+                            this.filterStatus = filterStatus
+                            this.insertDate = AppTools.getCurrentDate()
+                        } ?: throw NetworkException(NetworkError("Unknown issue", 0))
+                    }
+                    else ->
+                        throw NetworkException(mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java))
+                }
+            }
+            movieResponse.await()
+        }
     }
 
     private fun callFetchUpcomingMovies() = mMovieDbApi.fetchUpcomingMovies(mApi, Locale.getDefault().country)

@@ -3,6 +3,7 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import android.os.Handler
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
@@ -33,13 +34,13 @@ class MainRepository
     var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
 
     init {
-        genreRepository.mMovieGenreList.observeForever {
-            if (it?.size != 0 && syncStarted && !syncMovieGenreDone) {
-                debug("movieRepository.mMovieGenreList")
-                syncMovieGenreDone = true
-                //movieRepository.fetchNowPlayingMovie()
-            }
-        }
+//        genreRepository.mMovieGenreList.observeForever {
+//            if (it?.size != 0 && syncStarted && !syncMovieGenreDone) {
+//                debug("movieRepository.mMovieGenreList")
+//                syncMovieGenreDone = true
+//                movieRepository.fetchNowPlayingMovie()
+//            }
+//        }
 
         genreRepository.syncInformationMessage.observeForever {
             if (it != null) {
@@ -75,6 +76,15 @@ class MainRepository
         movieRepository.syncInformationMessage.observeForever {
             if (it != null) {
                 syncInformationMessage.postValue(it)
+            }
+        }
+
+        genreRepository.errorMessage.observeForever {
+            if(it != null && it.isNotEmpty()) {
+                setSynchronizationFailed()
+                val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
+                sync.networkError = NetworkError(statusMessage = it, statusCode = 0)
+                syncStatus.postValue(sync)
             }
         }
 
@@ -122,16 +132,20 @@ class MainRepository
 
     private suspend fun startFullSync() {
         withContext(Dispatchers.IO) {
-            debug("startFullSync - reset variables")
-            syncMovieDone = false
-            syncMovieGenreDone = false
-            syncUpcomingMovieDone = false
-            syncStarted = true
             debug("startFullSync - s - clean data")
             movieRepository.cleanAllData()
             debug("startFullSync - e - clean data")
 
-            genreRepository.fetchAllMovieGenreDataTemp()
+            debug("startFullSync - s - fetchAndSaveMovieGenreInformation")
+            val syncDone = genreRepository.fetchAndSaveMovieGenreInformation()
+            debug("startFullSync - e - fetchAndSaveMovieGenreInformation")
+            if(syncDone) {
+                debug("startFullSync - s - fetchAndSaveNowPlayingMovies")
+                val syncMovieDone = movieRepository.fetchAndSaveNowPlayingMovies()
+                debug("startFullSync - e - fetchAndSaveNowPlayingMovies")
+            }
+
+
         }
     }
 

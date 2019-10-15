@@ -25,7 +25,6 @@ class AppDataSource constructor(
         private val appExecutors: AppExecutors
 ) {
 
-    private val TAG = AppDataSource::class.java.simpleName
     companion object {
 
         @Volatile private var sInstance : AppDataSource? = null
@@ -66,41 +65,42 @@ class AppDataSource constructor(
         }
     }
 
-    fun saveMovie(movie: Movie){
-        appExecutors.diskIO().execute {
-            movieDAO.insertMovie(movie)
-        }
-    }
+//    fun saveMovie(movie: Movie){
+//        appExecutors.diskIO().execute {
+//            movieDAO.insertMovie(movie)
+//        }
+//    }
 
-    fun saveListOfMovie(list: List<Movie>){
-        appExecutors.diskIO().execute {
-            movieDAO.bulkInsertMovies(list)
-        }
+//    fun saveListOfMovie(list: List<Movie>){
+//        appExecutors.diskIO().execute {
+//            movieDAO.bulkInsertMovies(list)
+//        }
+//
+//        handleMovieToGenreFromList(list)
+//    }
 
-        handleMovieToGenreFromList(list)
-    }
+    suspend fun saveListOfMovieNetworkResponse(list: List<MovieResponse>) {
+        withContext(Dispatchers.IO) {
 
-    fun saveListOfMovieNetworkResponse(list: List<MovieResponse>){
-        appExecutors.diskIO().execute {
             list.forEach {
                 val movie = it as Movie
-                Log.d(TAG, "Save movie : ${movie.id} - ${movie.title}")
+                debug("Save movie : ${movie.id} - ${movie.title}")
                 movieDAO.insertMovie(movie)
 
-                var movieToGenreList : List<MovieToGenre> = ArrayList()
-                it.genres.forEach {
-                    movieToGenreList += MovieToGenre(idMovie = movie.id, idGenre = it.id)
+                val movieToGenreList = mutableListOf<MovieToGenre>()
+                it.genres.forEach {movieGenre ->
+                    movieToGenreList += MovieToGenre(idMovie = movie.id, idGenre = movieGenre.id)
                 }
-                saveListMovieToGenre(movieToGenreList)
+                movieToGenreDAO.bulkInsertMovieToGenre(movieToGenreList)
 
-                if(it.production_companies != null){
-                    var prodComp = it.production_companies!!
-                    prodComp.forEach { item -> item.insertDate = AppTools.getCurrentDate() }
-                    saveListProductionCompany(prodComp)
-                    var listMovieProduction : List<MovieToProduction> = listOf()
-                    it.production_companies!!.forEach {
-                        listMovieProduction += MovieToProduction(idMovie = movie.id, idProduction = it.id)
+                val currentDate = AppTools.getCurrentDate()
+                it.production_companies?.also { productionCompany: List<ProductionCompany> ->
+                    val listMovieProduction : MutableList<MovieToProduction> = mutableListOf()
+                    productionCompany.forEach { item ->
+                        item.insertDate = currentDate
+                        listMovieProduction += MovieToProduction(idMovie = movie.id, idProduction = item.id)
                     }
+                    saveListProductionCompany(productionCompany)
                     saveListMovieToProduction(listMovieProduction)
                 }
 
@@ -108,25 +108,22 @@ class AppDataSource constructor(
                     if(cast.count() > 0) {
                         handleCastResponse(cast, movie.id)
                     }
-                    if(crew.count() > 0) {
-                        //handleCrewResponse(crew, movie.id)
-                    }
                 }
             }
             movieDAO.removeObsoleteMovies(AppTools.getCurrentDate())
         }
     }
 
-    fun saveListPeople(list : List<People>) {
-        appExecutors.diskIO().execute {
+    suspend fun saveListPeople(list : List<People>) {
+        withContext(Dispatchers.IO){
             peopleDAO.bulkInsertPeoples(list)
             peopleDAO.removeObsoletePeople(AppTools.getCurrentDate())
         }
     }
 
-    fun saveListCasting(list : List<Casting>){
-        appExecutors.diskIO().execute {
-            val movieId = list.get(0).movieId ?: 0
+    suspend fun saveListCasting(list : List<Casting>){
+        withContext(Dispatchers.IO){
+            val movieId = list[0].movieId
             if(movieId != 0){
                 castingDAO.deleteCastingFromMovie(movieId)
             }
@@ -145,21 +142,21 @@ class AppDataSource constructor(
         }
     }
 
-    fun saveListMovieToGenre(list: List<MovieToGenre>){
-        appExecutors.diskIO().execute {
+    private suspend fun saveListMovieToGenre(list: List<MovieToGenre>){
+        withContext(Dispatchers.IO) {
             movieToGenreDAO.bulkInsertMovieToGenre(list)
         }
     }
 
-    fun saveListProductionCompany(list: List<ProductionCompany>){
-        appExecutors.diskIO().execute {
+    private suspend fun saveListProductionCompany(list: List<ProductionCompany>){
+        withContext(Dispatchers.IO){
             productionCompanyDao.bulkIgnoreInsert(list)
             productionCompanyDao.removeObsoleteProduction(AppTools.getCurrentDate())
         }
     }
 
-    fun saveListMovieToProduction(list: List<MovieToProduction>){
-        appExecutors.diskIO().execute {
+    private suspend fun saveListMovieToProduction(list: List<MovieToProduction>){
+        withContext(Dispatchers.IO){
             movieToProductionDao.bulkForceInsert(list)
         }
     }
@@ -179,17 +176,11 @@ class AppDataSource constructor(
             movieGenreDAO.removeAllData()
             debug("removeAllData - e")
         }
-//        appExecutors.diskIO().execute {
-//            movieDAO.removeAllMovies()
-//            peopleDAO.deleteAll()
-//            productionCompanyDao.deleteAll()
-//            movieGenreDAO.removeAllData()
-//        }
     }
 
-    private fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){
-        var peopleList : List<People> = listOf()
-        var castList : List<Casting> = listOf()
+    private suspend fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int) {
+        val peopleList : MutableList<People> = mutableListOf()
+        val castList : MutableList<Casting> = mutableListOf()
 
         list.forEach {
             peopleList += MapperUtils.Data.mapCastResponseToPeople(it)
@@ -200,31 +191,31 @@ class AppDataSource constructor(
         saveListCasting(castList)
     }
 
-    private fun handleCrewResponse(list : List<MovieCreditsListResponse.Crew>, movieId : Int){
-        var peopleList : List<People> = listOf()
-        var crewList : List<Crew> = listOf()
+//    private fun handleCrewResponse(list : List<MovieCreditsListResponse.Crew>, movieId : Int){
+//        var peopleList : List<People> = listOf()
+//        var crewList : List<Crew> = listOf()
+//
+//        list.forEach {
+//            peopleList += MapperUtils.Data.mapCrewResponseToPeople(it)
+//            crewList += MapperUtils.Data.mapCrewResponseToCrew(it, movieId)
+//        }
+//
+//        saveListPeople(peopleList)
+//        saveListCrew(crewList)
+//    }
 
-        list.forEach {
-            peopleList += MapperUtils.Data.mapCrewResponseToPeople(it)
-            crewList += MapperUtils.Data.mapCrewResponseToCrew(it, movieId)
-        }
-
-        saveListPeople(peopleList)
-        saveListCrew(crewList)
-    }
-
-    private fun handleMovieToGenreFromList(list : List<Movie>){
-        var movieToGenreList : List<MovieToGenre> = ArrayList()
-        list.forEach {
-            val idMovie = it.id
-            it.genres.forEach {
-                val idGenre = it.id
-                movieToGenreList += MovieToGenre(idMovie, idGenre)
-            }
-        }
-
-        saveListMovieToGenre(movieToGenreList)
-    }
+//    private fun handleMovieToGenreFromList(list : List<Movie>){
+//        var movieToGenreList : List<MovieToGenre> = ArrayList()
+//        list.forEach {
+//            val idMovie = it.id
+//            it.genres.forEach {
+//                val idGenre = it.id
+//                movieToGenreList += MovieToGenre(idMovie, idGenre)
+//            }
+//        }
+//
+//        saveListMovieToGenre(movieToGenreList)
+//    }
 
 
 }

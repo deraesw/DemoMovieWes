@@ -70,12 +70,12 @@ class MovieGenreCallHandler
                 val response = mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API).execute()
 
                 when {
-                    response.isSuccessful && response.body() != null -> return@async response.body()?.genres ?: emptyList()
-                    response.errorBody() != null ->  {
-                        val error = mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java)
-                        throw NetworkException(error.statusMessage)
-                    }
-                    else -> return@async listOf<MovieGenre>()
+                    response.isSuccessful && response.body() != null ->
+                        return@async response.body()?.genres ?: emptyList()
+                    response.errorBody() != null ->
+                        throw NetworkException(mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java))
+                    else ->
+                        return@async listOf<MovieGenre>()
                 }
             }
             list.await()

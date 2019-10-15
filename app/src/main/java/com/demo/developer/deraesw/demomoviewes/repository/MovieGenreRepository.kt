@@ -5,8 +5,10 @@ import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
 import com.demo.developer.deraesw.demomoviewes.extension.debug
+import com.demo.developer.deraesw.demomoviewes.extension.error
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import kotlinx.coroutines.withContext
@@ -27,6 +29,8 @@ class MovieGenreRepository
     val mMovieGenreList : LiveData<List<MovieGenre>> = appDataSource.movieGenreDAO.selectAllMovieGenre()
     val mGenreForFilter : LiveData<List<GenreFilter>> = appDataSource.movieGenreDAO.selectAllMovieGenreForFilter()
 
+    val errorMessage : SingleLiveEvent<String> = SingleLiveEvent()
+
     init {
         movieGenreCallHandler.mMovieGenreList.observeForever {
             if(it != null){
@@ -40,19 +44,21 @@ class MovieGenreRepository
         movieGenreCallHandler.fetchGenreMovieList()
     }
 
-    //TODO change name
-    suspend fun fetchAllMovieGenreDataTemp() {
+    suspend fun fetchAndSaveMovieGenreInformation(): Boolean {
         syncInformationMessage.postValue("Fetching movie genre list...")
-        try {
-            debug("fetchAllMovieGenreDataTemp")
+        return try {
+            debug("fetchAndSaveMovieGenreInformation")
             val list = movieGenreCallHandler.getGenreMovieList()
-            debug("fetchAllMovieGenreDataTemp ${list.size}")
+            debug("fetchAndSaveMovieGenreInformation ${list.size}")
             appDataSource.saveListMovieGenre(list)
-            debug("fetchAllMovieGenreDataTemp data save")
+            debug("fetchAndSaveMovieGenreInformation data save")
+            true
         } catch (net: NetworkException) {
-            //TODO
+            errorMessage.postValue(net.message)
+            false
         } catch (io: IOException) {
-            //TODO
+            errorMessage.postValue(io.message)
+            false
         }
     }
 

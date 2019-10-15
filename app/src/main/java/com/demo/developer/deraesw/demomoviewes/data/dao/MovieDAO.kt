@@ -26,7 +26,7 @@ interface MovieDAO {
     fun selectUpcomingMovies() : LiveData<List<UpcomingMovie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovie(movie: Movie)
+    suspend fun insertMovie(movie: Movie)
 
     @JvmSuppressWildcards
     @Insert(onConflict = OnConflictStrategy.REPLACE)

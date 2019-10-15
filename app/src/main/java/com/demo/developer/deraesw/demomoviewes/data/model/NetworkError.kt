@@ -7,4 +7,4 @@ class NetworkError(
         @SerializedName("status_code") var statusCode : Int
 )
 
-class NetworkException(message: String) : Throwable(message)
+class NetworkException(networkError: NetworkError) : Throwable(networkError.statusMessage)

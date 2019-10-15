@@ -17,7 +17,7 @@ import com.demo.developer.deraesw.demomoviewes.data.entity.MovieToGenre
     fun observeGenreListFromMovie(idMovie : Int) : LiveData<List<MovieGenre>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE )
-    fun bulkInsertMovieToGenre(movieToGenre : List<MovieToGenre>)
+    suspend fun bulkInsertMovieToGenre(movieToGenre : List<MovieToGenre>)
 
     @Query("DELETE FROM movie_to_genre")
     fun deleteAllRow()
