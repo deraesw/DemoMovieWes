@@ -5,9 +5,15 @@ import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.Casting
 import com.demo.developer.deraesw.demomoviewes.data.entity.Crew
 import com.demo.developer.deraesw.demomoviewes.data.entity.People
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
 import com.demo.developer.deraesw.demomoviewes.network.MovieCreditsCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.utils.MapperUtils
+import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,24 +24,7 @@ class MovieCreditsRepository
         private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){
 
-    private val TAG = MovieCreditsRepository::class.java.simpleName
-
-    val errorNetwork = movieCreditsCallHandler.mErrorMessage
-
-    init {
-        movieCreditsCallHandler.mCreditsList.observeForever {
-            if(it != null){
-                if(it.cast.isNotEmpty()){
-                    handleCastResponse(it.cast, it.id)
-                }
-
-                if(it.crew.isNotEmpty()){
-                    //handleCrewResponse(it.crew, it.id)
-                }
-            }
-        }
-
-    }
+    val errorNetwork: SingleLiveEvent<NetworkError> = SingleLiveEvent()
 
     fun getCastingFromMovie(movieId : Int) = appDataSource.selectCastingItemFromMovie(movieId)
 
@@ -45,13 +34,27 @@ class MovieCreditsRepository
 
     fun getCrewFromMovieWithPaging(movieId: Int) = appDataSource.selectCrewItemFromMovieWithPaging(movieId)
 
-    fun fetchMovieCredits(id: Int){
-        movieCreditsCallHandler.fetchMovieCredits(id)
+    suspend fun fetchAndSaveMovieCredits(id: Int) {
+        withContext(Dispatchers.IO) {
+            try {
+                val credits = movieCreditsCallHandler.getMovieCredits(id)
+                handleCastResponse(credits.cast, credits.id)
+//            true
+            } catch (net: NetworkException) {
+                errorNetwork.postValue(NetworkError(net.message!!, 0))
+//            false
+                //todo
+            } catch (io: IOException) {
+                errorNetwork.postValue(NetworkError(io.message!!, 0))
+//            false
+                //todo
+            }
+        }
     }
 
-    private fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){
-        var peopleList : List<People> = ArrayList()
-        var castList : List<Casting> = ArrayList()
+    private suspend fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){
+        val peopleList : MutableList<People> = mutableListOf()
+        val castList : MutableList<Casting> = mutableListOf()
 
         list.forEach {
             peopleList += MapperUtils.Data.mapCastResponseToPeople(it)
@@ -62,18 +65,18 @@ class MovieCreditsRepository
         appDataSource.saveListCasting(castList)
     }
 
-    private fun handleCrewResponse(list : List<MovieCreditsListResponse.Crew>, movieId : Int){
-        var peopleList : List<People> = ArrayList()
-        var crewList : List<Crew> = ArrayList()
-
-        list.forEach {
-            peopleList += MapperUtils.Data.mapCrewResponseToPeople(it)
-            crewList += MapperUtils.Data.mapCrewResponseToCrew(it, movieId)
-        }
-
-        appDataSource.saveListPeople(peopleList)
-        appDataSource.saveListCrew(crewList)
-    }
+//    private fun handleCrewResponse(list : List<MovieCreditsListResponse.Crew>, movieId : Int){
+//        var peopleList : List<People> = ArrayList()
+//        var crewList : List<Crew> = ArrayList()
+//
+//        list.forEach {
+//            peopleList += MapperUtils.Data.mapCrewResponseToPeople(it)
+//            crewList += MapperUtils.Data.mapCrewResponseToCrew(it, movieId)
+//        }
+//
+//        appDataSource.saveListPeople(peopleList)
+//        appDataSource.saveListCrew(crewList)
+//    }
 
     companion object {
         @Volatile private var sInstance : MovieCreditsRepository? = null

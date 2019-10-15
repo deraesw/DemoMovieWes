@@ -9,11 +9,16 @@ import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
 import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,27 +41,6 @@ class MovieRepository
     val upcomingMovies : LiveData<List<UpcomingMovie>> =
             appDataSource.movieDAO.selectUpcomingMovies()
 
-    init {
-        movieCallHandler.mMovieList.observeForever {
-            if(it != null){
-                appDataSource.saveListOfMovie(it)
-            }
-        }
-
-        movieCallHandler.mMovie.observeForever {
-            if(it != null){
-                appDataSource.saveMovie(it)
-            }
-        }
-
-        movieCallHandler.mMovieNetworkResponseList.observeForever {
-            if(it != null){
-                debug(" movieCallHandler.mMovieNetworkResponseList.observeForever : data found")
-                appDataSource.saveListOfMovieNetworkResponse(it)
-            }
-        }
-    }
-
     fun getMovieDetail(id : Int) = appDataSource.movieDAO.selectMovie(id)
 
     fun getProductionFromMovie(movieId : Int) = appDataSource.selectProductionFromMovie(movieId)
@@ -65,17 +49,42 @@ class MovieRepository
         return appDataSource.movieToGenreDAO.observeGenreListFromMovie(idMovie)
     }
 
-    fun fetchNowPlayingMovie() {
-        syncInformationMessage.postValue("Fetching movies in theaters...")
-        appExecutors.networkIO().execute {
-            movieCallHandler.fetchNowPlayingMovies()
+    suspend fun fetchAndSaveNowPlayingMovies(fromSync: Boolean = true): Boolean {
+        return withContext(Dispatchers.IO) {
+            val res = async {
+                if(fromSync) syncInformationMessage.postValue("Fetching movies in theaters...")
+                try {
+                    val moviesList = movieCallHandler.getNowPlayingMovies(fromSync)
+                    appDataSource.saveListOfMovieNetworkResponse(moviesList)
+                    true
+                } catch (net: NetworkException) {
+                    errorMessage.postValue(NetworkError(net.message!!, 0))
+                    false
+                    //todo
+                } catch (io: IOException) {
+                    errorMessage.postValue(NetworkError(io.message!!, 0))
+                    false
+                    //todo
+                }
+            }
+            res.await()
         }
     }
 
-    fun fetchUpcomingMovies() {
+    suspend fun fetchAndSaveUpcomingMovies(): Boolean {
         syncInformationMessage.postValue("Fetching upcoming movies...")
-        appExecutors.networkIO().execute {
-            movieCallHandler.fetchUpcomingMovies()
+        return try {
+            val moviesList = movieCallHandler.getUpcomingMovies()
+            appDataSource.saveListOfMovieNetworkResponse(moviesList)
+            true
+        } catch (net: NetworkException) {
+            errorMessage.postValue(NetworkError(net.message!!, 0))
+            false
+            //todo
+        } catch (io: IOException) {
+            errorMessage.postValue(NetworkError(io.message!!, 0))
+            false
+            //todo
         }
     }
 
@@ -99,7 +108,7 @@ class MovieRepository
         }
     }
 
-    fun cleanAllData() {
+    suspend fun cleanAllData() {
         appDataSource.cleanAllData()
     }
 

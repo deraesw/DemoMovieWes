@@ -12,7 +12,7 @@ interface ProductionCompanyDao : BaseDao<ProductionCompany> {
     fun selectAll(orderBy : String = "id") : LiveData<List<ProductionCompany>>
 
     @Query("DELETE FROM production_company")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("DELETE FROM production_company WHERE insertDate <> :date")
     fun removeObsoleteProduction(date: String)

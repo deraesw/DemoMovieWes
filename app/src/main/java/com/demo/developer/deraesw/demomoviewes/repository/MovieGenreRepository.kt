@@ -5,8 +5,14 @@ import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
+import com.demo.developer.deraesw.demomoviewes.extension.debug
+import com.demo.developer.deraesw.demomoviewes.extension.error
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import kotlinx.coroutines.withContext
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,36 +23,26 @@ class MovieGenreRepository
         private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){
 
-    private val TAG = MovieGenreRepository::class.java.simpleName
-
     var syncInformationMessage : SingleLiveEvent<String> = SingleLiveEvent()
     val mMovieGenreList : LiveData<List<MovieGenre>> = appDataSource.movieGenreDAO.selectAllMovieGenre()
     val mGenreForFilter : LiveData<List<GenreFilter>> = appDataSource.movieGenreDAO.selectAllMovieGenreForFilter()
 
-    init {
-        movieGenreCallHandler.mMovieGenreList.observeForever {
-            if(it != null){
-                appDataSource.saveListMovieGenre(it)
-            }
-        }
-    }
+    val errorMessage : SingleLiveEvent<String> = SingleLiveEvent()
 
-    fun fetchAllMovieGenreData() {
+
+    suspend fun fetchAndSaveMovieGenreInformation(): Boolean {
         syncInformationMessage.postValue("Fetching movie genre list...")
-        movieGenreCallHandler.fetchGenreMovieList()
-    }
-
-    fun synchronizeMovieGenre() : Boolean {
-        val response = movieGenreCallHandler.fetchGenreMovieResponse()
-        if(response.isSuccessful){
-            val movieResponse = response.body()
-            if(movieResponse != null) {
-                appDataSource.saveListMovieGenre(movieResponse.genres)
-                return true
-            }
+        return try {
+            val list = movieGenreCallHandler.getGenreMovieList()
+            appDataSource.saveListMovieGenre(list)
+            true
+        } catch (net: NetworkException) {
+            errorMessage.postValue(net.message)
+            false
+        } catch (io: IOException) {
+            errorMessage.postValue(io.message)
+            false
         }
-
-        return false
     }
 
     companion object {

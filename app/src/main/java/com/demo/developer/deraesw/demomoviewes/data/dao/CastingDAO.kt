@@ -27,7 +27,7 @@ interface CastingDAO {
 
     @JvmSuppressWildcards
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun bulkInsertCastings(list: List<Casting>)
+    suspend fun bulkInsertCastings(list: List<Casting>)
 
     @Query("DELETE FROM casting WHERE movieId = :movieId ")
     fun deleteCastingFromMovie(movieId: Int)

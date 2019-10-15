@@ -15,10 +15,10 @@ interface PeopleDAO {
 
     @JvmSuppressWildcards
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun bulkInsertPeoples(list: List<People>)
+    suspend fun bulkInsertPeoples(list: List<People>)
 
     @Query("DELETE FROM people")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("DELETE FROM people WHERE insertDate <> :date")
     fun removeObsoletePeople(date: String)
