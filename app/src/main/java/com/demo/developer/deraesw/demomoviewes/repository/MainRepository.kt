@@ -7,6 +7,8 @@ import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -35,7 +37,7 @@ class MainRepository
             if (it?.size != 0 && syncStarted && !syncMovieGenreDone) {
                 debug("movieRepository.mMovieGenreList")
                 syncMovieGenreDone = true
-                movieRepository.fetchNowPlayingMovie()
+                //movieRepository.fetchNowPlayingMovie()
             }
         }
 
@@ -95,7 +97,7 @@ class MainRepository
         }
     }
 
-    fun initFullSynchronization(accountData: AccountData) {
+    suspend fun initFullSynchronization(accountData: AccountData) {
         if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC || accountData.lastDateSync != AppTools.getCurrentDate()) {
             debug("initFullSynchronization - Start sync")
 
@@ -105,14 +107,31 @@ class MainRepository
 
             movieRepository.cleanAllData()
 
+//            syncMovieDone = false
+//            syncMovieGenreDone = false
+//            syncUpcomingMovieDone = false
+//            syncStarted = true
+
+            syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS))
+
+            //genreRepository.fetchAllMovieGenreData()
+
+            startFullSync()
+        }
+    }
+
+    private suspend fun startFullSync() {
+        withContext(Dispatchers.IO) {
+            debug("startFullSync - reset variables")
             syncMovieDone = false
             syncMovieGenreDone = false
             syncUpcomingMovieDone = false
             syncStarted = true
+            debug("startFullSync - s - clean data")
+            movieRepository.cleanAllData()
+            debug("startFullSync - e - clean data")
 
-            syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS))
-
-            genreRepository.fetchAllMovieGenreData()
+            genreRepository.fetchAllMovieGenreDataTemp()
         }
     }
 

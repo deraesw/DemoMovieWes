@@ -99,7 +99,7 @@ class MovieRepository
         }
     }
 
-    fun cleanAllData() {
+    suspend fun cleanAllData() {
         appDataSource.cleanAllData()
     }
 

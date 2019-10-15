@@ -18,7 +18,7 @@ interface PeopleDAO {
     fun bulkInsertPeoples(list: List<People>)
 
     @Query("DELETE FROM people")
-    fun deleteAll()
+    suspend fun deleteAll()
 
     @Query("DELETE FROM people WHERE insertDate <> :date")
     fun removeObsoletePeople(date: String)

@@ -17,8 +17,8 @@ import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
     fun selectAllMovieGenreForFilter() : LiveData<List<GenreFilter>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun bulkInsertMovieGenre(movieGenreList: List<MovieGenre>)
+    suspend fun bulkInsertMovieGenre(movieGenreList: List<MovieGenre>)
 
     @Query("DELETE FROM movie_genre")
-    fun removeAllData()
+    suspend fun removeAllData()
 }

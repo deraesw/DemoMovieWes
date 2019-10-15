@@ -4,7 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieGenreResponse
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,6 +27,8 @@ class MovieGenreCallHandler
 
     @Inject
     lateinit var mMoviedbAPI: MoviedbAPI
+    @Inject
+    lateinit var mGson : Gson
 
     fun fetchGenreMovieList(){
         val call = mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API)
@@ -53,6 +62,24 @@ class MovieGenreCallHandler
 
     fun fetchGenreMovieResponse() : Response<MovieGenreResponse> {
         return mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API).execute()
+    }
+
+    suspend fun getGenreMovieList() : List<MovieGenre> {
+        return coroutineScope {
+            val list = async {
+                val response = mMoviedbAPI.fetchMovieGenres(BuildConfig.MOVIES_DB_API).execute()
+
+                when {
+                    response.isSuccessful && response.body() != null -> return@async response.body()?.genres ?: emptyList()
+                    response.errorBody() != null ->  {
+                        val error = mGson.fromJson(response.errorBody()?.string(), NetworkError::class.java)
+                        throw NetworkException(error.statusMessage)
+                    }
+                    else -> return@async listOf<MovieGenre>()
+                }
+            }
+            list.await()
+        }
     }
 
     companion object {

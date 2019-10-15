@@ -33,7 +33,7 @@ interface MovieDAO {
     fun bulkInsertMovies(movieList: List<Movie>)
 
     @Query("DELETE FROM movie")
-    fun removeAllMovies()
+    suspend fun removeAllMovies()
 
     @Query("DELETE FROM movie WHERE insertDate <> :date")
     fun removeObsoleteMovies(date: String)

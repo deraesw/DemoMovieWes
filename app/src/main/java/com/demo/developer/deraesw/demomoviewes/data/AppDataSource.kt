@@ -4,10 +4,13 @@ import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
+import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.MapperUtils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AppDataSource constructor(
@@ -57,8 +60,8 @@ class AppDataSource constructor(
 
     fun selectProductionFromMovie(movieId: Int) = movieToProductionDao.selectProductionFromMovie(movieId)
 
-    fun saveListMovieGenre(list: List<MovieGenre>){
-        appExecutors.diskIO().execute {
+    suspend fun saveListMovieGenre(list: List<MovieGenre>) {
+        withContext(Dispatchers.IO) {
             movieGenreDAO.bulkInsertMovieGenre(list)
         }
     }
@@ -161,13 +164,27 @@ class AppDataSource constructor(
         }
     }
 
-    fun cleanAllData() {
-        appExecutors.diskIO().execute {
+    suspend fun cleanAllData() {
+        withContext(Dispatchers.IO) {
+            debug("removeAllMovies - s")
             movieDAO.removeAllMovies()
+            debug("removeAllMovies - e")
+            debug("peopleDAO.deleteAll() - s")
             peopleDAO.deleteAll()
+            debug("peopleDAO.deleteAll() - e")
+            debug("productionCompanyDao.deleteAll - s")
             productionCompanyDao.deleteAll()
+            debug("productionCompanyDao.deleteAll - e")
+            debug("removeAllData - s")
             movieGenreDAO.removeAllData()
+            debug("removeAllData - e")
         }
+//        appExecutors.diskIO().execute {
+//            movieDAO.removeAllMovies()
+//            peopleDAO.deleteAll()
+//            productionCompanyDao.deleteAll()
+//            movieGenreDAO.removeAllData()
+//        }
     }
 
     private fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int){
