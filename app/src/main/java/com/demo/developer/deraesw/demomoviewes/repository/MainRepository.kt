@@ -21,11 +21,6 @@ class MainRepository
         val movieCreditsRepository: MovieCreditsRepository,
         val movieRepository: MovieRepository) {
 
-    private val TAG = MainRepository::class.java.simpleName
-
-    private var syncMovieGenreDone = false
-    private var syncMovieDone = false
-    private var syncUpcomingMovieDone = false
     private var syncStarted = false
     private var mAccountData: AccountData? = null
 
@@ -34,42 +29,10 @@ class MainRepository
     var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
 
     init {
-//        genreRepository.mMovieGenreList.observeForever {
-//            if (it?.size != 0 && syncStarted && !syncMovieGenreDone) {
-//                debug("movieRepository.mMovieGenreList")
-//                syncMovieGenreDone = true
-//                movieRepository.fetchNowPlayingMovie()
-//            }
-//        }
 
         genreRepository.syncInformationMessage.observeForever {
             if (it != null) {
                 syncInformationMessage.postValue(it)
-            }
-        }
-
-        movieRepository.moviesInTheater.observeForever {
-            if (it?.size != 0 && syncStarted && !syncMovieDone) {
-                debug("movieRepository.moviesInTheater")
-                syncMovieDone = true
-                Handler().postDelayed({
-                    movieRepository.fetchUpcomingMovies()
-                }, 10000)
-            }
-        }
-
-        movieRepository.upcomingMovies.observeForever {
-            if (it?.size != 0 && syncStarted && !syncUpcomingMovieDone) {
-                debug("movieRepository.upcomingMovies")
-                syncUpcomingMovieDone = true
-            }
-        }
-
-
-        movieRepository.movieList.observeForever {
-            if (it?.size != 0 && syncStarted && checkSynchronizationTerminated()) {
-                setSynchronizationTerminated()
-                syncStarted = false
             }
         }
 
@@ -109,22 +72,13 @@ class MainRepository
 
     suspend fun initFullSynchronization(accountData: AccountData) {
         if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC || accountData.lastDateSync != AppTools.getCurrentDate()) {
-            debug("initFullSynchronization - Start sync")
 
             mAccountData = accountData
             mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
             sharePrefRepository.updateAccountInformation(mAccountData!!)
 
-            movieRepository.cleanAllData()
-
-//            syncMovieDone = false
-//            syncMovieGenreDone = false
-//            syncUpcomingMovieDone = false
-//            syncStarted = true
-
+            syncStarted = true
             syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS))
-
-            //genreRepository.fetchAllMovieGenreData()
 
             startFullSync()
         }
@@ -132,20 +86,16 @@ class MainRepository
 
     private suspend fun startFullSync() {
         withContext(Dispatchers.IO) {
-            debug("startFullSync - s - clean data")
             movieRepository.cleanAllData()
-            debug("startFullSync - e - clean data")
 
-            debug("startFullSync - s - fetchAndSaveMovieGenreInformation")
-            val syncDone = genreRepository.fetchAndSaveMovieGenreInformation()
-            debug("startFullSync - e - fetchAndSaveMovieGenreInformation")
-            if(syncDone) {
-                debug("startFullSync - s - fetchAndSaveNowPlayingMovies")
-                val syncMovieDone = movieRepository.fetchAndSaveNowPlayingMovies()
-                debug("startFullSync - e - fetchAndSaveNowPlayingMovies")
+            var syncDone = genreRepository.fetchAndSaveMovieGenreInformation()
+            syncDone = (syncDone && movieRepository.fetchAndSaveNowPlayingMovies())
+            syncDone = (syncDone && movieRepository.fetchAndSaveUpcomingMovies())
+
+            if(syncStarted && syncDone) {
+                setSynchronizationTerminated()
+                syncStarted = false
             }
-
-
         }
     }
 
@@ -158,18 +108,9 @@ class MainRepository
         }
     }
 
-    private fun checkSynchronizationTerminated(): Boolean {
-        if (syncMovieGenreDone && syncMovieDone && syncUpcomingMovieDone) {
-            return true
-        }
-
-        return false
-    }
-
     private fun setSynchronizationTerminated() {
 
         val fromInitialSync = mAccountData!!.lastDateSync.isEmpty() || mAccountData!!.lastDateSync != AppTools.getCurrentDate()
-        Log.d(TAG, "setSynchronizationTerminated")
         mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_DONE
         mAccountData!!.lastDateSync = AppTools.getCurrentDate()
         sharePrefRepository.updateAccountInformation(mAccountData!!)
@@ -180,8 +121,6 @@ class MainRepository
     }
 
     private fun setSynchronizationFailed() {
-
-        Log.d(TAG, "setSynchronizationFailed")
         mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_FAILED
         mAccountData!!.lastDateSync = AppTools.getCurrentDate()
         sharePrefRepository.updateAccountInformation(mAccountData!!)

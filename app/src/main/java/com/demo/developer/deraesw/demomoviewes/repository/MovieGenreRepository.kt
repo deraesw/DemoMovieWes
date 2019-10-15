@@ -23,35 +23,18 @@ class MovieGenreRepository
         private val appDataSource: AppDataSource,
         private val appExecutors: AppExecutors){
 
-    private val TAG = MovieGenreRepository::class.java.simpleName
-
     var syncInformationMessage : SingleLiveEvent<String> = SingleLiveEvent()
     val mMovieGenreList : LiveData<List<MovieGenre>> = appDataSource.movieGenreDAO.selectAllMovieGenre()
     val mGenreForFilter : LiveData<List<GenreFilter>> = appDataSource.movieGenreDAO.selectAllMovieGenreForFilter()
 
     val errorMessage : SingleLiveEvent<String> = SingleLiveEvent()
 
-    init {
-        movieGenreCallHandler.mMovieGenreList.observeForever {
-            if(it != null){
-                //appDataSource.saveListMovieGenre(it)
-            }
-        }
-    }
-
-    fun fetchAllMovieGenreData() {
-        syncInformationMessage.postValue("Fetching movie genre list...")
-        movieGenreCallHandler.fetchGenreMovieList()
-    }
 
     suspend fun fetchAndSaveMovieGenreInformation(): Boolean {
         syncInformationMessage.postValue("Fetching movie genre list...")
         return try {
-            debug("fetchAndSaveMovieGenreInformation")
             val list = movieGenreCallHandler.getGenreMovieList()
-            debug("fetchAndSaveMovieGenreInformation ${list.size}")
             appDataSource.saveListMovieGenre(list)
-            debug("fetchAndSaveMovieGenreInformation data save")
             true
         } catch (net: NetworkException) {
             errorMessage.postValue(net.message)
@@ -60,20 +43,6 @@ class MovieGenreRepository
             errorMessage.postValue(io.message)
             false
         }
-    }
-
-    fun synchronizeMovieGenre() : Boolean {
-        val response = movieGenreCallHandler.fetchGenreMovieResponse()
-        if(response.isSuccessful){
-            val movieResponse = response.body()
-            if(movieResponse != null) {
-                //TODO
-                //appDataSource.saveListMovieGenre(movieResponse.genres)
-                return true
-            }
-        }
-
-        return false
     }
 
     companion object {

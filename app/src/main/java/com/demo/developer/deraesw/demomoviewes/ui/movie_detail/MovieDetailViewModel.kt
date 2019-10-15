@@ -8,8 +8,6 @@ import javax.inject.Inject
 class MovieDetailViewModel
 @Inject constructor(private val mainRepository: MainRepository) : ViewModel() {
 
-    val status = mainRepository.syncStatus
-
     fun getMovieDetail(movieId : Int) = mainRepository.movieRepository.getMovieDetail(movieId)
 
     fun getGenreFromMovie(movieId : Int) = mainRepository.movieRepository.getMovieGenreFromMovie(movieId)
