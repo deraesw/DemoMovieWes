@@ -1,11 +1,10 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
 
 
+import android.os.Bundle
+import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.*
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
@@ -24,7 +23,6 @@ import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
 /**
- * A simple [Fragment] subclass.
  * Will display a list of movies in theater
  */
 class MoviesInTheaterFragment : DaggerFragment()
@@ -51,7 +49,7 @@ class MoviesInTheaterFragment : DaggerFragment()
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
-            savedInstanceState: Bundle?): View? {
+            savedInstanceState: Bundle?): View {
 
         binding = FragmentMoviesInTheaterBinding.inflate(layoutInflater)
 
@@ -76,31 +74,31 @@ class MoviesInTheaterFragment : DaggerFragment()
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewModel.movieGenre.observe(this, Observer {
-            if(it != null){
+        viewModel.movieGenre.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
                 allGenreList = it
                 genreFilterList = listOf()
                 it.forEach { item ->
-                    genreFilterList += GenreFilter(id = item.id, name = item.name)
+                    genreFilterList = genreFilterList + GenreFilter(id = item.id, name = item.name)
                 }
             }
         })
 
-        viewModel.movieList.observe(this, Observer {
-            if(it != null){
+        viewModel.movieList.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
                 viewModel.populateMovieInTheaterWithGenre(it)
             }
         })
 
-        viewModel.movieInTheaterWithGender.observe(this, Observer {
+        viewModel.movieInTheaterWithGender.observe(viewLifecycleOwner, Observer {
             originalList = it ?: ArrayList()
             manageItems()
             manageFilterContentView()
             stopRefresh()
         })
 
-        viewModel.errorMessage.observe(this, Observer {
-            if(it != null) {
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
                 stopRefresh()
             }
         })
@@ -120,7 +118,7 @@ class MoviesInTheaterFragment : DaggerFragment()
         when(item.itemId){
             R.id.action_filter_content -> {
                 FilterBottomSheet(genreFilterList, this, this).also {
-                    it.show(activity!!.supportFragmentManager, "filterGenre")
+                    it.show(requireActivity().supportFragmentManager, "filterGenre")
                 }
                 return true
             }
