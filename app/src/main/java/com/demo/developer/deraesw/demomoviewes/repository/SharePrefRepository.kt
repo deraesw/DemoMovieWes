@@ -40,7 +40,7 @@ class SharePrefRepository
 
     private fun getAccountData() : AccountData{
         val accountData = AccountData()
-        accountData.lastDateSync = sharedPreferences.getString(Constant.ShareKey.LAST_DATE_SYNC, "")
+        accountData.lastDateSync = sharedPreferences.getString(Constant.ShareKey.LAST_DATE_SYNC, "") ?: ""
         accountData.syncStatus   = sharedPreferences.getInt(Constant.ShareKey.SYNC_STATUS, AccountData.SyncStatus.NO_SYNC)
 
         return accountData
