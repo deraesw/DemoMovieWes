@@ -1,27 +1,21 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.transition.TransitionInflater
-import com.demo.developer.deraesw.demomoviewes.R
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.demo.developer.deraesw.demomoviewes.adapter.MovieDetailCastingAdapter
 import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
-import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
-import com.demo.developer.deraesw.demomoviewes.extension.setAmountWithSuffix
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingViewModel
-import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.inc_movie_detail_casting_section.view.*
 import javax.inject.Inject
@@ -31,33 +25,27 @@ import javax.inject.Inject
  */
 class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.MovieDetailCastingAdapterInterface {
 
-    //Todo remove - using navigation component
-    companion object {
-        private const val ARGUMENT_MOVIE_ID = "ARGUMENT_MOVIE_ID"
-
-        fun setupBundle(movieId : Int) : Bundle{
-            val bundle = Bundle()
-            bundle.putInt(ARGUMENT_MOVIE_ID, movieId)
-            return bundle
-        }
-    }
-
-    @Inject lateinit var factory : ViewModelProvider.Factory
-    private lateinit var binding : FragmentMovieDetailBinding
-    private lateinit var viewModel : MovieDetailViewModel
-    private lateinit var castingViewModel : MovieCastingViewModel
+    @Inject
+    lateinit var factory: ViewModelProvider.Factory
+    private lateinit var binding: FragmentMovieDetailBinding
+    private lateinit var viewModel: MovieDetailViewModel
+    private lateinit var castingViewModel: MovieCastingViewModel
 
     private val adapter = ProductionAdapter()
     private val castingAdapter = MovieDetailCastingAdapter(this)
     private val args: MovieDetailActivityFragmentArgs by navArgs()
-    private var movieId : Int = 0
+    private var movieId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?)
+            : View {
 
         binding = FragmentMovieDetailBinding.inflate(layoutInflater, container, false)
 
@@ -85,12 +73,12 @@ class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.
             )
         }
 
-        val productionRecyclerView = binding.incMovieContentInfo!!.rvProductionCompany
-        productionRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context, androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false)
+        val productionRecyclerView = binding.incMovieContentInfo.rvProductionCompany
+        productionRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         productionRecyclerView.setHasFixedSize(true)
         productionRecyclerView.adapter = adapter
 
-        binding.incMovieContentInfo!!.incMovieCastingMember!!.rv_casting_member.apply {
+        binding.incMovieContentInfo.incMovieCastingMember.rv_casting_member.apply {
             setLinearLayout(hasDivider = false, isVertical = false)
             adapter = castingAdapter
         }
@@ -113,31 +101,31 @@ class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.
         if(movieId != 0){
 
             viewModel.apply{
-                getMovieDetail(movieId).observe(this@MovieDetailActivityFragment, Observer {
-                    if(it != null){
+                getMovieDetail(movieId).observe(viewLifecycleOwner, {
+                    if (it != null) {
                         binding.movie = it
                     }
                 })
 
-                getGenreFromMovie(movieId).observe(this@MovieDetailActivityFragment, Observer {
-                    if(it != null){
-                        binding.incMovieHeaderInfo!!.tvMovieGenres.text = it.joinToString(transform = {it.name})
+                getGenreFromMovie(movieId).observe(viewLifecycleOwner, { list ->
+                    if (list != null) {
+                        binding.incMovieHeaderInfo.tvMovieGenres.text = list.joinToString(transform = { item -> item.name })
                     }
                 })
 
-                getProductionFromMovie(movieId).observe(this@MovieDetailActivityFragment, Observer {
-                    if(it != null){
+                getProductionFromMovie(movieId).observe(viewLifecycleOwner, {
+                    if (it != null) {
                         adapter.submitList(it)
-                        if(it.isEmpty()) {
+                        if (it.isEmpty()) {
                             binding.incMovieContentInfo.tvNoProductionFound.visibility = View.VISIBLE
                         }
                     }
                 })
             }
 
-            castingViewModel.getLimitedMovieCasting(movieId, 3).observe(this, Observer {
-                if(it != null){
-                    if(it.isNotEmpty()){
+            castingViewModel.getLimitedMovieCasting(movieId, 3).observe(viewLifecycleOwner, {
+                if (it != null) {
+                    if (it.isNotEmpty()) {
                         castingAdapter.submitList(it.plus(
                                 CastingItem(name = "See more", specialItemAction = true))
                         )
