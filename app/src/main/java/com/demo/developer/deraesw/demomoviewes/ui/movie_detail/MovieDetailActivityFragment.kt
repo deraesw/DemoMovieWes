@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -14,22 +15,20 @@ import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
-import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingViewModel
-import dagger.android.support.DaggerFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.inc_movie_detail_casting_section.view.*
-import javax.inject.Inject
 
 /**
  * A placeholder fragment containing a simple view.
  */
-class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.MovieDetailCastingAdapterInterface {
+@AndroidEntryPoint
+class MovieDetailActivityFragment : Fragment(),
+    MovieDetailCastingAdapter.MovieDetailCastingAdapterInterface {
 
-    @Inject
-    lateinit var factory: ViewModelProvider.Factory
     private lateinit var binding: FragmentMovieDetailBinding
-    private lateinit var viewModel: MovieDetailViewModel
-    private lateinit var castingViewModel: MovieCastingViewModel
+    private val viewModel: MovieDetailViewModel by viewModels()
+    private val castingViewModel: MovieCastingViewModel by viewModels()
 
     private val adapter = ProductionAdapter()
     private val castingAdapter = MovieDetailCastingAdapter(this)
@@ -94,9 +93,6 @@ class MovieDetailActivityFragment : DaggerFragment(), MovieDetailCastingAdapter.
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        viewModel = viewModelProvider(factory)
-        castingViewModel = viewModelProvider(factory)
 
         if(movieId != 0){
 

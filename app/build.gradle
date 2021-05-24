@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
@@ -78,14 +79,6 @@ dependencies {
     implementation "androidx.gridlayout:gridlayout:$rootProject.gridlayoutVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutVersion"
 
-    //Daggers 2
-    api "com.google.dagger:dagger:$dagger_version"
-    kapt "com.google.dagger:dagger-compiler:$dagger_version"
-    api "com.google.dagger:dagger-android:2.35.1"
-    api "com.google.dagger:dagger-android-support:$dagger_version"
-    // if you use the support libraries
-    kapt "com.google.dagger:dagger-android-processor:$dagger_version"
-
     //Architecture dependency
 
     // ViewModel and LiveData
@@ -106,6 +99,10 @@ dependencies {
     //Navigation
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navVersion"
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
+    kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"

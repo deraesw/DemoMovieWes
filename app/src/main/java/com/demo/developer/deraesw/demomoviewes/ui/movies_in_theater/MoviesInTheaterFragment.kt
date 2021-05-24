@@ -3,8 +3,9 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
 
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
@@ -15,29 +16,24 @@ import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheaterBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
-import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.home.HomeFragmentDirections
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterBottomSheet
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * Will display a list of movies in theater
  */
-class MoviesInTheaterFragment : DaggerFragment()
-        , MovieInTheaterAdapter.MovieInTheaterAdapterInterface
-        , FilterMovieAdapter.FilterMovieAdapterInterface
-        , FilterListenerInterface {
+@AndroidEntryPoint
+class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheaterAdapterInterface,
+    FilterMovieAdapter.FilterMovieAdapterInterface, FilterListenerInterface {
 
-    @Inject lateinit var factory: ViewModelProvider.Factory
-
-    private lateinit var binding : FragmentMoviesInTheaterBinding
+    private lateinit var binding: FragmentMoviesInTheaterBinding
     private lateinit var adapter: MovieInTheaterAdapter
-    private lateinit var viewModel : MoviesInTheaterViewModel
+    private val viewModel: MoviesInTheaterViewModel by viewModels()
 
-    private var originalList : List<MovieInTheater> = listOf()
-    private var filterItem : List<Int> = listOf()
+    private var originalList: List<MovieInTheater> = listOf()
+    private var filterItem: List<Int> = listOf()
     private var allGenreList : List<MovieGenre> = listOf()
     private var genreFilterList : List<GenreFilter> = listOf()
 
@@ -59,8 +55,6 @@ class MoviesInTheaterFragment : DaggerFragment()
             setLinearLayout(hasDivider = false)
             adapter = this@MoviesInTheaterFragment.adapter
         }
-
-        viewModel = viewModelProvider(factory)
 
         binding.ivClearAllFilter.setOnClickListener {
             clearGenreFilter()

@@ -1,28 +1,28 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
-import androidx.lifecycle.MutableLiveData
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
 class SharePrefRepository
-@Inject constructor(@Named("context_app") mContext : Context) {
+@Inject constructor(@ApplicationContext mContext: Context) {
 
-    val account : MutableLiveData<AccountData> = MutableLiveData()
-    private val sharedPreferences : SharedPreferences =
-            PreferenceManager.getDefaultSharedPreferences(mContext)
+    val account: MutableLiveData<AccountData> = MutableLiveData()
+    private val sharedPreferences: SharedPreferences =
+        PreferenceManager.getDefaultSharedPreferences(mContext)
 
     init {
         fetchAccountInformation()
     }
 
-    fun fetchAccountInformationDirectly() : AccountData{
+    fun fetchAccountInformationDirectly(): AccountData {
         return getAccountData()
     }
 

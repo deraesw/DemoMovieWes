@@ -1,6 +1,5 @@
 package com.demo.developer.deraesw.demomoviewes.data
 
-import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
@@ -11,7 +10,6 @@ import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.MapperUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class AppDataSource constructor(
         val movieGenreDAO: MovieGenreDAO,
@@ -29,17 +27,19 @@ class AppDataSource constructor(
 
         @Volatile private var sInstance : AppDataSource? = null
 
-        @Inject fun getInstance( appDatabase: appDatabase,
-                         appExecutors: AppExecutors) : AppDataSource {
-            sInstance ?: synchronized(this){
+        fun getInstance(
+            appDatabase: appDatabase,
+            appExecutors: AppExecutors
+        ): AppDataSource {
+            sInstance ?: synchronized(this) {
                 sInstance = AppDataSource(
-                        appDatabase.movieGenreDao(),
-                        appDatabase.movieDAO(),
-                        appDatabase.movieToGenreDAO(),
-                        appDatabase.peopleDAO(),
-                        appDatabase.crewDAO(),
-                        appDatabase.castingDAO(),
-                        appDatabase.productionCompanyDao(),
+                    appDatabase.movieGenreDao(),
+                    appDatabase.movieDAO(),
+                    appDatabase.movieToGenreDAO(),
+                    appDatabase.peopleDAO(),
+                    appDatabase.crewDAO(),
+                    appDatabase.castingDAO(),
+                    appDatabase.productionCompanyDao(),
                         appDatabase.movieToProductionDao(),
                         appExecutors)
             }

@@ -2,7 +2,6 @@ package com.demo.developer.deraesw.demomoviewes.di
 
 import android.content.Context
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
-import com.demo.developer.deraesw.demomoviewes.DemoMovieWesApp
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
@@ -13,33 +12,32 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
+@InstallIn(SingletonComponent::class)
 @Module
-class AppModule constructor(var app : DemoMovieWesApp) {
+class AppModule {
 
-    @Named("context_app")
+    @Singleton
     @Provides
-    fun provideApplication() : Context {
-        return app.applicationContext
-    }
-
-    @Provides
-    fun provideAppDataBase(@Named("context_app") context: Context) : appDatabase {
+    fun provideAppDataBase(@ApplicationContext context: Context): appDatabase {
         return appDatabase.getInstance(context)
     }
 
+    @Singleton
     @Provides
-    fun provideAppDataSource(appDatabase: appDatabase, appExecutors: AppExecutors) : AppDataSource {
+    fun provideAppDataSource(appDatabase: appDatabase, appExecutors: AppExecutors): AppDataSource {
         return AppDataSource.getInstance(appDatabase, appExecutors)
     }
 
     @Singleton
     @Provides
-    fun provideMovieGenreRepository(movieGenreCallHandler: MovieGenreCallHandler, appDataSource: AppDataSource ,appExecutors: AppExecutors) : MovieGenreRepository {
+    fun provideMovieGenreRepository(movieGenreCallHandler: MovieGenreCallHandler, appDataSource: AppDataSource, appExecutors: AppExecutors) : MovieGenreRepository {
         return MovieGenreRepository(movieGenreCallHandler, appDataSource, appExecutors)
     }
 
@@ -56,9 +54,9 @@ class AppModule constructor(var app : DemoMovieWesApp) {
     @Provides
     fun provideRetrofit(gson: Gson) : Retrofit {
         return Retrofit.Builder()
-                .baseUrl(Constant.MOVIE_API_WEB)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
+            .baseUrl(Constant.MOVIE_API_WEB)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
     }
 
     @Singleton
