@@ -6,31 +6,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.HomePageAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentHomeBinding
-import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.google.android.material.tabs.TabLayoutMediator
-import dagger.android.support.DaggerFragment
-import javax.inject.Inject
+import dagger.hilt.android.AndroidEntryPoint
 
-class HomeFragment : DaggerFragment() {
+@AndroidEntryPoint
+class HomeFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var viewModel: MainActivityViewModel
+    private val viewModel: MainActivityViewModel by viewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
-
-        viewModel = viewModelProvider(viewModelFactory)
-
 
         viewModel.accountData.observe(viewLifecycleOwner, {
             if (it != null) {
