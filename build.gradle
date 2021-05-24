@@ -8,21 +8,28 @@ buildscript {
         minSdkVersion = 21
         targetSdkVersion = 30
 
+
+        appcompatVersion = "1.3.0"
+        constraintlayoutVersion = "2.0.4"
+        coroutinesVersion = "1.4.3"
+        glideVersion = "4.10.0"
+        gridlayoutVersion = "1.0.0"
+        lifecycleVersion = "2.3.1"
+        lifecycleExtVersion = "2.2.0"
+        materialVersion = "1.3.0"
+        navVersion = "2.3.5"
+        okhttpVersion = "4.7.2"
+        pagingVersion = "3.0.0"
+        retrofitVersion = "2.9.0"
+        roomVersion = "2.3.0"
+        workVersion = "2.5.0"
     }
 
     //Version of all dependencies
-    ext.build_version = '3.1.2'
     ext.kotlin_version = '1.4.32'
-    ext.architecture_version = '2.0.0'
-    ext.room_version = '2.1.0-alpha02'
-    ext.architecture_lifecycle_version = '1.1.1'
-    ext.extra_version = '28.0.0'
-    ext.retrofit_version='2.6.2'
-    ext.glide_version='4.10.0'
     ext.dagger_version='2.24'
     ext.dagger_android_version='2.16'
-    ext.work_manager_version='1.0.0-alpha11'
-    ext.paging_version="2.1.0-beta01"
+
 
     repositories {
         google()

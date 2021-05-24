@@ -6,6 +6,11 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
+
+    buildFeatures {
+        dataBinding true
+    }
+
     defaultConfig {
         applicationId "com.demo.developer.deraesw.demomoviewes"
         minSdkVersion rootProject.minSdkVersion
@@ -24,8 +29,6 @@ android {
             it.buildConfigField "String", "MOVIES_DB_API", movieDBApiToken
         }
     }
-
-    dataBinding.enabled = true
 
     flavorDimensions "default"
 
@@ -66,18 +69,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     //Coroutines
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
 
     //Support dependencies
-    implementation 'com.google.android.material:material:1.1.0-alpha10'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    //implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    //implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    //implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.gridlayout:gridlayout:1.0.0'
-
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+    implementation "com.google.android.material:material:$rootProject.materialVersion"
+    implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
+    implementation "androidx.gridlayout:gridlayout:$rootProject.gridlayoutVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutVersion"
 
     //Daggers 2
     api "com.google.dagger:dagger:$dagger_version"
@@ -88,36 +87,34 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
     //Architecture dependency
-    def lifecycle_version = "2.1.0"
+
     // ViewModel and LiveData
-    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleExtVersion"
 
     //ROOM
-    def room_version = "2.2.0-rc01"
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    //Work manager
-    def work_version = "2.2.0"
-    implementation "androidx.work:work-runtime-ktx:$work_version"
-    //Paging library
-    implementation "androidx.paging:paging-runtime:$paging_version"
-    //Navigation
-    def nav_version = "2.1.0"
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
 
+    //Work manager
+    implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"
+
+    //Paging library
+    implementation "androidx.paging:paging-runtime-ktx:$rootProject.pagingVersion"
+
+    //Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navVersion"
 
     //Glide
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
 
     //Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:3.8.0"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpVersion"
 
 
     //Testing dependencies
@@ -126,7 +123,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "androidx.room:room-testing:$room_version"
-    androidTestImplementation "androidx.work:work-testing:$work_version"
+    testImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    androidTestImplementation "androidx.work:work-testing:$rootProject.workVersion"
     implementation 'androidx.arch.core:core-testing:2.1.0'
 }
