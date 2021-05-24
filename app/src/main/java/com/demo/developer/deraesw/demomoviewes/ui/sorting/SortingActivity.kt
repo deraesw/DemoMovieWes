@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.FrameLayout
+import androidx.appcompat.app.AppCompatActivity
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.extension.showShortToast
 
@@ -38,9 +38,9 @@ class SortingActivity : AppCompatActivity(), SortingFragment.SortingFragmentInte
             finish()
         } else {
             val mainContainer : FrameLayout = findViewById(R.id.main_container)
-            mainContainer.setOnClickListener({
+            mainContainer.setOnClickListener {
                 finish()
-            })
+            }
 
             if(savedInstanceState == null){
                 val fragment = SortingFragment()

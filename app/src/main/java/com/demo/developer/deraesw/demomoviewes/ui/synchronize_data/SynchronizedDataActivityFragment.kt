@@ -4,20 +4,17 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentSynchronizedDataBinding
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
-import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
@@ -39,11 +36,11 @@ class SynchronizedDataActivityFragment : DaggerFragment() {
 
         var accountData: AccountData? = null
 
-        viewModel.accountData.observe(this, Observer {
-            if(it != null) {
+        viewModel.accountData.observe(viewLifecycleOwner, {
+            if (it != null) {
                 accountData = it
                 //Meaning first time open application or clear data
-                if(it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC){
+                if (it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC) {
                     Handler().postDelayed({
                         viewModel.callFullSyncData(it)
                     }, 1000)

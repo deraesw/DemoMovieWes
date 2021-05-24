@@ -2,32 +2,23 @@ package com.demo.developer.deraesw.demomoviewes.ui.home
 
 
 import android.os.Bundle
-import android.os.Handler
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.HomePageAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentHomeBinding
-import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.extension.viewModelProvider
 import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.android.support.DaggerFragment
-import java.util.*
 import javax.inject.Inject
 
-/**
- * A simple [Fragment] subclass.
- */
 class HomeFragment : DaggerFragment() {
 
     @Inject
@@ -41,14 +32,14 @@ class HomeFragment : DaggerFragment() {
         viewModel = viewModelProvider(viewModelFactory)
 
 
-        viewModel.accountData.observe(this, Observer {
-            if(it != null) {
-                if(it.lastDateSync == "" && (it.syncStatus == AccountData.SyncStatus.NO_SYNC || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)){
+        viewModel.accountData.observe(viewLifecycleOwner, {
+            if (it != null) {
+                if (it.lastDateSync == "" && (it.syncStatus == AccountData.SyncStatus.NO_SYNC || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)) {
                     val destination = HomeFragmentDirections.actionHomeFragmentToSynchronizedDataActivityFragment()
                     this.findNavController().navigate(destination)
                 }
 
-                if((it.lastDateSync != "" && it.lastDateSync != AppTools.getCurrentDate()) && (it.syncStatus == AccountData.SyncStatus.SYNC_DONE || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)) {
+                if ((it.lastDateSync != "" && it.lastDateSync != AppTools.getCurrentDate()) && (it.syncStatus == AccountData.SyncStatus.SYNC_DONE || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)) {
                     viewModel.resetSyncStatus(it)
                 }
 
