@@ -49,7 +49,7 @@ class PeopleDaoTest {
     }
 
     @Test
-    fun testBulkInsert(){
+    fun testBulkInsert() = runBlocking {
         peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
 
@@ -60,7 +60,7 @@ class PeopleDaoTest {
     }
 
     @Test
-    fun testBulkInsertWithDuplicate(){
+    fun testBulkInsertWithDuplicate() = runBlocking {
         peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
 
@@ -75,7 +75,7 @@ class PeopleDaoTest {
     }
 
     @Test
-    fun testDeleteAll(){
+    fun testDeleteAll() = runBlocking {
         peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
         assertThat(list.isEmpty(), equalTo(false))
@@ -86,7 +86,7 @@ class PeopleDaoTest {
     }
 
     @Test
-    fun testDeleteObsolete(){
+    fun testDeleteObsolete() = runBlocking {
         peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
         assertThat(list.isEmpty(), equalTo(false))

@@ -1,8 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.data.dao
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.demo.developer.deraesw.demomoviewes.data.appDatabase
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
@@ -10,11 +10,11 @@ import com.demo.developer.deraesw.demomoviewes.data.getValue
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
+import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.Assert.assertThat
 
 @RunWith(AndroidJUnit4::class)
 class MovieGenreDAOTest {
@@ -29,40 +29,41 @@ class MovieGenreDAOTest {
     fun initDb() {
         return runBlocking {
             database = Room.inMemoryDatabaseBuilder(
-                    InstrumentationRegistry.getInstrumentation().targetContext,
-                    appDatabase::class.java)
-                    .build()
+                InstrumentationRegistry.getInstrumentation().targetContext,
+                appDatabase::class.java
+            )
+                .build()
 
             movieGenreDAO = database.movieGenreDao()
         }
     }
 
     @After
-    fun closeDb(){
+    fun closeDb() {
         database.close()
     }
 
     @Test
-    fun selectEmptyTable(){
-        val list : List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
+    fun selectEmptyTable() {
+        val list: List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
 
         assertThat(list.size, equalTo(0))
     }
 
     @Test
-    fun insertListGenre(){
+    fun insertListGenre() = runBlocking {
         movieGenreDAO.bulkInsertMovieGenre(DataTestUtils.movieGenreList)
 
-        val list : List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
+        val list: List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
 
         assertThat(list.isEmpty(), equalTo(false))
         assertThat(list.size, equalTo(DataTestUtils.movieGenreList.size))
     }
 
     @Test
-    fun insertListGenreWithDuplicateItem(){
+    fun insertListGenreWithDuplicateItem() = runBlocking {
         movieGenreDAO.bulkInsertMovieGenre(DataTestUtils.movieGenreList)
-        var list : List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
+        var list: List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
         assertThat(list.isEmpty(), equalTo(false))
         assertThat(list.size, equalTo(DataTestUtils.movieGenreList.size))
 
@@ -73,9 +74,9 @@ class MovieGenreDAOTest {
     }
 
     @Test
-    fun insertListGenreAndRemoveAll(){
+    fun insertListGenreAndRemoveAll() = runBlocking {
         movieGenreDAO.bulkInsertMovieGenre(DataTestUtils.movieGenreList)
-        var list : List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
+        var list: List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
         assertThat(list.size, equalTo(DataTestUtils.movieGenreList.size))
 
         movieGenreDAO.removeAllData()

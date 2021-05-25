@@ -9,7 +9,6 @@ import com.demo.developer.deraesw.demomoviewes.data.getValue
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -60,15 +59,19 @@ class MovieToProductionDaoTest {
     }
 
     @Test
-    fun testDeleteCascadeMovie(){
+    fun testDeleteCascadeMovie() = runBlocking {
         movieToProductionDao.bulkForceInsert(DataTestUtils.movieToProductionList)
 
         val list = getValue(movieToProductionDao.selectProductionFromMovie(DataTestUtils.movie1.id))
         assertThat(list.isEmpty(), equalTo(false))
-        assertThat(list.size, equalTo(DataTestUtils.movieToProductionList.filter { it.idMovie == DataTestUtils.movie1.id}.count()))
+        assertThat(list.size,
+            equalTo(DataTestUtils.movieToProductionList.filter { it.idMovie == DataTestUtils.movie1.id }
+                .count())
+        )
 
         movieDAO.removeAllMovies()
-        val listEmpty = getValue(movieToProductionDao.selectProductionFromMovie(DataTestUtils.movie1.id))
+        val listEmpty =
+            getValue(movieToProductionDao.selectProductionFromMovie(DataTestUtils.movie1.id))
         assertThat(listEmpty.isEmpty(), equalTo(true))
     }
 

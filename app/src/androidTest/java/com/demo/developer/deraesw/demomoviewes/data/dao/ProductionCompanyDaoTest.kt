@@ -73,7 +73,7 @@ class ProductionCompanyDaoTest {
     }
 
     @Test
-    fun testDeleteAllData(){
+    fun testDeleteAllData() = runBlocking {
         productionCompanyDao.bulkForceInsert(DataTestUtils.productionList)
         val list = getValue(productionCompanyDao.selectAll())
         assertThat(list.isEmpty(), equalTo(false))
