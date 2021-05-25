@@ -20,10 +20,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
 
-    private val viewModel: MovieCastingViewModel by viewModels()
     private lateinit var adapter: CastingAdapter
     private lateinit var binding: FragmentMovieCastingBinding
 
+    private val viewModel: MovieCastingViewModel by viewModels()
     private val args: MovieCastingFragmentArgs by navArgs()
     private var movieId: Int = 0
     private var originalList: List<CastingItem> = ArrayList()

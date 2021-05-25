@@ -14,22 +14,23 @@ import javax.inject.Singleton
 class MovieCreditsCallHandler
 @Inject constructor() {
 
-    companion object {
-        private var mInstance : MovieCreditsCallHandler? = null
-        fun getInstance() : MovieCreditsCallHandler {
-            mInstance ?: synchronized(this) {
-                mInstance = MovieCreditsCallHandler()
-            }
-            return mInstance!!
-        }
-    }
+//    companion object {
+//        private var mInstance : MovieCreditsCallHandler? = null
+//        fun getInstance() : MovieCreditsCallHandler {
+//            mInstance ?: synchronized(this) {
+//                mInstance = MovieCreditsCallHandler()
+//            }
+//            return mInstance!!
+//        }
+//    }
 
     @Inject
     lateinit var mMovieDbApi: MoviedbAPI
-    @Inject
-    lateinit var mGson : Gson
 
-    suspend fun getMovieCredits(idMovie : Int) : MovieCreditsListResponse {
+    @Inject
+    lateinit var mGson: Gson
+
+    suspend fun getMovieCredits(idMovie: Int): MovieCreditsListResponse {
         return coroutineScope {
             val item = async {
                 val response = mMovieDbApi.fetchMovieCredit(idMovie, BuildConfig.MOVIES_DB_API).execute()
