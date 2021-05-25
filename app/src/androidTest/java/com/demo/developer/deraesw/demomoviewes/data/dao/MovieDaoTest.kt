@@ -35,7 +35,7 @@ class MovieDaoTest : BaseDaoTest() {
 
     @Test
     fun testInsertSingleMovie() = runBlocking {
-        movieDAO.insertMovie(DataTestUtils.movie1)
+        movieDAO.insert(DataTestUtils.movie1)
 
         val list = getValue(movieDAO.selectAllMovies())
         assertThat(list.isEmpty(), equalTo(false))
@@ -44,8 +44,8 @@ class MovieDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testBulkInsert() {
-        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+    fun testBulkInsert() = runBlocking {
+        movieDAO.bulkForceInsert(DataTestUtils.movieList)
 
         val list = getValue(movieDAO.selectAllMovies())
         assertThat(list.isEmpty(), equalTo(false))
@@ -57,10 +57,10 @@ class MovieDaoTest : BaseDaoTest() {
 
     @Test
     fun testInsertWithDuplicate() = runBlocking {
-        movieDAO.insertMovie(DataTestUtils.movie2)
+        movieDAO.insert(DataTestUtils.movie2)
         val list = getValue(movieDAO.selectAllMovies())
 
-        movieDAO.insertMovie(DataTestUtils.movie2Duplicate)
+        movieDAO.insert(DataTestUtils.movie2Duplicate)
         val listDuplicate = getValue(movieDAO.selectAllMovies())
         assertThat(listDuplicate.isEmpty(), equalTo(false))
         assertThat(listDuplicate.size, equalTo(1))
@@ -68,11 +68,11 @@ class MovieDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testBulkInsertWithDuplicate() {
-        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+    fun testBulkInsertWithDuplicate() = runBlocking {
+        movieDAO.bulkForceInsert(DataTestUtils.movieList)
         val list = getValue(movieDAO.selectAllMovies())
 
-        movieDAO.bulkInsertMovies(DataTestUtils.movieListWithDuplicate)
+        movieDAO.bulkForceInsert(DataTestUtils.movieListWithDuplicate)
         val listDuplicate = getValue(movieDAO.selectAllMovies())
         assertThat(listDuplicate.isEmpty(), equalTo(false))
         assertThat(listDuplicate.size, equalTo(DataTestUtils.movieListWithDuplicate.size))
@@ -83,7 +83,7 @@ class MovieDaoTest : BaseDaoTest() {
 
     @Test
     fun testDeleteAllData() = runBlocking {
-        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+        movieDAO.bulkForceInsert(DataTestUtils.movieList)
         val list = getValue(movieDAO.selectAllMovies())
         assertThat(list.isEmpty(), equalTo(false))
 
@@ -93,8 +93,8 @@ class MovieDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testDeleteObsoleteData() {
-        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+    fun testDeleteObsoleteData() = runBlocking {
+        movieDAO.bulkForceInsert(DataTestUtils.movieList)
         val list = getValue(movieDAO.selectAllMovies())
         assertThat(list.isEmpty(), equalTo(false))
 
@@ -106,8 +106,8 @@ class MovieDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testSelectMoviesInTheater() {
-        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+    fun testSelectMoviesInTheater() = runBlocking {
+        movieDAO.bulkForceInsert(DataTestUtils.movieList)
         val list = getValue(movieDAO.selectMoviesInTheater())
         assertThat(list.isEmpty(), equalTo(false))
         assertThat(
@@ -117,8 +117,8 @@ class MovieDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testSelectUpcomingMovies() {
-        movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+    fun testSelectUpcomingMovies() = runBlocking {
+        movieDAO.bulkForceInsert(DataTestUtils.movieList)
         val list = getValue(movieDAO.selectUpcomingMovies())
         assertThat(list.isEmpty(), equalTo(false))
         assertThat(

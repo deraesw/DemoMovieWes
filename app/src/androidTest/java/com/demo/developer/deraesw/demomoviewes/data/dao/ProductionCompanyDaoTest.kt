@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ProductionCompanyDaoTest : BaseDaoTest() {
 
-    lateinit var productionCompanyDao: ProductionCompanyDao
+    private lateinit var productionCompanyDao: ProductionCompanyDao
 
     @get:Rule
     val testRule = InstantTaskExecutorRule()

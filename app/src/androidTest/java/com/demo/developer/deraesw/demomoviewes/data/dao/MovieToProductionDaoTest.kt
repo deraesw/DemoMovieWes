@@ -16,7 +16,7 @@ class MovieToProductionDaoTest : BaseDaoTest() {
 
     private lateinit var movieToProductionDao: MovieToProductionDao
     private lateinit var movieDAO: MovieDAO
-    lateinit var productionCompanyDao: ProductionCompanyDao
+    private lateinit var productionCompanyDao: ProductionCompanyDao
 
     @get:Rule
     val testRule = InstantTaskExecutorRule()
@@ -29,7 +29,7 @@ class MovieToProductionDaoTest : BaseDaoTest() {
             productionCompanyDao = database.productionCompanyDao()
             movieDAO = database.movieDAO()
 
-            movieDAO.bulkInsertMovies(DataTestUtils.movieList)
+            movieDAO.bulkForceInsert(DataTestUtils.movieList)
             productionCompanyDao.bulkForceInsert(DataTestUtils.productionList)
         }
     }

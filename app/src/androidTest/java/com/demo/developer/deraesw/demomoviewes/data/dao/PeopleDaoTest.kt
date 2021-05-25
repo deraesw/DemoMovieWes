@@ -15,7 +15,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class PeopleDaoTest : BaseDaoTest() {
 
-    lateinit var peopleDAO: PeopleDAO
+    private lateinit var peopleDAO: PeopleDAO
 
     @get:Rule
     val testRule = InstantTaskExecutorRule()
@@ -35,7 +35,7 @@ class PeopleDaoTest : BaseDaoTest() {
 
     @Test
     fun testBulkInsert() = runBlocking {
-        peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
+        peopleDAO.bulkForceInsert(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
 
         assertThat(list.isEmpty(), equalTo(false))
@@ -46,10 +46,10 @@ class PeopleDaoTest : BaseDaoTest() {
 
     @Test
     fun testBulkInsertWithDuplicate() = runBlocking {
-        peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
+        peopleDAO.bulkForceInsert(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
 
-        peopleDAO.bulkInsertPeoples(DataTestUtils.peopleListWithDuplicate)
+        peopleDAO.bulkForceInsert(DataTestUtils.peopleListWithDuplicate)
         val listDuplicate = getValue(peopleDAO.selectAllPeople())
 
         assertThat(listDuplicate.isEmpty(), equalTo(false))
@@ -61,7 +61,7 @@ class PeopleDaoTest : BaseDaoTest() {
 
     @Test
     fun testDeleteAll() = runBlocking {
-        peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
+        peopleDAO.bulkForceInsert(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
         assertThat(list.isEmpty(), equalTo(false))
 
@@ -72,7 +72,7 @@ class PeopleDaoTest : BaseDaoTest() {
 
     @Test
     fun testDeleteObsolete() = runBlocking {
-        peopleDAO.bulkInsertPeoples(DataTestUtils.peopleList)
+        peopleDAO.bulkForceInsert(DataTestUtils.peopleList)
         val list = getValue(peopleDAO.selectAllPeople())
         assertThat(list.isEmpty(), equalTo(false))
 

@@ -36,7 +36,7 @@ class MovieGenreDAOTest : BaseDaoTest() {
 
     @Test
     fun insertListGenre() = runBlocking {
-        movieGenreDAO.bulkInsertMovieGenre(DataTestUtils.movieGenreList)
+        movieGenreDAO.bulkForceInsert(DataTestUtils.movieGenreList)
 
         val list: List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
 
@@ -46,20 +46,20 @@ class MovieGenreDAOTest : BaseDaoTest() {
 
     @Test
     fun insertListGenreWithDuplicateItem() = runBlocking {
-        movieGenreDAO.bulkInsertMovieGenre(DataTestUtils.movieGenreList)
+        movieGenreDAO.bulkForceInsert(DataTestUtils.movieGenreList)
         var list: List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
         assertThat(list.isEmpty(), equalTo(false))
         assertThat(list.size, equalTo(DataTestUtils.movieGenreList.size))
 
         val duplicateItem = listOf(DataTestUtils.movieGenre2Duplicate)
-        movieGenreDAO.bulkInsertMovieGenre(duplicateItem)
+        movieGenreDAO.bulkForceInsert(duplicateItem)
         list = getValue(movieGenreDAO.selectAllMovieGenre())
         assertThat(list.size, equalTo(DataTestUtils.movieGenreList.size))
     }
 
     @Test
     fun insertListGenreAndRemoveAll() = runBlocking {
-        movieGenreDAO.bulkInsertMovieGenre(DataTestUtils.movieGenreList)
+        movieGenreDAO.bulkForceInsert(DataTestUtils.movieGenreList)
         var list: List<MovieGenre> = getValue(movieGenreDAO.selectAllMovieGenre())
         assertThat(list.size, equalTo(DataTestUtils.movieGenreList.size))
 

@@ -12,20 +12,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AppDataSource constructor(
-        val movieGenreDAO: MovieGenreDAO,
-        val movieDAO: MovieDAO,
-        val movieToGenreDAO: MovieToGenreDAO,
-        private val peopleDAO: PeopleDAO,
-        private val crewDAO: CrewDAO,
-        private val castingDAO: CastingDAO,
-        private val productionCompanyDao: ProductionCompanyDao,
-        private val movieToProductionDao: MovieToProductionDao,
-        private val appExecutors: AppExecutors
+    val movieGenreDAO: MovieGenreDAO,
+    val movieDAO: MovieDAO,
+    val movieToGenreDAO: MovieToGenreDAO,
+    private val peopleDAO: PeopleDAO,
+    private val crewDAO: CrewDAO,
+    private val castingDAO: CastingDAO,
+    private val productionCompanyDao: ProductionCompanyDao,
+    private val movieToProductionDao: MovieToProductionDao,
+    private val appExecutors: AppExecutors
 ) {
 
     companion object {
 
-        @Volatile private var sInstance : AppDataSource? = null
+        @Volatile
+        private var sInstance: AppDataSource? = null
 
         fun getInstance(
             AppDatabase: AppDatabase,
@@ -50,19 +51,22 @@ class AppDataSource constructor(
 
     }
 
-    fun selectCastingItemFromMovie(movieId : Int) = castingDAO.selectCastingItemFromMovie(movieId)
+    fun selectCastingItemFromMovie(movieId: Int) = castingDAO.selectCastingItemFromMovie(movieId)
 
-    fun selectLimitedCastingItemFromMovie(movieId : Int, limit : Int) = castingDAO.selectLimitedCastingItemFromMovie(movieId, limit)
+    fun selectLimitedCastingItemFromMovie(movieId: Int, limit: Int) =
+        castingDAO.selectLimitedCastingItemFromMovie(movieId, limit)
 
     fun selectCrewItemFromMovie(movieId: Int) = crewDAO.selectCrewsItemFromMovie(movieId)
 
-    fun selectCrewItemFromMovieWithPaging(movieId: Int) = crewDAO.selectCrewsItemFromMovieWithpaging(movieId)
+    fun selectCrewItemFromMovieWithPaging(movieId: Int) =
+        crewDAO.selectCrewsItemFromMovieWithpaging(movieId)
 
-    fun selectProductionFromMovie(movieId: Int) = movieToProductionDao.selectProductionFromMovie(movieId)
+    fun selectProductionFromMovie(movieId: Int) =
+        movieToProductionDao.selectProductionFromMovie(movieId)
 
     suspend fun saveListMovieGenre(list: List<MovieGenre>) {
         withContext(Dispatchers.IO) {
-            movieGenreDAO.bulkInsertMovieGenre(list)
+            movieGenreDAO.bulkForceInsert(list)
         }
     }
 
@@ -86,27 +90,30 @@ class AppDataSource constructor(
             list.forEach {
                 val movie = it as Movie
                 debug("Save movie : ${movie.id} - ${movie.title}")
-                movieDAO.insertMovie(movie)
+                movieDAO.insert(movie)
 
                 val movieToGenreList = mutableListOf<MovieToGenre>()
-                it.genres.forEach {movieGenre ->
+                it.genres.forEach { movieGenre ->
                     movieToGenreList += MovieToGenre(idMovie = movie.id, idGenre = movieGenre.id)
                 }
-                movieToGenreDAO.bulkInsertMovieToGenre(movieToGenreList)
+                movieToGenreDAO.bulkForceInsert(movieToGenreList)
 
                 val currentDate = AppTools.getCurrentDate()
                 it.production_companies?.also { productionCompany: List<ProductionCompany> ->
-                    val listMovieProduction : MutableList<MovieToProduction> = mutableListOf()
+                    val listMovieProduction: MutableList<MovieToProduction> = mutableListOf()
                     productionCompany.forEach { item ->
                         item.insertDate = currentDate
-                        listMovieProduction += MovieToProduction(idMovie = movie.id, idProduction = item.id)
+                        listMovieProduction += MovieToProduction(
+                            idMovie = movie.id,
+                            idProduction = item.id
+                        )
                     }
                     saveListProductionCompany(productionCompany)
                     saveListMovieToProduction(listMovieProduction)
                 }
 
                 it.credits?.apply {
-                    if(cast.count() > 0) {
+                    if (cast.count() > 0) {
                         handleCastResponse(cast, movie.id)
                     }
                 }
@@ -115,49 +122,49 @@ class AppDataSource constructor(
         }
     }
 
-    suspend fun saveListPeople(list : List<People>) {
-        withContext(Dispatchers.IO){
-            peopleDAO.bulkInsertPeoples(list)
+    suspend fun saveListPeople(list: List<People>) {
+        withContext(Dispatchers.IO) {
+            peopleDAO.bulkForceInsert(list)
             peopleDAO.removeObsoletePeople(AppTools.getCurrentDate())
         }
     }
 
-    suspend fun saveListCasting(list : List<Casting>){
-        withContext(Dispatchers.IO){
+    suspend fun saveListCasting(list: List<Casting>) {
+        withContext(Dispatchers.IO) {
             val movieId = list[0].movieId
-            if(movieId != 0){
+            if (movieId != 0) {
                 castingDAO.deleteCastingFromMovie(movieId)
             }
-            castingDAO.bulkInsertCastings(list)
+            castingDAO.bulkForceInsert(list)
             castingDAO.removeObsoleteCasting(AppTools.getCurrentDate())
         }
     }
 
-    fun saveListCrew(list: List<Crew>){
-        appExecutors.diskIO().execute {
-            val movieId = list.get(0).movieId ?: 0
-            if(movieId != 0){
-                crewDAO.deleteCrewFromMovie(movieId)
-            }
-            crewDAO.bulkInsertCrews(list)
-        }
+    fun saveListCrew(list: List<Crew>) {
+//        appExecutors.diskIO().execute {
+//            val movieId = list.get(0).movieId ?: 0
+//            if (movieId != 0) {
+//                crewDAO.deleteCrewFromMovie(movieId)
+//            }
+//            crewDAO.bulkInsertCrews(list)
+//        }
     }
 
-    private suspend fun saveListMovieToGenre(list: List<MovieToGenre>){
+    private suspend fun saveListMovieToGenre(list: List<MovieToGenre>) {
         withContext(Dispatchers.IO) {
-            movieToGenreDAO.bulkInsertMovieToGenre(list)
+            movieToGenreDAO.bulkIgnoreInsert(list)
         }
     }
 
-    private suspend fun saveListProductionCompany(list: List<ProductionCompany>){
-        withContext(Dispatchers.IO){
-            productionCompanyDao.bulkIgnoreInsert(list)
+    private suspend fun saveListProductionCompany(list: List<ProductionCompany>) {
+        withContext(Dispatchers.IO) {
+            productionCompanyDao.bulkForceInsert(list)
             productionCompanyDao.removeObsoleteProduction(AppTools.getCurrentDate())
         }
     }
 
-    private suspend fun saveListMovieToProduction(list: List<MovieToProduction>){
-        withContext(Dispatchers.IO){
+    private suspend fun saveListMovieToProduction(list: List<MovieToProduction>) {
+        withContext(Dispatchers.IO) {
             movieToProductionDao.bulkForceInsert(list)
         }
     }
@@ -179,9 +186,12 @@ class AppDataSource constructor(
         }
     }
 
-    private suspend fun handleCastResponse(list : List<MovieCreditsListResponse.Casting>, movieId: Int) {
-        val peopleList : MutableList<People> = mutableListOf()
-        val castList : MutableList<Casting> = mutableListOf()
+    private suspend fun handleCastResponse(
+        list: List<MovieCreditsListResponse.Casting>,
+        movieId: Int
+    ) {
+        val peopleList: MutableList<People> = mutableListOf()
+        val castList: MutableList<Casting> = mutableListOf()
 
         list.forEach {
             peopleList += MapperUtils.Data.mapCastResponseToPeople(it)
