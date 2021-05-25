@@ -34,7 +34,7 @@ class ProductionCompanyDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testBulkInsertTable() {
+    fun testBulkInsertTable() = runBlocking {
         productionCompanyDao.bulkForceInsert(DataTestUtils.productionList)
 
         val list = getValue(productionCompanyDao.selectAll())
@@ -46,7 +46,7 @@ class ProductionCompanyDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testBulkInsertTableWithDuplicate() {
+    fun testBulkInsertTableWithDuplicate() = runBlocking {
         productionCompanyDao.bulkForceInsert(DataTestUtils.productionList)
         productionCompanyDao.bulkForceInsert(DataTestUtils.productionListWithDuplicate)
         val list = getValue(productionCompanyDao.selectAll())
@@ -69,7 +69,7 @@ class ProductionCompanyDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testDeleteObsolete() {
+    fun testDeleteObsolete() = runBlocking {
         productionCompanyDao.bulkForceInsert(DataTestUtils.productionList)
 
         productionCompanyDao.removeObsoleteProduction("10-01-2019")

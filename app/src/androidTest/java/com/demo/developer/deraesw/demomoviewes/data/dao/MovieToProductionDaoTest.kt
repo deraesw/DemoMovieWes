@@ -36,12 +36,16 @@ class MovieToProductionDaoTest : BaseDaoTest() {
 
 
     @Test
-    fun testBulkInsertTable(){
+    fun testBulkInsertTable() = runBlocking {
         movieToProductionDao.bulkForceInsert(DataTestUtils.movieToProductionList)
 
         val list = getValue(movieToProductionDao.selectProductionFromMovie(DataTestUtils.movie1.id))
         assertThat(list.isEmpty(), equalTo(false))
-        assertThat(list.size, equalTo(DataTestUtils.movieToProductionList.filter { it.idMovie == DataTestUtils.movie1.id}.count()))
+        assertThat(
+            list.size,
+            equalTo(DataTestUtils.movieToProductionList.filter { it.idMovie == DataTestUtils.movie1.id }
+                .count())
+        )
     }
 
     @Test
@@ -62,21 +66,26 @@ class MovieToProductionDaoTest : BaseDaoTest() {
     }
 
     @Test
-    fun testDeleteAll(){
+    fun testDeleteAll() = runBlocking {
         movieToProductionDao.bulkForceInsert(DataTestUtils.movieToProductionList)
 
         movieToProductionDao.removeAll()
-        val listEmpty = getValue(movieToProductionDao.selectProductionFromMovie(DataTestUtils.movie1.id))
+        val listEmpty =
+            getValue(movieToProductionDao.selectProductionFromMovie(DataTestUtils.movie1.id))
         assertThat(listEmpty.isEmpty(), equalTo(true))
     }
 
     @Test
-    fun testBulkInsertDuplicate(){
+    fun testBulkInsertDuplicate() = runBlocking {
         movieToProductionDao.bulkForceInsert(DataTestUtils.movieToProductionList)
         movieToProductionDao.bulkForceInsert(DataTestUtils.movieToProductionList)
 
         val list = getValue(movieToProductionDao.selectProductionFromMovie(DataTestUtils.movie1.id))
         assertThat(list.isEmpty(), equalTo(false))
-        assertThat(list.size, equalTo(DataTestUtils.movieToProductionList.filter { it.idMovie == DataTestUtils.movie1.id}.count()))
+        assertThat(
+            list.size,
+            equalTo(DataTestUtils.movieToProductionList.filter { it.idMovie == DataTestUtils.movie1.id }
+                .count())
+        )
     }
 }
