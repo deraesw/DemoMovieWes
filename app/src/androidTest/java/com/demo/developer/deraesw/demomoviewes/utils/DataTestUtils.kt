@@ -1,4 +1,4 @@
-package com.demo.developer.deraesw.demomoviewes.data.dao
+package com.demo.developer.deraesw.demomoviewes.utils
 
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
 
