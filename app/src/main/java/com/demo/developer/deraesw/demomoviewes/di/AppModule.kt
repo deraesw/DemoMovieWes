@@ -3,7 +3,7 @@ package com.demo.developer.deraesw.demomoviewes.di
 import android.content.Context
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
-import com.demo.developer.deraesw.demomoviewes.data.appDatabase
+import com.demo.developer.deraesw.demomoviewes.data.AppDatabase
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MoviedbAPI
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
@@ -25,14 +25,14 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideAppDataBase(@ApplicationContext context: Context): appDatabase {
-        return appDatabase.getInstance(context)
+    fun provideAppDataBase(@ApplicationContext context: Context): AppDatabase {
+        return AppDatabase.getInstance(context)
     }
 
     @Singleton
     @Provides
-    fun provideAppDataSource(appDatabase: appDatabase, appExecutors: AppExecutors): AppDataSource {
-        return AppDataSource.getInstance(appDatabase, appExecutors)
+    fun provideAppDataSource(AppDatabase: AppDatabase, appExecutors: AppExecutors): AppDataSource {
+        return AppDataSource.getInstance(AppDatabase, appExecutors)
     }
 
     @Singleton

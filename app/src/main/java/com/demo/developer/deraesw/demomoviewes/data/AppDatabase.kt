@@ -20,7 +20,7 @@ import com.demo.developer.deraesw.demomoviewes.data.entity.*
     ],
     version = 7
 )
-abstract class appDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
 
     abstract fun movieGenreDao(): MovieGenreDAO
     abstract fun movieDAO(): MovieDAO
@@ -39,25 +39,22 @@ abstract class appDatabase : RoomDatabase() {
         private const val NAME_DATABASE = "demo_movie_wes.db"
 
         @Volatile
-        private var sInstance: appDatabase? = null
+        private var sInstance: AppDatabase? = null
 
-        fun getInstance(context: Context): appDatabase {
-            sInstance ?: synchronized(this) {
+        fun getInstance(context: Context): AppDatabase {
+            return sInstance ?: synchronized(this) {
                 sInstance ?: buildDatabase(context).also {
                     sInstance = it
                 }
             }
-
-            return sInstance!!
         }
 
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,
-                appDatabase::class.java,
+                AppDatabase::class.java,
                 NAME_DATABASE
-            )
-                .fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration()
                 .build()
 
     }

@@ -28,20 +28,21 @@ class AppDataSource constructor(
         @Volatile private var sInstance : AppDataSource? = null
 
         fun getInstance(
-            appDatabase: appDatabase,
+            AppDatabase: AppDatabase,
             appExecutors: AppExecutors
         ): AppDataSource {
             sInstance ?: synchronized(this) {
                 sInstance = AppDataSource(
-                    appDatabase.movieGenreDao(),
-                    appDatabase.movieDAO(),
-                    appDatabase.movieToGenreDAO(),
-                    appDatabase.peopleDAO(),
-                    appDatabase.crewDAO(),
-                    appDatabase.castingDAO(),
-                    appDatabase.productionCompanyDao(),
-                        appDatabase.movieToProductionDao(),
-                        appExecutors)
+                    AppDatabase.movieGenreDao(),
+                    AppDatabase.movieDAO(),
+                    AppDatabase.movieToGenreDAO(),
+                    AppDatabase.peopleDAO(),
+                    AppDatabase.crewDAO(),
+                    AppDatabase.castingDAO(),
+                    AppDatabase.productionCompanyDao(),
+                    AppDatabase.movieToProductionDao(),
+                    appExecutors
+                )
             }
 
             return sInstance!!
