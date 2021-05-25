@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.demo.developer.deraesw.demomoviewes.data.entity.People
+import com.demo.developer.deraesw.demomoviewes.utils.AppTools
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Dao
 interface PeopleDAO : BaseDao<People> {
@@ -16,4 +19,11 @@ interface PeopleDAO : BaseDao<People> {
 
     @Query("DELETE FROM people WHERE insertDate <> :date")
     suspend fun removeObsoletePeople(date: String)
+
+    suspend fun saveListPeople(list: List<People>) {
+        withContext(Dispatchers.IO) {
+            bulkForceInsert(list)
+            removeObsoletePeople(AppTools.getCurrentDate())
+        }
+    }
 }
