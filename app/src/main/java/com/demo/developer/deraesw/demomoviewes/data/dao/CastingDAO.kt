@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.demo.developer.deraesw.demomoviewes.data.entity.Casting
 import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CastingDAO : BaseDao<Casting> {
@@ -16,7 +17,7 @@ interface CastingDAO : BaseDao<Casting> {
                 "WHERE casting.movieId = :movieId " +
                 "ORDER BY casting.position"
     )
-    fun selectCastingItemFromMovie(movieId: Int): LiveData<List<CastingItem>>
+    fun selectCastingItemFromMovie(movieId: Int): Flow<List<CastingItem>>
 
     @Query(
         "SELECT people.id, people.name, people.profilePath, casting.character " +

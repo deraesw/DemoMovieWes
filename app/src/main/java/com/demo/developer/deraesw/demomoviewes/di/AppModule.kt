@@ -4,6 +4,7 @@ import android.content.Context
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.AppDatabase
+import com.demo.developer.deraesw.demomoviewes.data.dao.CastingDAO
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MoviedbAPI
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
@@ -31,18 +32,28 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideAppDataSource(AppDatabase: AppDatabase, appExecutors: AppExecutors): AppDataSource {
-        return AppDataSource.getInstance(AppDatabase, appExecutors)
+    fun provideAppDataSource(appDatabase: AppDatabase, appExecutors: AppExecutors): AppDataSource {
+        return AppDataSource.getInstance(appDatabase, appExecutors)
     }
 
     @Singleton
     @Provides
-    fun provideMovieGenreRepository(movieGenreCallHandler: MovieGenreCallHandler, appDataSource: AppDataSource, appExecutors: AppExecutors) : MovieGenreRepository {
+    fun provide(appDatabase: AppDatabase): CastingDAO {
+        return appDatabase.castingDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMovieGenreRepository(
+        movieGenreCallHandler: MovieGenreCallHandler,
+        appDataSource: AppDataSource,
+        appExecutors: AppExecutors
+    ): MovieGenreRepository {
         return MovieGenreRepository(movieGenreCallHandler, appDataSource, appExecutors)
     }
 
     @Provides
-    fun provideAppExecutors() : AppExecutors {
+    fun provideAppExecutors(): AppExecutors {
         return AppExecutors.getInstance()
     }
 

@@ -2,8 +2,8 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
+import com.demo.developer.deraesw.demomoviewes.data.dao.CastingDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.Casting
-import com.demo.developer.deraesw.demomoviewes.data.entity.Crew
 import com.demo.developer.deraesw.demomoviewes.data.entity.People
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
@@ -20,19 +20,22 @@ import javax.inject.Singleton
 @Singleton
 class MovieCreditsRepository
 @Inject constructor(
-        private val movieCreditsCallHandler: MovieCreditsCallHandler,
-        private val appDataSource: AppDataSource,
-        private val appExecutors: AppExecutors){
+    private val movieCreditsCallHandler: MovieCreditsCallHandler,
+    private val appDataSource: AppDataSource,
+    private val castingDAO: CastingDAO,
+    private val appExecutors: AppExecutors
+){
 
     val errorNetwork: SingleLiveEvent<NetworkError> = SingleLiveEvent()
 
-    fun getCastingFromMovie(movieId : Int) = appDataSource.selectCastingItemFromMovie(movieId)
+    fun getCastingFromMovie(movieId: Int) = castingDAO.selectCastingItemFromMovie(movieId)
 
-    fun getLimitedCastingFromMovie(movieId : Int, limit : Int) = appDataSource.selectLimitedCastingItemFromMovie(movieId, limit)
+    fun getLimitedCastingFromMovie(movieId: Int, limit: Int) =
+        castingDAO.selectLimitedCastingItemFromMovie(movieId, limit)
 
-    fun getCrewFromMovie(movieId: Int) = appDataSource.selectCrewItemFromMovie(movieId)
+//    fun getCrewFromMovie(movieId: Int) = appDataSource.selectCrewItemFromMovie(movieId)
 
-    fun getCrewFromMovieWithPaging(movieId: Int) = appDataSource.selectCrewItemFromMovieWithPaging(movieId)
+//    fun getCrewFromMovieWithPaging(movieId: Int) = appDataSource.selectCrewItemFromMovieWithPaging(movieId)
 
     suspend fun fetchAndSaveMovieCredits(id: Int) {
         withContext(Dispatchers.IO) {
@@ -78,21 +81,4 @@ class MovieCreditsRepository
 //        appDataSource.saveListCrew(crewList)
 //    }
 
-    companion object {
-        @Volatile private var sInstance : MovieCreditsRepository? = null
-
-        fun getInstance(
-                movieCreditsCallHandler: MovieCreditsCallHandler ,
-                appDataSource: AppDataSource,
-                appExecutors: AppExecutors) : MovieCreditsRepository {
-            sInstance ?: synchronized(this){
-                sInstance = MovieCreditsRepository(
-                        movieCreditsCallHandler,
-                        appDataSource,
-                        appExecutors)
-            }
-
-            return sInstance!!
-        }
-    }
 }
