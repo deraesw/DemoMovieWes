@@ -5,9 +5,8 @@ import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.AppDatabase
 import com.demo.developer.deraesw.demomoviewes.data.dao.CastingDAO
-import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
+import com.demo.developer.deraesw.demomoviewes.data.dao.PeopleDAO
 import com.demo.developer.deraesw.demomoviewes.network.MoviedbAPI
-import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -38,19 +37,26 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provide(appDatabase: AppDatabase): CastingDAO {
+    fun provideCastingDAO(appDatabase: AppDatabase): CastingDAO {
         return appDatabase.castingDAO()
     }
 
     @Singleton
     @Provides
-    fun provideMovieGenreRepository(
-        movieGenreCallHandler: MovieGenreCallHandler,
-        appDataSource: AppDataSource,
-        appExecutors: AppExecutors
-    ): MovieGenreRepository {
-        return MovieGenreRepository(movieGenreCallHandler, appDataSource, appExecutors)
+    fun providePeopleDAO(appDatabase: AppDatabase): PeopleDAO {
+        return appDatabase.peopleDAO()
     }
+
+
+//    @Singleton
+//    @Provides
+//    fun provideMovieGenreRepository(
+//        movieGenreCallHandler: MovieGenreCallHandler,
+//        appDataSource: AppDataSource,
+//        appExecutors: AppExecutors
+//    ): MovieGenreRepository {
+//        return MovieGenreRepository(movieGenreCallHandler, appDataSource, appExecutors)
+//    }
 
     @Provides
     fun provideAppExecutors(): AppExecutors {
@@ -59,7 +65,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideGsonBuilder() : Gson = GsonBuilder().setLenient().create()
+    fun provideGsonBuilder(): Gson = GsonBuilder().setLenient().create()
 
     @Singleton
     @Provides
