@@ -2,7 +2,6 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
@@ -10,8 +9,7 @@ import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
 import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,9 +18,10 @@ class MovieRepository
 @Inject constructor(
         private val movieCallHandler: MovieCallHandler,
         private val appDataSource: AppDataSource,
-        private val appExecutors: AppExecutors,
         private val networkRepository: NetworkRepository
 ) {
+
+    val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     val errorMessage = movieCallHandler.errorMessage
     val mMovieInTheaterWithGenres: MutableLiveData<List<MovieInTheater>> = MutableLiveData()
@@ -67,7 +66,7 @@ class MovieRepository
     }
 
     fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>) {
-        appExecutors.diskIO().execute {
+        scope.launch {
             list.forEach {
                 it.genres = appDataSource.movieToGenreDAO.selectGenreListFromMovie(it.id)
             }
@@ -77,7 +76,7 @@ class MovieRepository
     }
 
     fun populateUpcomingMoviesWithGenre(list: List<UpcomingMovie>) {
-        appExecutors.diskIO().execute {
+        scope.launch {
             list.forEach {
                 it.genres = appDataSource.movieToGenreDAO.selectGenreListFromMovie(it.id)
             }
