@@ -3,12 +3,17 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
-import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
-import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.data.dao.*
+import com.demo.developer.deraesw.demomoviewes.data.entity.*
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
-import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
+import com.demo.developer.deraesw.demomoviewes.extension.debug
+import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
+import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
+import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import com.demo.developer.deraesw.demomoviewes.utils.getPeopleAndCastingList
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -16,31 +21,32 @@ import javax.inject.Singleton
 @Singleton
 class MovieRepository
 @Inject constructor(
-        private val movieCallHandler: MovieCallHandler,
-        private val appDataSource: AppDataSource,
-        private val networkRepository: NetworkRepository
+    private val appDataSource: AppDataSource,
+    private val networkRepository: NetworkRepository,
+    private val movieDAO: MovieDAO,
+    private val movieToGenreDAO: MovieToGenreDAO,
+    private val movieToProductionDao: MovieToProductionDao,
+    private val castingDAO: CastingDAO,
+    private val peopleDAO: PeopleDAO,
+    private val productionCompanyDao: ProductionCompanyDao
 ) {
 
     val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    val errorMessage = movieCallHandler.errorMessage
-    val mMovieInTheaterWithGenres: MutableLiveData<List<MovieInTheater>> = MutableLiveData()
+    val errorMessage: SingleLiveEvent<NetworkError> = SingleLiveEvent()
+    val movieInTheaterWithGenres: MutableLiveData<List<MovieInTheater>> = MutableLiveData()
     val upcomingMoviesWithGenres: MutableLiveData<List<UpcomingMovie>> = MutableLiveData()
 
-    val movieList: LiveData<List<Movie>> =
-            appDataSource.movieDAO.selectAllMovies()
-    val moviesInTheater: LiveData<List<MovieInTheater>> =
-            appDataSource.movieDAO.selectMoviesInTheater()
-    val upcomingMovies: LiveData<List<UpcomingMovie>> =
-            appDataSource.movieDAO.selectUpcomingMovies()
+    val movieList: LiveData<List<Movie>> = movieDAO.selectAllMovies()
+    val moviesInTheater: LiveData<List<MovieInTheater>> = movieDAO.selectMoviesInTheater()
+    val upcomingMovies: LiveData<List<UpcomingMovie>> = movieDAO.selectUpcomingMovies()
 
-    fun getMovieDetail(id: Int) = appDataSource.movieDAO.selectMovie(id)
+    fun getMovieDetail(id: Int) = movieDAO.selectMovie(id)
 
-    fun getProductionFromMovie(movieId: Int) = appDataSource.selectProductionFromMovie(movieId)
+    fun getProductionFromMovie(movieId: Int) =
+        movieToProductionDao.selectProductionFromMovie(movieId)
 
-    fun getMovieGenreFromMovie(idMovie: Int): LiveData<List<MovieGenre>> {
-        return appDataSource.movieToGenreDAO.observeGenreListFromMovie(idMovie)
-    }
+    fun getMovieGenreFromMovie(idMovie: Int) = movieToGenreDAO.observeGenreListFromMovie(idMovie)
 
     suspend fun fetchAndSaveNowPlayingMovies(fromSync: Boolean = true): Boolean {
         return fetchAndSaveMovies(Constant.MovieType.NOW_PLAYING_MOVIES, fromSync)
@@ -50,7 +56,10 @@ class MovieRepository
         return fetchAndSaveMovies(Constant.MovieType.UPCOMING_MOVIES)
     }
 
-    private suspend fun fetchAndSaveMovies(movieType: Constant.MovieType, fromSync: Boolean = false): Boolean {
+    private suspend fun fetchAndSaveMovies(
+        movieType: Constant.MovieType,
+        fromSync: Boolean = false
+    ): Boolean {
         return withContext(Dispatchers.IO) {
             val result = networkRepository.fetchMovies(movieType, fromSync)
             if (result.errors != null) {
@@ -59,7 +68,7 @@ class MovieRepository
             }
 
             result.data?.also {
-                appDataSource.saveListOfMovieNetworkResponse(it)
+                saveListOfMovieNetworkResponse(it)
             }
             return@withContext true
         }
@@ -68,17 +77,17 @@ class MovieRepository
     fun populateMovieInTheaterWithGenre(list: List<MovieInTheater>) {
         scope.launch {
             list.forEach {
-                it.genres = appDataSource.movieToGenreDAO.selectGenreListFromMovie(it.id)
+                it.genres = movieToGenreDAO.selectGenreListFromMovie(it.id)
             }
 
-            mMovieInTheaterWithGenres.postValue(list)
+            movieInTheaterWithGenres.postValue(list)
         }
     }
 
     fun populateUpcomingMoviesWithGenre(list: List<UpcomingMovie>) {
         scope.launch {
             list.forEach {
-                it.genres = appDataSource.movieToGenreDAO.selectGenreListFromMovie(it.id)
+                it.genres = movieToGenreDAO.selectGenreListFromMovie(it.id)
             }
 
             upcomingMoviesWithGenres.postValue(list)
@@ -87,5 +96,55 @@ class MovieRepository
 
     suspend fun cleanAllData() {
         appDataSource.cleanAllData()
+    }
+
+    private suspend fun saveListOfMovieNetworkResponse(list: List<MovieResponse>) {
+        withContext(Dispatchers.IO) {
+            list.forEach {
+                val movie = it as Movie
+                debug("Save movie : ${movie.id} - ${movie.title}")
+
+                movieDAO.insert(movie)
+
+                saveMovieGenre(it.genres, movie.id)
+                saveProductionMovie(it)
+                saveCasting(it)
+            }
+            movieDAO.removeObsoleteMovies(AppTools.getCurrentDate())
+        }
+    }
+
+    private suspend fun saveMovieGenre(list: List<MovieGenre>, movieId: Int) {
+        val movieToGenreList = mutableListOf<MovieToGenre>()
+        list.forEach { movieGenre ->
+            movieToGenreList += MovieToGenre(idMovie = movieId, idGenre = movieGenre.id)
+        }
+
+        movieToGenreDAO.bulkForceInsert(movieToGenreList)
+    }
+
+    private suspend fun saveProductionMovie(movieResponse: MovieResponse) {
+        val currentDate = AppTools.getCurrentDate()
+        movieResponse.production_companies?.also { productionCompany: List<ProductionCompany> ->
+            val listMovieProduction: MutableList<MovieToProduction> = mutableListOf()
+            productionCompany.forEach { item ->
+                item.insertDate = currentDate
+                listMovieProduction += MovieToProduction(
+                    idMovie = movieResponse.id,
+                    idProduction = item.id
+                )
+            }
+
+            productionCompanyDao.saveListProductionCompany(productionCompany)
+            movieToProductionDao.bulkForceInsert(listMovieProduction)
+        }
+    }
+
+    private suspend fun saveCasting(movieResponse: MovieResponse) {
+        movieResponse.credits?.cast?.takeIf { cast -> cast.isNotEmpty() }?.also { cast ->
+            val (peoples, castings) = getPeopleAndCastingList(cast, movieResponse.id)
+            peopleDAO.saveListPeople(peoples)
+            castingDAO.saveListCasting(castings, movieResponse.id)
+        }
     }
 }

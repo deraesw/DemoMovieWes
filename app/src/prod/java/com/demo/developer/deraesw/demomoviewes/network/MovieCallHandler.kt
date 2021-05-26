@@ -1,6 +1,5 @@
 package com.demo.developer.deraesw.demomoviewes.network
 
-import androidx.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.BuildConfig
 import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
@@ -9,7 +8,6 @@ import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MoviesResponse
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import com.google.gson.Gson
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -23,20 +21,7 @@ import javax.inject.Singleton
 class MovieCallHandler
 @Inject constructor(){
 
-    companion object {
-        private var mInstance : MovieCallHandler? = null
-        fun getInstance() : MovieCallHandler {
-            mInstance ?: synchronized(this) {
-                mInstance = MovieCallHandler()
-            }
-            return mInstance!!
-        }
-    }
-
     private val mApi = BuildConfig.MOVIES_DB_API
-
-    val mMovie : MutableLiveData<MovieResponse> = MutableLiveData()
-    val errorMessage : SingleLiveEvent<NetworkError> = SingleLiveEvent()
 
     @Inject
     lateinit var mMovieDbApi: MoviedbAPI

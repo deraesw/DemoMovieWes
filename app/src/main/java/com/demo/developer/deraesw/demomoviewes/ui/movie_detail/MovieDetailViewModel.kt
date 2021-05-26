@@ -1,20 +1,20 @@
 package com.demo.developer.deraesw.demomoviewes.ui.movie_detail
 
 import androidx.lifecycle.ViewModel
-import com.demo.developer.deraesw.demomoviewes.repository.MainRepository
+import androidx.lifecycle.asLiveData
+import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailViewModel @Inject constructor(
-    private val mainRepository: MainRepository
+    private val movieRepository: MovieRepository
 ) : ViewModel() {
 
-    fun getMovieDetail(movieId: Int) = mainRepository.movieRepository.getMovieDetail(movieId)
+    fun getMovieDetail(movieId: Int) = movieRepository.getMovieDetail(movieId)
 
     fun getGenreFromMovie(movieId: Int) =
-        mainRepository.movieRepository.getMovieGenreFromMovie(movieId)
+        movieRepository.getMovieGenreFromMovie(movieId).asLiveData()
 
-    fun getProductionFromMovie(movieId: Int) =
-        mainRepository.movieRepository.getProductionFromMovie(movieId)
+    fun getProductionFromMovie(movieId: Int) = movieRepository.getProductionFromMovie(movieId)
 }

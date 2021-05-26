@@ -13,18 +13,16 @@ import javax.inject.Singleton
 @Singleton
 class MovieGenreRepository
 @Inject constructor(
-        private val networkRepository: NetworkRepository,
-        private val movieGenreDAO: MovieGenreDAO
+    private val networkRepository: NetworkRepository,
+    private val movieGenreDAO: MovieGenreDAO
 ) {
 
-    //    var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
     val mMovieGenreList: LiveData<List<MovieGenre>> = movieGenreDAO.selectAllMovieGenre()
     val mGenreForFilter: LiveData<List<GenreFilter>> = movieGenreDAO.selectAllMovieGenreForFilter()
 
     val errorMessage: SingleLiveEvent<String> = SingleLiveEvent()
 
     suspend fun fetchAndSaveMovieGenreInformation(): Boolean {
-//        syncInformationMessage.postValue("Fetching movie genre list...")
         return withContext(Dispatchers.IO) {
             val result = networkRepository.fetchMoviesGenreInformation()
             if (result.errors != null) {

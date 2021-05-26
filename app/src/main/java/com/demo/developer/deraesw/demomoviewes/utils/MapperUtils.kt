@@ -53,3 +53,19 @@ class MapperUtils {
     }
 
 }
+
+fun getPeopleAndCastingList(
+    list: List<MovieCreditsListResponse.Casting>,
+    movieId: Int
+): Pair<List<People>, List<Casting>> {
+
+    val peopleList: MutableList<People> = mutableListOf()
+    val castList: MutableList<Casting> = mutableListOf()
+
+    list.forEach {
+        peopleList += MapperUtils.Data.mapCastResponseToPeople(it)
+        castList += MapperUtils.Data.mapCastResponseToCasting(it, movieId)
+    }
+
+    return Pair(peopleList, castList)
+}

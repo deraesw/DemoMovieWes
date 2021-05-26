@@ -19,7 +19,7 @@ class MoviesInTheaterViewModel @Inject constructor(
 
     val movieList: LiveData<List<MovieInTheater>> = movieRepository.moviesInTheater
     val movieInTheaterWithGender: LiveData<List<MovieInTheater>> =
-        movieRepository.mMovieInTheaterWithGenres
+        movieRepository.movieInTheaterWithGenres
     val movieGenre: LiveData<List<MovieGenre>> = movieGenreRepository.mMovieGenreList
     val errorMessage = movieRepository.errorMessage
 

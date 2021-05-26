@@ -8,10 +8,9 @@ import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
 import com.demo.developer.deraesw.demomoviewes.network.MovieCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MovieCreditsCallHandler
 import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
-import com.demo.developer.deraesw.demomoviewes.network.response.MovieCreditsListResponse
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import com.demo.developer.deraesw.demomoviewes.utils.MapperUtils
+import com.demo.developer.deraesw.demomoviewes.utils.getPeopleAndCastingList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -77,23 +76,6 @@ class NetworkRepository
             }
         }
     }
-
-    private fun getPeopleAndCastingList(
-            list: List<MovieCreditsListResponse.Casting>,
-            movieId: Int
-    ): Pair<List<People>, List<Casting>> {
-
-        val peopleList: MutableList<People> = mutableListOf()
-        val castList: MutableList<Casting> = mutableListOf()
-
-        list.forEach {
-            peopleList += MapperUtils.Data.mapCastResponseToPeople(it)
-            castList += MapperUtils.Data.mapCastResponseToCasting(it, movieId)
-        }
-
-        return Pair(peopleList, castList)
-    }
-
 }
 
 data class MovieResult(

@@ -17,16 +17,6 @@ import javax.inject.Singleton
 @Module
 class AppModule {
 
-//    @Singleton
-//    @Provides
-//    fun provideMovieGenreRepository(
-//        movieGenreCallHandler: MovieGenreCallHandler,
-//        appDataSource: AppDataSource,
-//        appExecutors: AppExecutors
-//    ): MovieGenreRepository {
-//        return MovieGenreRepository(movieGenreCallHandler, appDataSource, appExecutors)
-//    }
-
     @Provides
     fun provideAppExecutors(): AppExecutors {
         return AppExecutors.getInstance()

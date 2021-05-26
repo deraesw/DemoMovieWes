@@ -11,12 +11,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MainRepository
+class SyncRepository
 @Inject constructor(
-        val genreRepository: MovieGenreRepository,
-        val sharePrefRepository: SharePrefRepository,
-        val movieCreditsRepository: MovieCreditsRepository,
-        val movieRepository: MovieRepository) {
+    val genreRepository: MovieGenreRepository,
+    val sharePrefRepository: SharePrefRepository,
+    val movieCreditsRepository: MovieCreditsRepository,
+    val movieRepository: MovieRepository
+) {
 
     private var syncStarted = false
     private var mAccountData: AccountData? = null
