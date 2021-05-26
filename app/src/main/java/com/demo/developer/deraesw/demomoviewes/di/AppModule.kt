@@ -5,6 +5,7 @@ import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.AppDatabase
 import com.demo.developer.deraesw.demomoviewes.data.dao.CastingDAO
+import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.dao.PeopleDAO
 import com.demo.developer.deraesw.demomoviewes.network.MoviedbAPI
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
@@ -45,6 +46,12 @@ class AppModule {
     @Provides
     fun providePeopleDAO(appDatabase: AppDatabase): PeopleDAO {
         return appDatabase.peopleDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMovieGenreDAO(appDatabase: AppDatabase): MovieGenreDAO {
+        return appDatabase.movieGenreDao()
     }
 
 

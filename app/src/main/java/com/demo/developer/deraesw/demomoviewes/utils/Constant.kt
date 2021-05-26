@@ -7,11 +7,15 @@ class Constant {
         const val MOVIE_API_IMAGE = "https://image.tmdb.org/t/p/"
     }
 
-    class  MovieFilterStatus {
+    class MovieFilterStatus {
         companion object {
             const val NOW_PLAYING_MOVIES = 1
             const val UPCOMING_MOVIES = 2
         }
+    }
+
+    enum class MovieType {
+        NOW_PLAYING_MOVIES, UPCOMING_MOVIES
     }
 
     class ShareKey {
@@ -22,7 +26,7 @@ class Constant {
     }
 
     class SortingCode {
-        class Movie{
+        class Movie {
             companion object {
                 const val BY_TITLE = "BY_TITLE"
                 const val BY_DURATION = "BY_DURATION"

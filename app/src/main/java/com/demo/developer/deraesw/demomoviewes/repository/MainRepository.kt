@@ -1,11 +1,8 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
-import android.os.Handler
-import android.util.Log
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
-import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
@@ -29,18 +26,6 @@ class MainRepository
     var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
 
     init {
-
-        genreRepository.syncInformationMessage.observeForever {
-            if (it != null) {
-                syncInformationMessage.postValue(it)
-            }
-        }
-
-        movieRepository.syncInformationMessage.observeForever {
-            if (it != null) {
-                syncInformationMessage.postValue(it)
-            }
-        }
 
         genreRepository.errorMessage.observeForever {
             if(it != null && it.isNotEmpty()) {
@@ -88,8 +73,11 @@ class MainRepository
         withContext(Dispatchers.IO) {
             movieRepository.cleanAllData()
 
+            syncInformationMessage.postValue("Fetching movie genre list...")
             var syncDone = genreRepository.fetchAndSaveMovieGenreInformation()
+            syncInformationMessage.postValue("Fetching movies in theaters...")
             syncDone = (syncDone && movieRepository.fetchAndSaveNowPlayingMovies())
+            syncInformationMessage.postValue("Fetching upcoming movies...")
             syncDone = (syncDone && movieRepository.fetchAndSaveUpcomingMovies())
 
             if(syncStarted && syncDone) {
