@@ -22,13 +22,6 @@ interface MovieDAO : BaseDao<Movie> {
     @Query("SELECT id, title, posterPath, runtime, releaseDate FROM movie WHERE filterStatus = 2")
     fun selectUpcomingMovies(): LiveData<List<UpcomingMovie>>
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insertMovie(movie: Movie)
-//
-//    @JvmSuppressWildcards
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun bulkInsertMovies(movieList: List<Movie>)
-
     @Query("DELETE FROM movie")
     suspend fun removeAllMovies()
 
