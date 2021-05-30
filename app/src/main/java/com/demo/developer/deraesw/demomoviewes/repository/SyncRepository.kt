@@ -28,15 +28,6 @@ class SyncRepository
 
     init {
 
-        genreRepository.errorMessage.observeForever {
-            if(it != null && it.isNotEmpty()) {
-                setSynchronizationFailed()
-                val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
-                sync.networkError = NetworkError(statusMessage = it, statusCode = 0)
-                syncStatus.postValue(sync)
-            }
-        }
-
         movieCreditsRepository.errorNetwork.observeForever {
             if (it != null) {
                 setSynchronizationFailed()
@@ -75,17 +66,30 @@ class SyncRepository
             movieRepository.cleanAllData()
 
             syncInformationMessage.postValue("Fetching movie genre list...")
-            var syncDone = genreRepository.fetchAndSaveMovieGenreInformation()
+            genreRepository.fetchAndSaveMovieGenreInformation().also {
+                genreRepository.errorMessage?.also {
+                    setFailedSync(it)
+                    return@withContext
+                }
+            }
+
             syncInformationMessage.postValue("Fetching movies in theaters...")
-            syncDone = (syncDone && movieRepository.fetchAndSaveNowPlayingMovies())
+            var syncDone = movieRepository.fetchAndSaveNowPlayingMovies()
             syncInformationMessage.postValue("Fetching upcoming movies...")
             syncDone = (syncDone && movieRepository.fetchAndSaveUpcomingMovies())
 
-            if(syncStarted && syncDone) {
+            if (syncStarted && syncDone) {
                 setSynchronizationTerminated()
                 syncStarted = false
             }
         }
+    }
+
+    private fun setFailedSync(networkError: NetworkError) {
+        setSynchronizationFailed()
+        val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
+        sync.networkError = networkError
+        syncStatus.postValue(sync)
     }
 
     fun resetStatus(accountData: AccountData) {

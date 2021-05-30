@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
-import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -20,13 +20,21 @@ class MovieGenreRepository
     val mMovieGenreList: LiveData<List<MovieGenre>> = movieGenreDAO.selectAllMovieGenre()
     val mGenreForFilter: LiveData<List<GenreFilter>> = movieGenreDAO.selectAllMovieGenreForFilter()
 
-    val errorMessage: SingleLiveEvent<String> = SingleLiveEvent()
+    var errorMessage: NetworkError? = null
+        get() {
+            return field.let {
+                field = null
+                it
+            }
+        }
+
 
     suspend fun fetchAndSaveMovieGenreInformation(): Boolean {
         return withContext(Dispatchers.IO) {
             val result = networkRepository.fetchMoviesGenreInformation()
+
             if (result.errors != null) {
-                errorMessage.postValue(result.errors.statusMessage)
+                errorMessage = result.errors
                 return@withContext false
             }
 
