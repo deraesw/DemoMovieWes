@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentSynchronizedDataBinding
 import com.demo.developer.deraesw.demomoviewes.extension.debug
-import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -24,13 +23,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class SynchronizedDataActivityFragment : Fragment() {
 
     private lateinit var binding: FragmentSynchronizedDataBinding
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: SynchronizedDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentSynchronizedDataBinding.inflate(layoutInflater, container, false)
 
         var accountData: AccountData? = null

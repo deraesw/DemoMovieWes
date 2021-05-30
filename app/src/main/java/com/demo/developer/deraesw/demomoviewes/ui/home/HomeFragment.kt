@@ -13,7 +13,7 @@ import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.HomePageAdapter
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentHomeBinding
-import com.demo.developer.deraesw.demomoviewes.ui.MainActivityViewModel
+import com.demo.developer.deraesw.demomoviewes.ui.HomeViewModel
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
