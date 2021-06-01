@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
 import com.demo.developer.deraesw.demomoviewes.repository.SharePrefRepository
-import com.demo.developer.deraesw.demomoviewes.repository.SyncRepository
+import com.demo.developer.deraesw.demomoviewes.repository.SyncRepositoryInterface
 import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SynchronizedDataViewModel
 @Inject constructor(
-    private val syncRepository: SyncRepository,
+    private val syncRepository: SyncRepositoryInterface,
     sharePrefRepository: SharePrefRepository
 ) : ViewModel() {
 

@@ -73,7 +73,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/ic_remove_circle_24dp"
-                        android:tint="@android:color/holo_red_dark"
+                        app:tint="@android:color/holo_red_dark"
                         android:visibility="gone"/>
 
                     <ImageView
@@ -81,7 +81,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/ic_check_circle_24dp"
-                        android:tint="@android:color/holo_green_light"
+                        app:tint="@android:color/holo_green_light"
                         android:visibility="gone"/>
 
                     <ProgressBar

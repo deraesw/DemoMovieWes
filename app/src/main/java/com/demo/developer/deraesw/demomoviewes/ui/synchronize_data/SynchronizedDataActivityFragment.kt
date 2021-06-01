@@ -3,18 +3,20 @@ package com.demo.developer.deraesw.demomoviewes.ui.synchronize_data
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentSynchronizedDataBinding
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,9 +41,10 @@ class SynchronizedDataActivityFragment : Fragment() {
                 accountData = it
                 //Meaning first time open application or clear data
                 if (it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC) {
-                    Handler().postDelayed({
+                    lifecycleScope.launch {
+                        delay(1000)
                         viewModel.callFullSyncData(it)
-                    }, 1000)
+                    }
                 }
             }
         })
@@ -55,10 +58,10 @@ class SynchronizedDataActivityFragment : Fragment() {
                         showSuccessIcon(true)
                         showProgressBar(false)
                         showFailedIcon(false)
-                        Handler().postDelayed({
-                            this.findNavController().popBackStack()
-                        }, 2000)
-
+                        lifecycleScope.launch {
+                            delay(2000)
+                            this@SynchronizedDataActivityFragment.findNavController().popBackStack()
+                        }
                     }
                     AccountData.SyncStatus.SYNC_FAILED -> {
                         binding.tvInformationMessage.text =

@@ -28,13 +28,14 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
         viewModel.accountData.observe(viewLifecycleOwner, {
             if (it != null) {
                 if (it.lastDateSync == "" && (it.syncStatus == AccountData.SyncStatus.NO_SYNC || it.syncStatus == AccountData.SyncStatus.SYNC_PROGRESS)) {
-                    val destination = HomeFragmentDirections.actionHomeFragmentToSynchronizedDataActivityFragment()
+                    val destination =
+                        HomeFragmentDirections.actionHomeFragmentToSynchronizedDataActivityFragment()
                     this.findNavController().navigate(destination)
                 }
 

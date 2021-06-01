@@ -10,6 +10,14 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface SyncRepositoryInterface {
+    var syncStatus: SingleLiveEvent<SynchronizationStatus>
+    var syncInformationMessage: SingleLiveEvent<String>
+
+    suspend fun initFullSynchronization(accountData: AccountData)
+    fun resetStatus(accountData: AccountData)
+}
+
 @Singleton
 class SyncRepository
 @Inject constructor(
@@ -17,14 +25,13 @@ class SyncRepository
     val sharePrefRepository: SharePrefRepository,
     val movieCreditsRepository: MovieCreditsRepository,
     val movieRepository: MovieRepository
-) {
+) : SyncRepositoryInterface {
 
     private var syncStarted = false
     private var mAccountData: AccountData? = null
 
-    //var networkError : SingleLiveEvent<NetworkError> = SingleLiveEvent()
-    var syncStatus: SingleLiveEvent<SynchronizationStatus> = SingleLiveEvent()
-    var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
+    override var syncStatus: SingleLiveEvent<SynchronizationStatus> = SingleLiveEvent()
+    override var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
 
     init {
 
@@ -47,7 +54,7 @@ class SyncRepository
         }
     }
 
-    suspend fun initFullSynchronization(accountData: AccountData) {
+    override suspend fun initFullSynchronization(accountData: AccountData) {
         if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC || accountData.lastDateSync != AppTools.getCurrentDate()) {
 
             mAccountData = accountData
@@ -92,7 +99,7 @@ class SyncRepository
         syncStatus.postValue(sync)
     }
 
-    fun resetStatus(accountData: AccountData) {
+    override fun resetStatus(accountData: AccountData) {
         mAccountData = accountData
         mAccountData?.apply {
             syncStatus = AccountData.SyncStatus.NO_SYNC
