@@ -55,7 +55,6 @@ class SynchronizedDataActivityFragmentTest {
     @Before
     fun init() {
         hiltRule.inject()
-        (repository as SyncRepositoryTest).resetState()
     }
 
     @Before
@@ -141,7 +140,7 @@ class SynchronizedDataActivityFragmentTest {
 
         runBlocking {
             (repository as SyncRepositoryTest).setSyncFailed()
-            delay(500)
+            delay(1000)
         }
 
         R.id.cardView2.withId().isDisplay()

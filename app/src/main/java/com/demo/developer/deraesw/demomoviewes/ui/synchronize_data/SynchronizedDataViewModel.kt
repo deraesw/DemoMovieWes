@@ -4,10 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
-import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
 import com.demo.developer.deraesw.demomoviewes.repository.SharePrefRepository
 import com.demo.developer.deraesw.demomoviewes.repository.SyncRepositoryInterface
-import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,8 +19,7 @@ class SynchronizedDataViewModel
 ) : ViewModel() {
 
     val accountData: LiveData<AccountData> = sharePrefRepository.account
-    val syncStatus: SingleLiveEvent<SynchronizationStatus> = syncRepository.syncStatus
-    var syncInformationMessage: SingleLiveEvent<String> = syncRepository.syncInformationMessage
+    val eventsFlow = syncRepository.eventsFlow
 
     fun callFullSyncData(accountData: AccountData) {
         viewModelScope.launch {

@@ -8,14 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentSynchronizedDataBinding
 import com.demo.developer.deraesw.demomoviewes.extension.debug
+import com.demo.developer.deraesw.demomoviewes.repository.MessageEvent
+import com.demo.developer.deraesw.demomoviewes.repository.SynchronizationStatusEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -49,43 +53,17 @@ class SynchronizedDataActivityFragment : Fragment() {
             }
         })
 
-        viewModel.syncStatus.observe(this, Observer {
-            if (it != null) {
-                when (it.status) {
-                    AccountData.SyncStatus.SYNC_INIT_DONE -> {
-                        debug("init done launch service")
-                        binding.tvInformationMessage.text = ""
-                        showSuccessIcon(true)
-                        showProgressBar(false)
-                        showFailedIcon(false)
-                        lifecycleScope.launch {
-                            delay(2000)
-                            this@SynchronizedDataActivityFragment.findNavController().popBackStack()
-                        }
-                    }
-                    AccountData.SyncStatus.SYNC_FAILED -> {
-                        binding.tvInformationMessage.text =
-                            it.networkError?.statusMessage ?: "unknown error"
-                        showFailedIcon(true)
-                        showSuccessIcon(false)
-                        showProgressBar(false)
-                        binding.btnRetry.visibility = View.VISIBLE
-                        debug("Failed status receive")
-                    }
-                    AccountData.SyncStatus.SYNC_PROGRESS -> {
-                        showProgressBar(true)
-                        showFailedIcon(false)
-                        showSuccessIcon(false)
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.eventsFlow.collect {
+                    when (it) {
+                        is MessageEvent -> binding.tvInformationMessage.text = it.message
+                        is SynchronizationStatusEvent -> handleSyncStatusUpdate(it)
                     }
                 }
             }
-        })
+        }
 
-        viewModel.syncInformationMessage.observe(this, Observer {
-            if (it != null) {
-                binding.tvInformationMessage.text = it
-            }
-        })
 
         binding.btnRetry.setOnClickListener {
             accountData?.apply {
@@ -95,6 +73,36 @@ class SynchronizedDataActivityFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    private fun handleSyncStatusUpdate(synchronizationStatusEvent: SynchronizationStatusEvent) {
+        when (synchronizationStatusEvent.status.status) {
+            AccountData.SyncStatus.SYNC_INIT_DONE -> {
+                debug("init done launch service")
+                binding.tvInformationMessage.text = ""
+                showSuccessIcon(true)
+                showProgressBar(false)
+                showFailedIcon(false)
+                lifecycleScope.launch {
+                    delay(2000)
+                    this@SynchronizedDataActivityFragment.findNavController().popBackStack()
+                }
+            }
+            AccountData.SyncStatus.SYNC_FAILED -> {
+                binding.tvInformationMessage.text =
+                    synchronizationStatusEvent.status.networkError?.statusMessage ?: "unknown error"
+                showFailedIcon(true)
+                showSuccessIcon(false)
+                showProgressBar(false)
+                binding.btnRetry.visibility = View.VISIBLE
+                debug("Failed status receive")
+            }
+            AccountData.SyncStatus.SYNC_PROGRESS -> {
+                showProgressBar(true)
+                showFailedIcon(false)
+                showSuccessIcon(false)
+            }
+        }
     }
 
     private fun showProgressBar(show: Boolean) {

@@ -3,14 +3,15 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
 import com.demo.developer.deraesw.demomoviewes.extension.debug
-import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import javax.inject.Singleton
 
 @Singleton
 class SyncRepositoryTest : SyncRepositoryInterface {
 
-    override var syncStatus: SingleLiveEvent<SynchronizationStatus> = SingleLiveEvent()
-    override var syncInformationMessage: SingleLiveEvent<String> = SingleLiveEvent()
+    private val eventChannel = Channel<SyncRepoEvent>(Channel.BUFFERED)
+    override val eventsFlow = eventChannel.receiveAsFlow()
 
     override suspend fun initFullSynchronization(accountData: AccountData) {
         debug("initFullSynchronization")
@@ -20,24 +21,19 @@ class SyncRepositoryTest : SyncRepositoryInterface {
         debug("resetStatus")
     }
 
-    fun resetState() {
-        syncStatus = SingleLiveEvent()
-        syncInformationMessage = SingleLiveEvent()
+    suspend fun setNoSync() {
+        eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.NO_SYNC)))
     }
 
-    fun setNoSync() {
-        syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.NO_SYNC))
+    suspend fun setSyncInProgress() {
+        eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS)))
     }
 
-    fun setSyncInProgress() {
-        syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS))
+    suspend fun setSyncDone() {
+        eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE)))
     }
 
-    fun setSyncDone() {
-        syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE))
-    }
-
-    fun setSyncFailed() {
-        syncStatus.postValue(SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED))
+    suspend fun setSyncFailed() {
+        eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)))
     }
 }
