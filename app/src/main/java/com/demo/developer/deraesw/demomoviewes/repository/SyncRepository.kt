@@ -29,7 +29,6 @@ class SyncRepository
 ) : SyncRepositoryInterface {
 
     private var syncStarted = false
-    private var mAccountData: AccountData? = null
 
     private val eventChannel = Channel<SyncRepoEvent>(Channel.BUFFERED)
     override val eventsFlow = eventChannel.receiveAsFlow()
@@ -57,11 +56,12 @@ class SyncRepository
     }
 
     override suspend fun initFullSynchronization(accountData: AccountData) {
-        if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC || accountData.lastDateSync != AppTools.getCurrentDate()) {
-
-            mAccountData = accountData
-            mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
-            sharePrefRepository.updateAccountInformation(mAccountData!!)
+        if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC
+            || accountData.lastDateSync != AppTools.getCurrentDate()
+        ) {
+            sharePrefRepository.updateAccountInformation(accountData.apply {
+                syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
+            })
 
             syncStarted = true
             eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.SYNC_PROGRESS)))
@@ -102,30 +102,33 @@ class SyncRepository
     }
 
     override fun resetStatus(accountData: AccountData) {
-        mAccountData = accountData
-        mAccountData?.apply {
+        sharePrefRepository.updateAccountInformation(accountData.apply {
             syncStatus = AccountData.SyncStatus.NO_SYNC
             lastDateSync = ""
             sharePrefRepository.updateAccountInformation(this)
-        }
+        })
     }
 
     private suspend fun setSynchronizationTerminated() {
-        val fromInitialSync =
-            mAccountData!!.lastDateSync.isEmpty() || mAccountData!!.lastDateSync != AppTools.getCurrentDate()
-        mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_DONE
-        mAccountData!!.lastDateSync = AppTools.getCurrentDate()
-        sharePrefRepository.updateAccountInformation(mAccountData!!)
+        sharePrefRepository.fetchAccountInformationDirectly().also {
+            val fromInitialSync =
+                it.lastDateSync.isEmpty() || it.lastDateSync != AppTools.getCurrentDate()
+            it.syncStatus = AccountData.SyncStatus.SYNC_DONE
+            it.lastDateSync = AppTools.getCurrentDate()
+            sharePrefRepository.updateAccountInformation(it)
 
-        if (fromInitialSync) {
-            eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE)))
+            if (fromInitialSync) {
+                eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE)))
+            }
         }
     }
 
     private fun setSynchronizationFailed() {
-        mAccountData!!.syncStatus = AccountData.SyncStatus.SYNC_FAILED
-        mAccountData!!.lastDateSync = AppTools.getCurrentDate()
-        sharePrefRepository.updateAccountInformation(mAccountData!!)
+        sharePrefRepository.fetchAccountInformationDirectly().also {
+            it.syncStatus = AccountData.SyncStatus.SYNC_FAILED
+            it.lastDateSync = AppTools.getCurrentDate()
+            sharePrefRepository.updateAccountInformation(it)
+        }
     }
 }
 

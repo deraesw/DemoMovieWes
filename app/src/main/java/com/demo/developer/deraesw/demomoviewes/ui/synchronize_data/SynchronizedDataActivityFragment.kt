@@ -44,7 +44,7 @@ class SynchronizedDataActivityFragment : Fragment() {
             if (it != null) {
                 accountData = it
                 //Meaning first time open application or clear data
-                if (it.lastDateSync == "" && it.syncStatus == AccountData.SyncStatus.NO_SYNC) {
+                if (it.isNeverSync()) {
                     lifecycleScope.launch {
                         delay(1000)
                         viewModel.callFullSyncData(it)

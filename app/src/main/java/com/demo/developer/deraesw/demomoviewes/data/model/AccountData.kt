@@ -7,13 +7,16 @@ class AccountData(
         var syncStatus : Int = 0) {
 
     val isSynchronizedOnce = lastDateSync != ""
-    val isSynchronizationNeeded : Boolean
+    val isSynchronizationNeeded: Boolean
         get() {
             return ((lastDateSync == "" || lastDateSync != AppTools.getCurrentDate())
                     && syncStatus != SyncStatus.NO_SYNC
                     && syncStatus != SyncStatus.SYNC_PROGRESS
                     )
         }
+
+    fun isNeverSync() = lastDateSync == "" && syncStatus == SyncStatus.NO_SYNC
+
     class SyncStatus {
         companion object {
             const val NO_SYNC = 0
