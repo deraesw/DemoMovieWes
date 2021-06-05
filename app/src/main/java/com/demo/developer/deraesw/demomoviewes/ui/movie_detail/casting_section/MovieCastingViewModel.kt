@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkFailed
+import com.demo.developer.deraesw.demomoviewes.extension.whenFailed
 import com.demo.developer.deraesw.demomoviewes.repository.MovieCreditsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -28,10 +28,9 @@ class MovieCastingViewModel @Inject constructor(
 
     fun fetchMovieCredits(movieId: Int) {
         viewModelScope.launch {
-            movieCreditsRepository.fetchAndSaveMovieCredits(movieId).takeIf { it is NetworkFailed }
-                ?.also {
-                    eventChannel.send(NetworkErrorEvent((it as NetworkFailed).errors))
-                }
+            movieCreditsRepository.fetchAndSaveMovieCredits(movieId).whenFailed {
+                eventChannel.send(NetworkErrorEvent(it.errors))
+            }
         }
     }
 }

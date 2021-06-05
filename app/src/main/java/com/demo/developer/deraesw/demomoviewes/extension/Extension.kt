@@ -27,6 +27,8 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkFailed
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkResults
 
 /**
  * Allows calls like
@@ -92,3 +94,8 @@ inline fun <reified T> T.error(text : String) {
     Log.e(T::class.java.simpleName, text)
 }
 
+inline fun NetworkResults.whenFailed(action: (item: NetworkFailed) -> Unit) {
+    this.takeIf { it is NetworkFailed }?.also {
+        action(it as NetworkFailed)
+    }
+}

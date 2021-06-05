@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkFailed
+import com.demo.developer.deraesw.demomoviewes.extension.whenFailed
 import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepository
 import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,9 +35,8 @@ class MoviesInTheaterViewModel @Inject constructor(
 
     fun fetchNowPlayingMoving() {
         viewModelScope.launch {
-            movieRepository.fetchAndSaveNowPlayingMovies(fromSync = false)
-                .takeIf { it is NetworkFailed }?.also {
-                eventChannel.send(NetworkErrorEvent((it as NetworkFailed).errors))
+            movieRepository.fetchAndSaveNowPlayingMovies(fromSync = false).whenFailed {
+                eventChannel.send(NetworkErrorEvent(it.errors))
             }
         }
     }

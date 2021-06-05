@@ -2,8 +2,8 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkFailed
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
+import com.demo.developer.deraesw.demomoviewes.extension.whenFailed
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -55,28 +55,22 @@ class SyncRepository
 
             eventChannel.send(MessageEvent("Fetching movie genre list..."))
 
-            genreRepository.fetchAndSaveMovieGenreInformation()
-                .takeIf { it is NetworkFailed }
-                ?.also {
-                    setFailedSync((it as NetworkFailed).errors)
-                    return@withContext
-                }
+            genreRepository.fetchAndSaveMovieGenreInformation().whenFailed {
+                setFailedSync(it.errors)
+                return@withContext
+            }
 
             eventChannel.send(MessageEvent("Fetching movies in theaters..."))
-            movieRepository.fetchAndSaveNowPlayingMovies()
-                .takeIf { it is NetworkFailed }
-                ?.also {
-                    setFailedSync((it as NetworkFailed).errors)
-                    return@withContext
-                }
+            movieRepository.fetchAndSaveNowPlayingMovies().whenFailed {
+                setFailedSync(it.errors)
+                return@withContext
+            }
 
             eventChannel.send(MessageEvent("Fetching upcoming movies..."))
-            movieRepository.fetchAndSaveUpcomingMovies()
-                .takeIf { it is NetworkFailed }
-                ?.also {
-                    setFailedSync((it as NetworkFailed).errors)
-                    return@withContext
-                }
+            movieRepository.fetchAndSaveUpcomingMovies().whenFailed {
+                setFailedSync(it.errors)
+                return@withContext
+            }
 
             if (syncStarted) {
                 setSynchronizationTerminated()
