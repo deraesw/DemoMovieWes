@@ -20,8 +20,8 @@ import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheaterBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.ui.home.HomeFragmentDirections
-import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterBottomSheet
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
+import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterWithChipBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -120,7 +120,7 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.action_filter_content -> {
-                FilterBottomSheet(genreFilterList, this, this).also {
+                FilterWithChipBottomSheet(genreFilterList, this, this).also {
                     it.show(requireActivity().supportFragmentManager, "filterGenre")
                 }
                 return true

@@ -157,4 +157,5 @@ class SynchronizedDataActivityFragmentTest {
 
         R.id.btn_retry.withId().isDisplay().isText(R.string.lbl_retry)
     }
+
 }
