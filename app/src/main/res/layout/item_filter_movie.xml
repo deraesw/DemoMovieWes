@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -8,32 +9,36 @@
             type="com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter"/>
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="clip_vertical"
-        android:padding="@dimen/padding_normal"
-        android:background="?attr/selectableItemBackground"
-        >
+        android:background="?attr/selectableItemBackground">
 
         <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/cb_genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="@={genre.checked}"
-            />
+            android:layout_marginStart="@dimen/padding_normal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_genre_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceListItem"
+            android:layout_marginStart="@dimen/padding_light"
+            android:layout_marginEnd="@dimen/padding_light"
             android:text="@{genre.name}"
-            android:paddingStart="@dimen/padding_light"
-            android:paddingLeft="@dimen/padding_light"
-            tools:text="Comedy"
-            />
+            android:textAppearance="?android:textAppearanceListItem"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_genre"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/cb_genre"
+            app:layout_constraintTop_toTopOf="@+id/cb_genre"
+            tools:text="Comedy" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
