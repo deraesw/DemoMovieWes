@@ -2,8 +2,9 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import com.demo.developer.deraesw.demomoviewes.data.dao.CastingDAO
 import com.demo.developer.deraesw.demomoviewes.data.dao.PeopleDAO
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
-import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkFailed
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkResults
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkSuccess
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,27 +18,26 @@ class MovieCreditsRepository
         private val networkRepository: NetworkRepository
 ) {
 
-    val errorNetwork: SingleLiveEvent<NetworkError> = SingleLiveEvent()
-
     fun getCastingFromMovie(movieId: Int) = castingDAO.selectCastingItemFromMovie(movieId)
 
     fun getLimitedCastingFromMovie(
-            movieId: Int,
-            limit: Int
+        movieId: Int,
+        limit: Int
     ) = castingDAO.selectLimitedCastingItemFromMovie(movieId, limit)
 
-    suspend fun fetchAndSaveMovieCredits(id: Int) {
-        withContext(Dispatchers.IO) {
+    suspend fun fetchAndSaveMovieCredits(id: Int): NetworkResults {
+        return withContext(Dispatchers.IO) {
             val result = networkRepository.fetchMovieCredits(id = id)
             if (result.errors != null) {
-                errorNetwork.postValue(result.errors)
-                return@withContext
+                return@withContext NetworkFailed(result.errors)
             }
 
             result.data?.also {
                 peopleDAO.saveListPeople(it.peoples)
                 castingDAO.saveListCasting(it.castings, it.movieId)
             }
+
+            return@withContext NetworkSuccess(true)
         }
     }
 }

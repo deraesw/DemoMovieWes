@@ -7,6 +7,9 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
@@ -15,6 +18,8 @@ import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieCastingBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -77,11 +82,16 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
                 }
             }
 
-            viewModel.errorNetwork.observe(this, {
-                if (it != null) {
-                    binding.sfCastingList.isRefreshing = false
+            lifecycleScope.launch {
+                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.eventsFlow.collect {
+                        when (it) {
+                            is NetworkErrorEvent -> binding.sfCastingList.isRefreshing = false
+                        }
+                    }
                 }
-            })
+            }
+
         }
     }
 

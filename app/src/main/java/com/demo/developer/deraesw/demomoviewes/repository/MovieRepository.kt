@@ -5,14 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
-import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
-import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
+import com.demo.developer.deraesw.demomoviewes.data.model.*
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.network.response.MovieResponse
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
-import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
 import com.demo.developer.deraesw.demomoviewes.utils.getPeopleAndCastingList
 import kotlinx.coroutines.*
 import javax.inject.Inject
@@ -33,7 +30,6 @@ class MovieRepository
 
     val scope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    val errorMessage: SingleLiveEvent<NetworkError> = SingleLiveEvent()
     val movieInTheaterWithGenres: MutableLiveData<List<MovieInTheater>> = MutableLiveData()
     val upcomingMoviesWithGenres: MutableLiveData<List<UpcomingMovie>> = MutableLiveData()
 
@@ -48,29 +44,28 @@ class MovieRepository
 
     fun getMovieGenreFromMovie(idMovie: Int) = movieToGenreDAO.observeGenreListFromMovie(idMovie)
 
-    suspend fun fetchAndSaveNowPlayingMovies(fromSync: Boolean = true): Boolean {
+    suspend fun fetchAndSaveNowPlayingMovies(fromSync: Boolean = true): NetworkResults {
         return fetchAndSaveMovies(Constant.MovieType.NOW_PLAYING_MOVIES, fromSync)
     }
 
-    suspend fun fetchAndSaveUpcomingMovies(): Boolean {
+    suspend fun fetchAndSaveUpcomingMovies(): NetworkResults {
         return fetchAndSaveMovies(Constant.MovieType.UPCOMING_MOVIES)
     }
 
     private suspend fun fetchAndSaveMovies(
         movieType: Constant.MovieType,
         fromSync: Boolean = false
-    ): Boolean {
+    ): NetworkResults {
         return withContext(Dispatchers.IO) {
             val result = networkRepository.fetchMovies(movieType, fromSync)
             if (result.errors != null) {
-                errorMessage.postValue(result.errors)
-                return@withContext false
+                return@withContext NetworkFailed(result.errors)
             }
 
             result.data?.also {
                 saveListOfMovieNetworkResponse(it)
             }
-            return@withContext true
+            return@withContext NetworkSuccess(true)
         }
     }
 

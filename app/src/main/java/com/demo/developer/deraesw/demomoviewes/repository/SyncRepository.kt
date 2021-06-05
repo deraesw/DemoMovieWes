@@ -2,6 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.repository
 
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.data.model.NetworkFailed
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import kotlinx.coroutines.Dispatchers
@@ -33,28 +34,6 @@ class SyncRepository
     private val eventChannel = Channel<SyncRepoEvent>(Channel.BUFFERED)
     override val eventsFlow = eventChannel.receiveAsFlow()
 
-    init {
-
-        //TODO remove from init and delete init
-//        movieCreditsRepository.errorNetwork.observeForever {
-//            if (it != null) {
-//                setSynchronizationFailed()
-//                val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
-//                sync.networkError = it
-//                syncStatus.postValue(sync)
-//            }
-//        }
-//
-//        movieRepository.errorMessage.observeForever {
-//            if (it != null) {
-//                setSynchronizationFailed()
-//                val sync = SynchronizationStatus(AccountData.SyncStatus.SYNC_FAILED)
-//                sync.networkError = it
-//                syncStatus.postValue(sync)
-//            }
-//        }
-    }
-
     override suspend fun initFullSynchronization(accountData: AccountData) {
         if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC
             || accountData.lastDateSync != AppTools.getCurrentDate()
@@ -75,19 +54,31 @@ class SyncRepository
             movieRepository.cleanAllData()
 
             eventChannel.send(MessageEvent("Fetching movie genre list..."))
-            genreRepository.fetchAndSaveMovieGenreInformation().also {
-                genreRepository.errorMessage?.also {
-                    setFailedSync(it)
+
+            genreRepository.fetchAndSaveMovieGenreInformation()
+                .takeIf { it is NetworkFailed }
+                ?.also {
+                    setFailedSync((it as NetworkFailed).errors)
                     return@withContext
                 }
-            }
 
             eventChannel.send(MessageEvent("Fetching movies in theaters..."))
-            var syncDone = movieRepository.fetchAndSaveNowPlayingMovies()
-            eventChannel.send(MessageEvent("Fetching upcoming movies..."))
-            syncDone = (syncDone && movieRepository.fetchAndSaveUpcomingMovies())
+            movieRepository.fetchAndSaveNowPlayingMovies()
+                .takeIf { it is NetworkFailed }
+                ?.also {
+                    setFailedSync((it as NetworkFailed).errors)
+                    return@withContext
+                }
 
-            if (syncStarted && syncDone) {
+            eventChannel.send(MessageEvent("Fetching upcoming movies..."))
+            movieRepository.fetchAndSaveUpcomingMovies()
+                .takeIf { it is NetworkFailed }
+                ?.also {
+                    setFailedSync((it as NetworkFailed).errors)
+                    return@withContext
+                }
+
+            if (syncStarted) {
                 setSynchronizationTerminated()
                 syncStarted = false
             }

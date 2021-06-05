@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
@@ -20,6 +23,8 @@ import com.demo.developer.deraesw.demomoviewes.ui.home.HomeFragmentDirections
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterBottomSheet
 import com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater.filter_movies.FilterListenerInterface
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Will display a list of movies in theater
@@ -91,11 +96,15 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
             stopRefresh()
         })
 
-        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                stopRefresh()
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.eventsFlow.collect {
+                    when (it) {
+                        is NetworkErrorEvent -> stopRefresh()
+                    }
+                }
             }
-        })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
