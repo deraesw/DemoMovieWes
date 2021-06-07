@@ -6,7 +6,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.di.SyncRepositoryModule
 import com.demo.developer.deraesw.demomoviewes.extension.*
-import com.demo.developer.deraesw.demomoviewes.repository.*
+import com.demo.developer.deraesw.demomoviewes.repository.SyncRepositoryInterface
+import com.demo.developer.deraesw.demomoviewes.repository.SyncRepositoryTest
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,12 +30,7 @@ class TestModule {
 
     @Singleton
     @Provides
-    fun provideSyncRepository(
-        genreRepository: MovieGenreRepository,
-        sharePrefRepository: SharePrefRepository,
-        movieCreditsRepository: MovieCreditsRepository,
-        movieRepository: MovieRepository
-    ): SyncRepositoryInterface = SyncRepositoryTest()
+    fun provideSyncRepository(): SyncRepositoryInterface = SyncRepositoryTest()
 }
 
 
