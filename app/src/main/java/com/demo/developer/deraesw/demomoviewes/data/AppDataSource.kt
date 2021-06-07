@@ -1,7 +1,9 @@
 package com.demo.developer.deraesw.demomoviewes.data
 
-import com.demo.developer.deraesw.demomoviewes.AppExecutors
-import com.demo.developer.deraesw.demomoviewes.data.dao.*
+import com.demo.developer.deraesw.demomoviewes.data.dao.MovieDAO
+import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
+import com.demo.developer.deraesw.demomoviewes.data.dao.PeopleDAO
+import com.demo.developer.deraesw.demomoviewes.data.dao.ProductionCompanyDao
 import com.demo.developer.deraesw.demomoviewes.extension.debug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -9,13 +11,8 @@ import kotlinx.coroutines.withContext
 class AppDataSource constructor(
     val movieGenreDAO: MovieGenreDAO,
     val movieDAO: MovieDAO,
-    val movieToGenreDAO: MovieToGenreDAO,
     private val peopleDAO: PeopleDAO,
-    private val crewDAO: CrewDAO,
-    private val castingDAO: CastingDAO,
     private val productionCompanyDao: ProductionCompanyDao,
-    private val movieToProductionDao: MovieToProductionDao,
-    private val appExecutors: AppExecutors
 ) {
 
     companion object {
@@ -24,20 +21,14 @@ class AppDataSource constructor(
         private var sInstance: AppDataSource? = null
 
         fun getInstance(
-            AppDatabase: AppDatabase,
-            appExecutors: AppExecutors
+            AppDatabase: AppDatabase
         ): AppDataSource {
             sInstance ?: synchronized(this) {
                 sInstance = AppDataSource(
                     AppDatabase.movieGenreDao(),
                     AppDatabase.movieDAO(),
-                    AppDatabase.movieToGenreDAO(),
                     AppDatabase.peopleDAO(),
-                    AppDatabase.crewDAO(),
-                    AppDatabase.castingDAO(),
-                    AppDatabase.productionCompanyDao(),
-                        AppDatabase.movieToProductionDao(),
-                        appExecutors
+                    AppDatabase.productionCompanyDao()
                 )
             }
 

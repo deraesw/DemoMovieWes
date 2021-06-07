@@ -1,7 +1,6 @@
 package com.demo.developer.deraesw.demomoviewes.di
 
 import android.content.Context
-import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.AppDatabase
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
@@ -24,8 +23,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideAppDataSource(appDatabase: AppDatabase, appExecutors: AppExecutors): AppDataSource {
-        return AppDataSource.getInstance(appDatabase, appExecutors)
+    fun provideAppDataSource(appDatabase: AppDatabase): AppDataSource {
+        return AppDataSource.getInstance(appDatabase)
     }
 
     @Singleton

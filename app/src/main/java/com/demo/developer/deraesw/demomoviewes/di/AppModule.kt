@@ -1,6 +1,5 @@
 package com.demo.developer.deraesw.demomoviewes.di
 
-import com.demo.developer.deraesw.demomoviewes.AppExecutors
 import com.demo.developer.deraesw.demomoviewes.network.MoviedbAPI
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 import com.google.gson.Gson
@@ -16,11 +15,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 class AppModule {
-
-    @Provides
-    fun provideAppExecutors(): AppExecutors {
-        return AppExecutors.getInstance()
-    }
 
     @Singleton
     @Provides
