@@ -56,7 +56,7 @@ class MovieDetailActivityFragment : Fragment(),
             }
         }
 
-        movieId = args.EXTRAMOVIEID
+        movieId = args.movieId
 
         binding.apply {
             var isToolbarShown = false

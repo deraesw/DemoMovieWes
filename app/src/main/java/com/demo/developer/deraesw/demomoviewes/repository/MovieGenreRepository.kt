@@ -1,65 +1,39 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
-import androidx.lifecycle.LiveData
-import com.demo.developer.deraesw.demomoviewes.AppExecutors
-import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
+import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
-import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkException
-import com.demo.developer.deraesw.demomoviewes.extension.debug
-import com.demo.developer.deraesw.demomoviewes.extension.error
-import com.demo.developer.deraesw.demomoviewes.network.MovieGenreCallHandler
-import com.demo.developer.deraesw.demomoviewes.utils.SingleLiveEvent
+import com.demo.developer.deraesw.demomoviewes.data.model.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
+
+interface MovieGenreRepositoryInterface {
+    val mMovieGenreList: Flow<List<MovieGenre>>
+}
 
 @Singleton
 class MovieGenreRepository
 @Inject constructor(
-        private val movieGenreCallHandler: MovieGenreCallHandler ,
-        private val appDataSource: AppDataSource,
-        private val appExecutors: AppExecutors){
+    private val networkRepository: NetworkRepository,
+    private val movieGenreDAO: MovieGenreDAO
+) : MovieGenreRepositoryInterface {
 
-    var syncInformationMessage : SingleLiveEvent<String> = SingleLiveEvent()
-    val mMovieGenreList : LiveData<List<MovieGenre>> = appDataSource.movieGenreDAO.selectAllMovieGenre()
-    val mGenreForFilter : LiveData<List<GenreFilter>> = appDataSource.movieGenreDAO.selectAllMovieGenreForFilter()
+    override val mMovieGenreList = movieGenreDAO.selectAllMovieGenre()
 
-    val errorMessage : SingleLiveEvent<String> = SingleLiveEvent()
+    suspend fun fetchAndSaveMovieGenreInformation(): NetworkResults {
+        return withContext(Dispatchers.IO) {
+            val result = networkRepository.fetchMoviesGenreInformation()
 
-
-    suspend fun fetchAndSaveMovieGenreInformation(): Boolean {
-        syncInformationMessage.postValue("Fetching movie genre list...")
-        return try {
-            val list = movieGenreCallHandler.getGenreMovieList()
-            appDataSource.saveListMovieGenre(list)
-            true
-        } catch (net: NetworkException) {
-            errorMessage.postValue(net.message)
-            false
-        } catch (io: IOException) {
-            errorMessage.postValue(io.message)
-            false
-        }
-    }
-
-    companion object {
-        @Volatile private var sInstance : MovieGenreRepository? = null
-
-        fun getInstance(
-                movieGenreCallHandler: MovieGenreCallHandler ,
-                appDataSource: AppDataSource,
-                appExecutors: AppExecutors) : MovieGenreRepository {
-            sInstance ?: synchronized(this){
-                sInstance = MovieGenreRepository(
-                        movieGenreCallHandler,
-                        appDataSource,
-                        appExecutors)
+            if (result.errors != null) {
+                return@withContext NetworkFailed(result.errors)
             }
 
-            return sInstance!!
+            result.data?.also {
+                movieGenreDAO.bulkForceInsert(it)
+            }
+            return@withContext NetworkSuccess(true)
         }
     }
 }

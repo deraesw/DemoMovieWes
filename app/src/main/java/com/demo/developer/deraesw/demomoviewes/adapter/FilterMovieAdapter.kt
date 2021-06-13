@@ -1,12 +1,11 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemFilterMovieBinding
 
@@ -35,16 +34,11 @@ class FilterMovieAdapter(val handler: FilterMovieAdapterInterface)
 
         init {
             binding.root.setOnClickListener(this)
-//            binding!!.cbGenre.setOnClickListener {
-//                handler.clickOnItem(
-//                        mList.get(adapterPosition).id,
-//                        binding!!.cbGenre.isChecked)
-//            }
         }
 
         override fun onClick(p0: View?) {
-            val checkStatus =  !(binding!!.cbGenre.isChecked)
-            binding!!.cbGenre.isChecked = checkStatus
+            val checkStatus = !(binding.cbGenre.isChecked)
+            binding.cbGenre.isChecked = checkStatus
             handler.clickOnItem(getItem(adapterPosition).id, checkStatus)
         }
 

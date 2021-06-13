@@ -16,9 +16,9 @@ android {
         applicationId "com.demo.developer.deraesw.demomoviewes"
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode 2
-        versionName "1.1"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionCode 3
+        versionName "1.2"
+        testInstrumentationRunner "com.demo.developer.deraesw.demomoviewes.CustomTestRunner"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -61,6 +61,10 @@ android {
     // work-runtime-ktx 2.1.0 and above now requires Java 8
     kotlinOptions {
         jvmTarget = "1.8"
+
+        // Enable Coroutines and Flow APIs
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.FlowPreview"
     }
 }
 
@@ -104,6 +108,11 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
+    //DataStore
+    implementation "androidx.datastore:datastore-preferences:$rootProject.datastorePreferencesVersion"
+
+    //Extra libraries
+
     //Glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
@@ -115,12 +124,15 @@ dependencies {
 
 
     //Testing dependencies
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation "androidx.test.ext:junit:1.1.1"
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
-    testImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    androidTestImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation "androidx.test.ext:junit:1.1.2"
+    androidTestImplementation 'androidx.test:rules:1.3.0'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
     androidTestImplementation "androidx.work:work-testing:$rootProject.workVersion"
-    implementation 'androidx.arch.core:core-testing:2.1.0'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.35'
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
+    testImplementation 'junit:junit:4.13.2'
+
 }

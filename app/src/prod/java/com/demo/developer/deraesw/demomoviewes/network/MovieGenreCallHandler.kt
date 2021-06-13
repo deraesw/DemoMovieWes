@@ -36,16 +36,4 @@ class MovieGenreCallHandler
             list.await()
         }
     }
-
-    companion object {
-
-        private var mInstance : MovieGenreCallHandler? = null
-
-        fun getInstance() : MovieGenreCallHandler {
-            mInstance ?: synchronized(this) {
-                mInstance = MovieGenreCallHandler()
-            }
-            return mInstance!!
-        }
-    }
 }

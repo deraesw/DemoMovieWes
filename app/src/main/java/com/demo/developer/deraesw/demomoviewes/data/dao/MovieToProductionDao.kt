@@ -16,5 +16,5 @@ interface MovieToProductionDao : BaseDao<MovieToProduction> {
     fun selectProductionFromMovie(movieId : Int) : LiveData<List<ProductionCompany>>
 
     @Query("DELETE FROM movie_to_production")
-    fun removeAll()
+    suspend fun removeAll()
 }

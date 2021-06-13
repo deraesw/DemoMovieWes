@@ -7,7 +7,9 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
@@ -16,15 +18,17 @@ import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieCastingBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
 
-    private val viewModel: MovieCastingViewModel by viewModels()
     private lateinit var adapter: CastingAdapter
     private lateinit var binding: FragmentMovieCastingBinding
 
+    private val viewModel: MovieCastingViewModel by viewModels()
     private val args: MovieCastingFragmentArgs by navArgs()
     private var movieId: Int = 0
     private var originalList: List<CastingItem> = ArrayList()
@@ -37,7 +41,7 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
     ): View {
         binding = FragmentMovieCastingBinding.inflate(layoutInflater, container, false)
 
-        movieId = args.EXTRAMOVIEID
+        movieId = args.movieId
 
         (activity as AppCompatActivity).apply {
             setSupportActionBar(binding.castingToolbar)
@@ -58,6 +62,18 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
         }
 
         setHasOptionsMenu(true)
+
+        lifecycleScope.launch {
+            viewModel
+                .eventsFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    when (it) {
+                        is NetworkErrorEvent -> binding.sfCastingList.isRefreshing = false
+                    }
+                }
+        }
+
         return binding.root
     }
 
@@ -66,25 +82,17 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
 
         if (movieId != 0) {
 
-            viewModel.getMovieCasting(movieId).observe(viewLifecycleOwner, Observer {
-                if (it != null) {
-                    if (it.isNotEmpty()) {
-                        originalList = it
-                        manageItems()
-                    }
+            viewModel.getMovieCasting(movieId).observe(viewLifecycleOwner) { list ->
+                if (list != null) {
+                    originalList = list
+                    manageItems()
                 }
 
                 if (binding.sfCastingList.isRefreshing) {
                     binding.sfCastingList.isRefreshing = false
                     binding.rvCastingList.scrollToPosition(0)
                 }
-            })
-
-            viewModel.errorNetwork.observe(this, {
-                if (it != null) {
-                    binding.sfCastingList.isRefreshing = false
-                }
-            })
+            }
         }
     }
 
@@ -98,10 +106,6 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
         }
 
         super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onQueryTextSubmit(query: String?) = true

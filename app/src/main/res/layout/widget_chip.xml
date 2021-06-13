@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="genreFilter"
+            type="com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter" />
+    </data>
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:text="@{genreFilter.name}"
+        app:chipBackgroundColor="@color/selector_filter_chip"
+        android:checked="@{genreFilter.checked ? true : false}" />
+</layout>
+
