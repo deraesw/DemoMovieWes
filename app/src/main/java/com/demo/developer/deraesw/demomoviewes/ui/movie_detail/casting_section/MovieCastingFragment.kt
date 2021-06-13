@@ -41,7 +41,7 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
     ): View {
         binding = FragmentMovieCastingBinding.inflate(layoutInflater, container, false)
 
-        movieId = args.EXTRAMOVIEID
+        movieId = args.movieId
 
         (activity as AppCompatActivity).apply {
             setSupportActionBar(binding.castingToolbar)
