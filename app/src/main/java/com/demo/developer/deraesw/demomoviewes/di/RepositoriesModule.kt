@@ -16,13 +16,11 @@ class SyncRepositoryModule {
     @Provides
     fun provideSyncRepository(
         genreRepository: MovieGenreRepository,
-        sharePrefRepository: SharePrefRepository,
-        movieCreditsRepository: MovieCreditsRepository,
+        preferenceDataStoreRepository: PreferenceDataStoreRepository,
         movieRepository: MovieRepository
     ): SyncRepositoryInterface = SyncRepository(
         genreRepository,
-        sharePrefRepository,
-        movieCreditsRepository,
+        preferenceDataStoreRepository,
         movieRepository
     )
 

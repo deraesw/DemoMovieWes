@@ -3,11 +3,13 @@ package com.demo.developer.deraesw.demomoviewes.repository
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
 import com.demo.developer.deraesw.demomoviewes.data.model.SynchronizationStatus
+import com.demo.developer.deraesw.demomoviewes.extension.debug
 import com.demo.developer.deraesw.demomoviewes.extension.whenFailed
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -17,15 +19,14 @@ interface SyncRepositoryInterface {
     val eventsFlow: Flow<SyncRepoEvent>
 
     suspend fun initFullSynchronization(accountData: AccountData)
-    fun resetStatus(accountData: AccountData)
+    suspend fun resetStatus(accountData: AccountData)
 }
 
 @Singleton
 class SyncRepository
 @Inject constructor(
     val genreRepository: MovieGenreRepository,
-    val sharePrefRepository: SharePrefRepository,
-    val movieCreditsRepository: MovieCreditsRepository,
+    val preferenceDataStoreRepository: PreferenceDataStoreRepository,
     val movieRepository: MovieRepository
 ) : SyncRepositoryInterface {
 
@@ -38,7 +39,7 @@ class SyncRepository
         if (accountData.syncStatus == AccountData.SyncStatus.NO_SYNC
             || accountData.lastDateSync != AppTools.getCurrentDate()
         ) {
-            sharePrefRepository.updateAccountInformation(accountData.apply {
+            preferenceDataStoreRepository.updateAccountInformation(accountData.apply {
                 syncStatus = AccountData.SyncStatus.SYNC_PROGRESS
             })
 
@@ -86,21 +87,21 @@ class SyncRepository
         eventChannel.send(SynchronizationStatusEvent(sync))
     }
 
-    override fun resetStatus(accountData: AccountData) {
-        sharePrefRepository.updateAccountInformation(accountData.apply {
+    override suspend fun resetStatus(accountData: AccountData) {
+        preferenceDataStoreRepository.updateAccountInformation(accountData.apply {
             syncStatus = AccountData.SyncStatus.NO_SYNC
             lastDateSync = ""
-            sharePrefRepository.updateAccountInformation(this)
         })
     }
 
     private suspend fun setSynchronizationTerminated() {
-        sharePrefRepository.fetchAccountInformationDirectly().also {
+        preferenceDataStoreRepository.accountData.first().also {
+            debug(it.toString())
             val fromInitialSync =
                 it.lastDateSync.isEmpty() || it.lastDateSync != AppTools.getCurrentDate()
             it.syncStatus = AccountData.SyncStatus.SYNC_DONE
             it.lastDateSync = AppTools.getCurrentDate()
-            sharePrefRepository.updateAccountInformation(it)
+            preferenceDataStoreRepository.updateAccountInformation(it)
 
             if (fromInitialSync) {
                 eventChannel.send(SynchronizationStatusEvent(SynchronizationStatus(AccountData.SyncStatus.SYNC_INIT_DONE)))
@@ -108,11 +109,12 @@ class SyncRepository
         }
     }
 
-    private fun setSynchronizationFailed() {
-        sharePrefRepository.fetchAccountInformationDirectly().also {
+    private suspend fun setSynchronizationFailed() {
+        preferenceDataStoreRepository.accountData.first().also {
+            debug(it.toString())
             it.syncStatus = AccountData.SyncStatus.SYNC_FAILED
             it.lastDateSync = AppTools.getCurrentDate()
-            sharePrefRepository.updateAccountInformation(it)
+            preferenceDataStoreRepository.updateAccountInformation(it)
         }
     }
 }

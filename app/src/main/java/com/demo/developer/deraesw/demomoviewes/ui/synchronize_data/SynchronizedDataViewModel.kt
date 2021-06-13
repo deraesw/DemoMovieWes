@@ -2,9 +2,10 @@ package com.demo.developer.deraesw.demomoviewes.ui.synchronize_data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
-import com.demo.developer.deraesw.demomoviewes.repository.SharePrefRepository
+import com.demo.developer.deraesw.demomoviewes.repository.PreferenceDataStoreRepository
 import com.demo.developer.deraesw.demomoviewes.repository.SyncRepositoryInterface
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,10 +16,10 @@ import javax.inject.Inject
 class SynchronizedDataViewModel
 @Inject constructor(
     private val syncRepository: SyncRepositoryInterface,
-    sharePrefRepository: SharePrefRepository
+    preferenceDataStoreRepository: PreferenceDataStoreRepository
 ) : ViewModel() {
 
-    val accountData: LiveData<AccountData> = sharePrefRepository.account
+    val accountData: LiveData<AccountData> = preferenceDataStoreRepository.accountData.asLiveData()
     val eventsFlow = syncRepository.eventsFlow
 
     fun callFullSyncData(accountData: AccountData) {
@@ -28,6 +29,8 @@ class SynchronizedDataViewModel
     }
 
     fun resetFailedStatus(accountData: AccountData) {
-        syncRepository.resetStatus(accountData)
+        viewModelScope.launch {
+            syncRepository.resetStatus(accountData)
+        }
     }
 }

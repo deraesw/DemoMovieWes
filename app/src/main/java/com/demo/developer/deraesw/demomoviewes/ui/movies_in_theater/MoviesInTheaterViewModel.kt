@@ -2,6 +2,7 @@ package com.demo.developer.deraesw.demomoviewes.ui.movies_in_theater
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
@@ -21,10 +22,10 @@ class MoviesInTheaterViewModel @Inject constructor(
     private val movieGenreRepository: MovieGenreRepository
 ) : ViewModel() {
 
-    val movieList: LiveData<List<MovieInTheater>> = movieRepository.moviesInTheater
+    val movieList: LiveData<List<MovieInTheater>> = movieRepository.moviesInTheater.asLiveData()
     val movieInTheaterWithGender: LiveData<List<MovieInTheater>> =
         movieRepository.movieInTheaterWithGenres
-    val movieGenre: LiveData<List<MovieGenre>> = movieGenreRepository.mMovieGenreList
+    val movieGenre: LiveData<List<MovieGenre>> = movieGenreRepository.mMovieGenreList.asLiveData()
 
     private val eventChannel = Channel<MoviesInTheaterViewModelEvent>(Channel.BUFFERED)
     val eventsFlow = eventChannel.receiveAsFlow()

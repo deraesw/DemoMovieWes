@@ -108,6 +108,11 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     kapt "com.google.dagger:hilt-compiler:$rootProject.hiltVersion"
 
+    //DataStore
+    implementation "androidx.datastore:datastore-preferences:$rootProject.datastorePreferencesVersion"
+
+    //Extra libraries
+
     //Glide
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
