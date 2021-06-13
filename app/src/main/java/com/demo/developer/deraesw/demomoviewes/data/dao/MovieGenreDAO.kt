@@ -5,12 +5,13 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
 import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieGenreDAO : BaseDao<MovieGenre> {
 
     @Query("SELECT * FROM movie_genre ORDER BY name")
-    fun selectAllMovieGenre(): LiveData<List<MovieGenre>>
+    fun selectAllMovieGenre(): Flow<List<MovieGenre>>
 
     @Query("SELECT * FROM movie_genre ORDER BY name")
     fun selectAllMovieGenreForFilter(): LiveData<List<GenreFilter>>

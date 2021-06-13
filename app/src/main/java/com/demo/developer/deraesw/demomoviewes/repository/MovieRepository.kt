@@ -1,7 +1,7 @@
 package com.demo.developer.deraesw.demomoviewes.repository
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import com.demo.developer.deraesw.demomoviewes.data.AppDataSource
 import com.demo.developer.deraesw.demomoviewes.data.dao.*
 import com.demo.developer.deraesw.demomoviewes.data.entity.*
@@ -33,11 +33,11 @@ class MovieRepository
     val movieInTheaterWithGenres: MutableLiveData<List<MovieInTheater>> = MutableLiveData()
     val upcomingMoviesWithGenres: MutableLiveData<List<UpcomingMovie>> = MutableLiveData()
 
-    val movieList: LiveData<List<Movie>> = movieDAO.selectAllMovies()
-    val moviesInTheater: LiveData<List<MovieInTheater>> = movieDAO.selectMoviesInTheater()
-    val upcomingMovies: LiveData<List<UpcomingMovie>> = movieDAO.selectUpcomingMovies()
+    val movieList = movieDAO.selectAllMovies()
+    val moviesInTheater = movieDAO.selectMoviesInTheater()
+    val upcomingMovies = movieDAO.selectUpcomingMovies()
 
-    fun getMovieDetail(id: Int) = movieDAO.selectMovie(id)
+    fun getMovieDetail(id: Int) = movieDAO.selectMovie(id).asLiveData()
 
     fun getProductionFromMovie(movieId: Int) =
         movieToProductionDao.selectProductionFromMovie(movieId)

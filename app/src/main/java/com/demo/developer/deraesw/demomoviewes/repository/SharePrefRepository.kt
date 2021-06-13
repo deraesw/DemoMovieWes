@@ -45,16 +45,4 @@ class SharePrefRepository
 
         return accountData
     }
-
-    companion object {
-        @Volatile private var sInstance :SharePrefRepository? = null
-
-        fun getInstance(context: Context) : SharePrefRepository {
-            sInstance ?: synchronized(this){
-                sInstance = SharePrefRepository(context)
-            }
-
-            return sInstance!!
-        }
-    }
 }

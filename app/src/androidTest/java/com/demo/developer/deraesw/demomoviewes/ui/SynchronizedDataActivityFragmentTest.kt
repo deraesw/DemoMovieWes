@@ -8,13 +8,9 @@ import com.demo.developer.deraesw.demomoviewes.di.SyncRepositoryModule
 import com.demo.developer.deraesw.demomoviewes.extension.*
 import com.demo.developer.deraesw.demomoviewes.repository.SyncRepositoryInterface
 import com.demo.developer.deraesw.demomoviewes.repository.SyncRepositoryTest
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
@@ -22,17 +18,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import javax.inject.Inject
-import javax.inject.Singleton
-
-@Module
-@InstallIn(SingletonComponent::class)
-class TestModule {
-
-    @Singleton
-    @Provides
-    fun provideSyncRepository(): SyncRepositoryInterface = SyncRepositoryTest()
-}
-
 
 @RunWith(AndroidJUnit4::class)
 @UninstallModules(SyncRepositoryModule::class)
