@@ -53,6 +53,7 @@ class SynchronizedDataActivityFragment : Fragment() {
             }
         })
 
+        //Method 1, using lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED), more suited for multi flow
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.eventsFlow.collect {

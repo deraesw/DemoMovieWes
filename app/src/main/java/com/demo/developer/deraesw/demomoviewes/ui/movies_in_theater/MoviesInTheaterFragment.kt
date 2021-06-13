@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.*
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
@@ -39,8 +36,8 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
 
     private var originalList: List<MovieInTheater> = listOf()
     private var filterItem: List<Int> = listOf()
-    private var allGenreList : List<MovieGenre> = listOf()
-    private var genreFilterList : List<GenreFilter> = listOf()
+    private var allGenreList: List<MovieGenre> = listOf()
+    private var genreFilterList: List<GenreFilter> = listOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +45,10 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?): View {
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
         binding = FragmentMoviesInTheaterBinding.inflate(layoutInflater)
 
@@ -66,6 +64,18 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
         }
 
         binding.sfMoviesInTheatersList.setOnRefreshListener(this@MoviesInTheaterFragment::fetchMoviesInTheater)
+
+        //Method 2, using flowWithLifecycle (see SynchronizedDataActivityFragment)
+        lifecycleScope.launch {
+            viewModel
+                .eventsFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    when (it) {
+                        is NetworkErrorEvent -> stopRefresh()
+                    }
+                }
+        }
 
         return binding.root
     }
@@ -95,16 +105,6 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
             manageFilterContentView()
             stopRefresh()
         })
-
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.eventsFlow.collect {
-                    when (it) {
-                        is NetworkErrorEvent -> stopRefresh()
-                    }
-                }
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -118,7 +118,7 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             R.id.action_filter_content -> {
                 FilterWithChipBottomSheet(genreFilterList, this, this).also {
                     it.show(requireActivity().supportFragmentManager, "filterGenre")
@@ -133,7 +133,7 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     override fun clickOnItem(id: Int, view: View) {
         val direction = HomeFragmentDirections.actionHomeFragmentToMovieDetailActivityFragment(id)
         val extras = FragmentNavigatorExtras(
-                view to "movie_poster"
+            view to "movie_poster"
         )
         this.findNavController().navigate(direction, extras)
     }
@@ -155,9 +155,9 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
         manageFilterContentView()
     }
 
-    private fun manageItems(){
+    private fun manageItems() {
         var filterList = originalList
-        if(filterItem.isNotEmpty()){
+        if (filterItem.isNotEmpty()) {
             filterList = filterList.filter {
                 it.genres.any { movieGenre ->
                     filterItem.contains(movieGenre.id)
@@ -168,12 +168,12 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
         adapter.submitList(filterList)
     }
 
-    private fun manageFilterContentView(){
-        if(filterItem.isNotEmpty()){
+    private fun manageFilterContentView() {
+        if (filterItem.isNotEmpty()) {
             binding.llFilterContent.visibility = View.VISIBLE
             val filterContent = allGenreList.filter {
                 filterItem.contains(it.id)
-            } .sortedBy {
+            }.sortedBy {
                 it.name
             }.joinToString(transform = {
                 it.name
@@ -191,7 +191,7 @@ class MoviesInTheaterFragment : Fragment(), MovieInTheaterAdapter.MovieInTheater
     }
 
     private fun stopRefresh() {
-        if(binding.sfMoviesInTheatersList.isRefreshing) {
+        if (binding.sfMoviesInTheatersList.isRefreshing) {
             binding.sfMoviesInTheatersList.isRefreshing = false
         }
     }

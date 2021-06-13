@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
@@ -62,6 +62,18 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
         }
 
         setHasOptionsMenu(true)
+
+        lifecycleScope.launch {
+            viewModel
+                .eventsFlow
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect {
+                    when (it) {
+                        is NetworkErrorEvent -> binding.sfCastingList.isRefreshing = false
+                    }
+                }
+        }
+
         return binding.root
     }
 
@@ -81,17 +93,6 @@ class MovieCastingFragment : Fragment(), SearchView.OnQueryTextListener {
                     binding.rvCastingList.scrollToPosition(0)
                 }
             }
-
-            lifecycleScope.launch {
-                lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    viewModel.eventsFlow.collect {
-                        when (it) {
-                            is NetworkErrorEvent -> binding.sfCastingList.isRefreshing = false
-                        }
-                    }
-                }
-            }
-
         }
     }
 
