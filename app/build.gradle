@@ -31,27 +31,27 @@ android {
         }
     }
 
-    flavorDimensions "default"
+//    flavorDimensions "default"
+//
+//    productFlavors {
+//
+//        prod {
+//            dimension "default"
+//            resValue "string", "app_name", "Movies App"
+//        }
 
-    productFlavors {
+//        mock {
+//            dimension "default"
+//            applicationIdSuffix = ".mock"
+//            resValue "string", "app_name", "Movies App - Mock"
+//        }
+//    }
 
-        prod {
-            dimension "default"
-            resValue "string", "app_name", "Movies App"
-        }
-
-        mock {
-            dimension "default"
-            applicationIdSuffix = ".mock"
-            resValue "string", "app_name", "Movies App - Mock"
-        }
-    }
-
-    android.variantFilter { variant ->
-        if (variant.buildType.name == 'release' && variant.flavors[0].name == 'mock') {
-            variant.ignore = true
-        }
-    }
+//    android.variantFilter { variant ->
+//        if (variant.buildType.name == 'release' && variant.flavors[0].name == 'mock') {
+//            variant.ignore = true
+//        }
+//    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
