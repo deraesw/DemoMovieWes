@@ -47,7 +47,7 @@ object ArchitectureComponent {
     }
 
     object Room {
-        const val VERSION = "2.5.0"
+        const val VERSION = "2.3.0"
 
         const val ROOM_RUNTIME = "androidx.room:room-runtime:$VERSION"
         const val ROOM_KTX = "androidx.room:room-ktx:$VERSION"
@@ -81,7 +81,7 @@ object Retrofit {
 
     const val RETROFIT = "com.squareup.retrofit2:retrofit:$VERSION"
     const val CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:$VERSION"
-    const val LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:$VERSION"
+    const val LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:4.7.2"
 }
 
 object TestingDependencies {
