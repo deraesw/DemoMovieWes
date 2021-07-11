@@ -34,7 +34,7 @@ object ArchitectureComponent {
     }
 
     object Navigation {
-        private const val VERSION = "2.3.5"
+        const val VERSION = "2.3.5"
 
         const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:$VERSION"
         const val NAVIGATION_UI = "androidx.navigation:navigation-ui-ktx:$VERSION"

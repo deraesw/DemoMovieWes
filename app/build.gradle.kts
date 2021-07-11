@@ -44,27 +44,20 @@ android {
     }
 
 
-//    flavorDimensions "default"
-//
-//    productFlavors {
-//
-//        prod {
-//            dimension "default"
-//            resValue "string", "app_name", "Movies App"
-//        }
+    flavorDimensions("default")
 
-//        mock {
-//            dimension "default"
-//            applicationIdSuffix = ".mock"
-//            resValue "string", "app_name", "Movies App - Mock"
-//        }
-//    }
+    productFlavors {
+        create("prod") {
+            dimension = "default"
+            resValue("string", "app_name", "Movies App")
+        }
 
-//    android.variantFilter { variant ->
-//        if (variant.buildType.name == 'release' && variant.flavors[0].name == 'mock') {
-//            variant.ignore = true
-//        }
-//    }
+        create("mock") {
+            dimension = "default"
+            applicationIdSuffix = ".mock"
+            resValue("string", "app_name", "Movies App - Mock")
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
