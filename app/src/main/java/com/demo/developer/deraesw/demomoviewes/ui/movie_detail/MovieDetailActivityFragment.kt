@@ -17,7 +17,6 @@ import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBi
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.inc_movie_detail_casting_section.view.*
 
 /**
  * A placeholder fragment containing a simple view.
@@ -77,7 +76,7 @@ class MovieDetailActivityFragment : Fragment(),
         productionRecyclerView.setHasFixedSize(true)
         productionRecyclerView.adapter = adapter
 
-        binding.incMovieContentInfo.incMovieCastingMember.rv_casting_member.apply {
+        binding.incMovieContentInfo.incMovieCastingMember.rvCastingMember.apply {
             setLinearLayout(hasDivider = false, isVertical = false)
             adapter = castingAdapter
         }
@@ -126,7 +125,8 @@ class MovieDetailActivityFragment : Fragment(),
                                 CastingItem(name = "See more", specialItemAction = true))
                         )
                     } else {
-                        binding.incMovieContentInfo.incMovieCastingMember.tv_no_castings_found.visibility = View.VISIBLE
+                        binding.incMovieContentInfo.incMovieCastingMember.tvNoCastingsFound.visibility =
+                            View.VISIBLE
                     }
                 }
             })
