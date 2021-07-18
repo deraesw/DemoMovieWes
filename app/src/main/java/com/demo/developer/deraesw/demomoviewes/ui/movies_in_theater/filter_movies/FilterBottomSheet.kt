@@ -8,7 +8,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.FilterMovieAdapter
-import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
+import com.demo.developer.deraesw.demomoviewes.core.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

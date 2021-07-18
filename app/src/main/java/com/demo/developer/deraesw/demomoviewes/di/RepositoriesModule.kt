@@ -1,7 +1,7 @@
 package com.demo.developer.deraesw.demomoviewes.di
 
-import com.demo.developer.deraesw.demomoviewes.data.dao.MovieGenreDAO
-import com.demo.developer.deraesw.demomoviewes.repository.*
+import com.demo.developer.deraesw.demomoviewes.core.data.dao.MovieGenreDAO
+import com.demo.developer.deraesw.demomoviewes.core.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

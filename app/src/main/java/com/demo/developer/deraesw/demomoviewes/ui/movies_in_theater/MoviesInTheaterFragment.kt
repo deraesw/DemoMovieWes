@@ -11,9 +11,9 @@ import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.FilterMovieAdapter
 import com.demo.developer.deraesw.demomoviewes.adapter.MovieInTheaterAdapter
-import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
-import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
-import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.core.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.core.data.model.GenreFilter
+import com.demo.developer.deraesw.demomoviewes.core.data.model.MovieInTheater
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMoviesInTheaterBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.ui.home.HomeFragmentDirections

@@ -6,7 +6,7 @@
 
         <variable
             name="genreFilter"
-            type="com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter" />
+            type="com.demo.developer.deraesw.demomoviewes.core.data.model.GenreFilter" />
     </data>
 
     <com.google.android.material.chip.Chip

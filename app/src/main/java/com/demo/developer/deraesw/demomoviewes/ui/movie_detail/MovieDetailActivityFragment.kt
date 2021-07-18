@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.demo.developer.deraesw.demomoviewes.adapter.MovieDetailCastingAdapter
 import com.demo.developer.deraesw.demomoviewes.adapter.ProductionAdapter
-import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
+import com.demo.developer.deraesw.demomoviewes.core.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieDetailBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section.MovieCastingViewModel

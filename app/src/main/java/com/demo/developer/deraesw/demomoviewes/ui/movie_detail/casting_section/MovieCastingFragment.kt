@@ -14,7 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.CastingAdapter
-import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
+import com.demo.developer.deraesw.demomoviewes.core.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentMovieCastingBinding
 import com.demo.developer.deraesw.demomoviewes.extension.setLinearLayout
 import dagger.hilt.android.AndroidEntryPoint

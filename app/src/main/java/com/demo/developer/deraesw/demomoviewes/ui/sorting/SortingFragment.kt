@@ -2,17 +2,14 @@ package com.demo.developer.deraesw.demomoviewes.ui.sorting
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.SortingAdapter
-import com.demo.developer.deraesw.demomoviewes.data.model.SortItem
+import com.demo.developer.deraesw.demomoviewes.core.data.model.SortItem
 import com.demo.developer.deraesw.demomoviewes.utils.Constant
 
 

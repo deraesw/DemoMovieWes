@@ -1,12 +1,12 @@
 package com.demo.developer.deraesw.demomoviewes.ui
 
-import androidx.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import android.widget.TextView
-import com.demo.developer.deraesw.demomoviewes.data.entity.Movie
-import com.demo.developer.deraesw.demomoviewes.data.model.MovieInTheater
-import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
+import androidx.databinding.BindingAdapter
+import com.demo.developer.deraesw.demomoviewes.core.data.entity.Movie
+import com.demo.developer.deraesw.demomoviewes.core.data.model.MovieInTheater
+import com.demo.developer.deraesw.demomoviewes.core.data.model.UpcomingMovie
 import com.demo.developer.deraesw.demomoviewes.extension.setAmountWithSuffix
 import com.demo.developer.deraesw.demomoviewes.extension.setImageUrl
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools

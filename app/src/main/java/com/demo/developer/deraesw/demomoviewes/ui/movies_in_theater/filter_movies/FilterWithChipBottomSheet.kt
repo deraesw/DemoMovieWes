@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.FilterMovieAdapter
-import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
+import com.demo.developer.deraesw.demomoviewes.core.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.databinding.WidgetChipBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.ChipGroup

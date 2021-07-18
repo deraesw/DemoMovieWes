@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.demo.developer.deraesw.demomoviewes.R
 import com.demo.developer.deraesw.demomoviewes.adapter.HomePageAdapter
-import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.core.data.model.AccountData
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentHomeBinding
 import com.demo.developer.deraesw.demomoviewes.utils.AppTools
 import com.google.android.material.tabs.TabLayoutMediator

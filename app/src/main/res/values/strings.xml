@@ -1,4 +1,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="app_name">"Movies App</string>
+
     <!-- title view -->
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
     <string name="title_movies_in_theater">Movies in theater</string>

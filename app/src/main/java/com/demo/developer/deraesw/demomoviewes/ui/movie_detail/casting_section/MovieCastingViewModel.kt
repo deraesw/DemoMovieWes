@@ -3,9 +3,9 @@ package com.demo.developer.deraesw.demomoviewes.ui.movie_detail.casting_section
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkError
-import com.demo.developer.deraesw.demomoviewes.extension.whenFailed
-import com.demo.developer.deraesw.demomoviewes.repository.MovieCreditsRepository
+import com.demo.developer.deraesw.demomoviewes.core.data.model.NetworkError
+import com.demo.developer.deraesw.demomoviewes.core.extension.whenFailed
+import com.demo.developer.deraesw.demomoviewes.core.repository.MovieCreditsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow

@@ -43,22 +43,6 @@ android {
         dataBinding = true
     }
 
-
-    flavorDimensions("default")
-
-    productFlavors {
-        create("prod") {
-            dimension = "default"
-            resValue("string", "app_name", "Movies App")
-        }
-
-        create("mock") {
-            dimension = "default"
-            applicationIdSuffix = ".mock"
-            resValue("string", "app_name", "Movies App - Mock")
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -78,6 +62,8 @@ dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$KOTLIN_VERSION")
 
+    implementation(project(":core"))
+
     //Coroutines
     implementation(Coroutines.COROUTINES_ANDROID)
     implementation(Coroutines.COROUTINES_CORE)
@@ -94,11 +80,6 @@ dependencies {
     implementation(ArchitectureComponent.Lifecycle.RUNTIME)
     implementation(ArchitectureComponent.Lifecycle.EXTENSIONS)
 
-    //ROOM
-    implementation(ArchitectureComponent.Room.ROOM_RUNTIME)
-    implementation(ArchitectureComponent.Room.ROOM_KTX)
-    kapt(ArchitectureComponent.Room.ROOM_COMPILER)
-
     //Work manager
     implementation(ArchitectureComponent.WorkManager.WORK)
 
@@ -112,9 +93,6 @@ dependencies {
     //Hilt
     implementation(ArchitectureComponent.Hilt.HILT_ANDROID)
     kapt(ArchitectureComponent.Hilt.HILT_COMPILER)
-
-    //DataStore
-    implementation(ArchitectureComponent.DataStore.DATASTORE)
 
     //Extra libraries
     //Glide
