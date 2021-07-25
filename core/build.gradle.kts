@@ -14,6 +14,7 @@ android {
         targetSdkVersion(Sdk.targetSdkVersion)
         versionCode = 3
         versionName = "1.2"
+        testInstrumentationRunner = "com.demo.developer.deraesw.demomoviewes.core.CustomTestRunner"
     }
 
     buildTypes {
