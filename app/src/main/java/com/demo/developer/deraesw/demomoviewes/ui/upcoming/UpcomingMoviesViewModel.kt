@@ -3,10 +3,10 @@ package com.demo.developer.deraesw.demomoviewes.ui.upcoming
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.demo.developer.deraesw.demomoviewes.data.entity.MovieGenre
-import com.demo.developer.deraesw.demomoviewes.data.model.UpcomingMovie
-import com.demo.developer.deraesw.demomoviewes.repository.MovieGenreRepositoryInterface
-import com.demo.developer.deraesw.demomoviewes.repository.MovieRepository
+import com.demo.developer.deraesw.demomoviewes.core.data.entity.MovieGenre
+import com.demo.developer.deraesw.demomoviewes.core.data.model.UpcomingMovie
+import com.demo.developer.deraesw.demomoviewes.core.repository.MovieGenreRepositoryInterface
+import com.demo.developer.deraesw.demomoviewes.core.repository.MovieRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

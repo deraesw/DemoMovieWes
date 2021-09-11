@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.demo.developer.deraesw.demomoviewes.data.model.GenreFilter
+import com.demo.developer.deraesw.demomoviewes.core.data.model.GenreFilter
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemFilterMovieBinding
 
 class FilterMovieAdapter(val handler: FilterMovieAdapterInterface)

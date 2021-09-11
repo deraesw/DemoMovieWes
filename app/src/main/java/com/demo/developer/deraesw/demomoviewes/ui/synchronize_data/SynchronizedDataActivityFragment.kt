@@ -12,11 +12,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.core.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.core.repository.MessageEvent
+import com.demo.developer.deraesw.demomoviewes.core.repository.SynchronizationStatusEvent
 import com.demo.developer.deraesw.demomoviewes.databinding.FragmentSynchronizedDataBinding
 import com.demo.developer.deraesw.demomoviewes.extension.debug
-import com.demo.developer.deraesw.demomoviewes.repository.MessageEvent
-import com.demo.developer.deraesw.demomoviewes.repository.SynchronizationStatusEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect

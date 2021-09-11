@@ -1,11 +1,11 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.demo.developer.deraesw.demomoviewes.data.entity.ProductionCompany
+import androidx.recyclerview.widget.RecyclerView
+import com.demo.developer.deraesw.demomoviewes.core.data.entity.ProductionCompany
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieProductionBinding
 
 class ProductionAdapter: ListAdapter<ProductionCompany, RecyclerView.ViewHolder>(ProductionDiffCallback()) {

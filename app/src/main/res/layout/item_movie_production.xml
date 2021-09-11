@@ -6,7 +6,7 @@
     <data>
         <variable
             name="prod"
-            type="com.demo.developer.deraesw.demomoviewes.data.entity.ProductionCompany"/>
+            type="com.demo.developer.deraesw.demomoviewes.core.data.entity.ProductionCompany" />
 
     </data>
 

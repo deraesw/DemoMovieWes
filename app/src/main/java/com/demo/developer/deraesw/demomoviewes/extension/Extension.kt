@@ -20,8 +20,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkFailed
-import com.demo.developer.deraesw.demomoviewes.data.model.NetworkResults
 
 /**
  * Allows calls like
@@ -39,10 +37,4 @@ inline fun <reified T> T.debug(text : String) {
 
 inline fun <reified T> T.error(text : String) {
     Log.e(T::class.java.simpleName, text)
-}
-
-inline fun NetworkResults.whenFailed(action: (item: NetworkFailed) -> Unit) {
-    this.takeIf { it is NetworkFailed }?.also {
-        action(it as NetworkFailed)
-    }
 }

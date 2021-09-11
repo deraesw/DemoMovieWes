@@ -7,7 +7,7 @@
     <data>
         <variable
             name="casting"
-            type="com.demo.developer.deraesw.demomoviewes.data.model.CastingItem"/>
+            type="com.demo.developer.deraesw.demomoviewes.core.data.model.CastingItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

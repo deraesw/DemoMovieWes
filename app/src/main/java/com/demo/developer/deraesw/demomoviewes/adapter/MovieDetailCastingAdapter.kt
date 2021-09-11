@@ -1,12 +1,12 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.demo.developer.deraesw.demomoviewes.data.model.CastingItem
+import androidx.recyclerview.widget.RecyclerView
+import com.demo.developer.deraesw.demomoviewes.core.data.model.CastingItem
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemMovieDetailCastingItemBinding
 
 class MovieDetailCastingAdapter(val handler : MovieDetailCastingAdapterInterface)

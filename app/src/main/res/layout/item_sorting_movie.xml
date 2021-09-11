@@ -7,7 +7,7 @@
     <data>
         <variable
             name="sorting"
-            type="com.demo.developer.deraesw.demomoviewes.data.model.SortItem"/>
+            type="com.demo.developer.deraesw.demomoviewes.core.data.model.SortItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

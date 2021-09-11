@@ -1,12 +1,11 @@
 package com.demo.developer.deraesw.demomoviewes.adapter
 
-import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.demo.developer.deraesw.demomoviewes.data.model.SortItem
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import com.demo.developer.deraesw.demomoviewes.core.data.model.SortItem
 import com.demo.developer.deraesw.demomoviewes.databinding.ItemSortingMovieBinding
 
 class SortingAdapter(val mHandler: SortingMovieAdapterInterface):

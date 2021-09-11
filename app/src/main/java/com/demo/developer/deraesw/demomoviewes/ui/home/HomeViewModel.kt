@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.demo.developer.deraesw.demomoviewes.data.model.AccountData
-import com.demo.developer.deraesw.demomoviewes.repository.PreferenceDataStoreRepository
-import com.demo.developer.deraesw.demomoviewes.repository.SyncRepository
+import com.demo.developer.deraesw.demomoviewes.core.data.model.AccountData
+import com.demo.developer.deraesw.demomoviewes.core.repository.PreferenceDataStoreRepository
+import com.demo.developer.deraesw.demomoviewes.core.repository.SyncRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
